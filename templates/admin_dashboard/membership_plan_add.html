@@ -1,0 +1,60 @@
+{% extends 'admin_dashboard/index.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+<link rel="stylesheet" href="{% static 'css/add_form.css' %}">
+<!-- Load Open Sans font -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+<div class="content">
+   
+    <section>
+        <div class="section-header">
+             <div class="field_name"><span>Add Membership</span></div>
+             <form method="post" action="{% url 'membership:membership_plan_add' %}">
+                {% csrf_token %}
+                {% comment %} <button type="submit" class='create-btn '>Create New</button> {% endcomment %}
+            </form>
+        </div>
+    </section>
+        <form method="POST" action="{% url 'membership:membership_plan_add' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="categoryname">Name</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {{ form.plan_name }}
+            </div>
+
+            <div class="input-group">
+                <label for="categoryname">Annual fees</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {{ form.annual_fees }}
+            </div>
+
+            <div class="input-group">
+                <label for="categoryname">Discount Rate</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {{ form.discount_rate }}
+            </div>
+
+            <div class="input-group">
+                <label for="categoryname">Discription</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {{ form.description }}
+            </div>
+
+            <div class="btn-container">
+                <form method="post" action="{% url 'membership:membership_plan_list' %}">
+                <button type="submit" class="btn-cancel">Save</button>
+                </form>
+                <form method="post" action="{% url 'membership:membership_plan_list' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-cancel">Cancel</button>
+                </form>
+            </div>
+        </form>
+   
+</div>
+
+{% endblock content %}

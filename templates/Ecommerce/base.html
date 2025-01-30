@@ -1,0 +1,151 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    {% block head %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/password_reset.css' %}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="#" class="brand"><img src="/media/logo.jpg" alt="" height="70px"></a>
+        </div>
+        <div class="navbar-toggle" onclick="toggleMenu()">☰</div>
+        <div class="nav-menu">
+            <ul class="navbar-menu">
+                <li><a href="{% url 'Ecommerce:home' %}">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">Category <i class='bx bxs-chevron-down'></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Seeds</a></li>
+                        <li><a href="#">Furtilizer</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">About</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Our story</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Membership</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Crop-Info.</a></li>
+                <li><a href="#">Kishan Charcha</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-icons">
+            <ul>
+                <li class="icons">
+                    <a href="#" class="icon"><box-icon name='heart'></box-icon></a>
+                    <a href="#" class="icon"><box-icon type='cart' name='cart-alt'></box-icon></a>
+                    <span class="dropdown">
+                        <a href="#" class="icon"><box-icon name='user'></box-icon></a>
+                        <ul class="dropdown-menu">
+                            {% if user.is_authenticated %}
+                            <li class="dropdown-item">
+                                <form method="POST" action="{% url 'account:logout' %}" >
+                                    {% csrf_token %}
+                                    <button type="submit">Logout</button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li><a href="/account/register">Registration</a></li>
+                            <li><a href="/account/login">Login</a></li>
+                        {% endif %}
+                        
+                        </ul>
+                    </span>
+                </li>
+            </ul>
+        </div>
+                
+    </nav>
+
+      <!-- Messages Section -->
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li  class="message {{ message.tags }}">
+          {{ message }}
+      </li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+
+    <main>
+    <div class="container">
+        {% block content%}
+        {% endblock %}
+    </div>
+</main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer1"></div>
+        <div class="footer-container">
+            <!-- Logo Section -->
+            <div class="footer-logo">
+                <img src="/media/newlogo-removebg-preview.png" alt="Jyoti Agro Logo" class="logo">
+                
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><box-icon name='phone-call' class="footer-icon"></box-icon>9913883517</p>
+                <p><box-icon name='envelope' class="footer-icon"></box-icon>jyotiagro123@gmail.com</p>
+                <p><box-icon name='map' class="footer-icon"></box-icon> JamalPur Char Rasta, Jamalpur, Ahmedabad, Gujarat.</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Links</h3>
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Enquiry</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <a href="#">Seeds</a>
+                <a href="#">Fertilizer</a>
+                <a href="#">Insecticides</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Membership</h3>
+                <h3>Support</h3>
+                <a href="#">FAQs</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="footer-bottom">
+            <p>2025 © All Rights Reserved | Terms of Use | JYOTI AGRO</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const navbarMenu = document.querySelector('.navbar-menu');
+            navbarMenu.classList.toggle('active');
+        }
+    </script>
+</body>
+
+</html>

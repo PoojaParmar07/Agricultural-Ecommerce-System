@@ -1,0 +1,77 @@
+{% extends 'admin_dashboard/index.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+
+<link rel="stylesheet" href="{% static 'css/add_form.css' %}">
+<!-- Load Open Sans font -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+<div class="content">
+   
+    <section>
+        <div class="section-header">
+             <div class="field_name"><span> Add User in Membership</span></div>
+             <form method="post" action="{% url 'membership:add_user_membership' %}">
+                {% csrf_token %}
+                {% comment %} <button type="submit" class='create-btn '>Create New</button> {% endcomment %}
+            </form>
+        </div>
+    </section>
+        <form method="POST" action="{% url 'membership:add_user_membership' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-group">
+                {% comment %} <label for="categoryname">Plan Id</label> {% endcomment %}
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {% comment %} {% csrf_token %}
+                {{ form.id }} {% endcomment %}
+                {% comment %} {{ form.as_p }} {% endcomment %}
+            </div>
+            <div class="input-group">
+                <label for="categoryname">Plan Name</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {% csrf_token %}
+                {{ form.plan }}
+                {% comment %} {{ form.as_p }} {% endcomment %}
+            </div>
+            <div class="input-group">
+                <label for="categoryname">Start Date</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {% csrf_token %}
+                {{ form.membership_start_date }}
+            </div>
+            <div class="input-group">
+                <label for="categoryname">End Date</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {% csrf_token %}
+                {{ form.membership_end_date }}
+            </div>
+            <div class="input-group">
+                <label for="categoryname">Status</label>
+                {% comment %} <input type="text" id="categoryname" name="category_name" required> {% endcomment %}
+                {% csrf_token %}
+                {{ form.status }}
+            </div>
+
+
+            <div class="btn-container">
+                {% comment %} <form method="post" action="{% url 'agro:category_add' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Update</button>
+                </form> {% endcomment %}
+                <form method="post" action="{% url 'membership:user_membership' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-cancel">Save</button>
+                </form>
+                <form method="post" action="{% url 'membership:user_membership' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-cancel">Cancel</button>
+                </form>
+                
+            </div>
+        </form>
+   
+</div>
+
+{% endblock content %}

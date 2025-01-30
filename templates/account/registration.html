@@ -1,0 +1,91 @@
+{% extends 'Ecommerce/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+   
+{% block head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">{% endblock %}
+</head>
+<body>
+    {% block content %}
+<div class="registration-container">
+    <h2>Create an Account</h2>
+
+
+
+
+    <form method="POST" id='createAccountForm' action="{% url 'account:registration' %}">
+        {% csrf_token %}
+        
+        <!-- Username Field -->
+        <div class="form-group">
+           
+            <label for="username">Username</label> <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password1">Password</label>
+            <input type="password" id="password1" name="pass1" required>
+        </div>
+        <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            <input type="password" id="password2" name="pass2" required>
+        </div>
+        <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" required>
+        </div>
+        <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" required>
+        </div>
+        <div class="form-group">
+            <label for="pincode">Pincode</label>
+            <input type="text" id="pincode" name="pincode" required>
+        </div>
+        <div class="form-group">
+            <label for="mobile">Mobile Number</label>
+            <input type="text" id="mobile" name="mobile_number" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" required></textarea>
+        </div>
+        <div class="form-submit">
+            <button type="submit">Register</button>
+            <div class="register-link" >
+                Already have an account? <a href="{% url 'account:login' %}">Login</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+
+<script>
+    document.getElementById('createAccountForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+    
+        const formData = new FormData(this);
+        let data = {};
+    
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+    
+        console.log('Form Data Submitted:', data);
+        alert('Account created successfully!');
+    });
+    </script>
+
+</body>
+</html>

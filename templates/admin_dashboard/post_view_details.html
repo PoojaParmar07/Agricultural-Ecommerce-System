@@ -1,0 +1,46 @@
+{% extends 'admin_dashboard/index.html' %}
+{% load static %}
+{% block content %}
+
+{% block head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/view_details.css' %}">
+{% endblock %}
+
+<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+
+<!-- Load Open Sans font -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+<div class="content">
+    <section>
+        <div class="section-header">
+             <div class="field_name"><span>Post Detail</span></div>
+            
+        </div>
+    </section>
+    
+    <form method="post" action="{% url 'socialmedia:post_view_details' pk=post.pk %}">
+        {% csrf_token %}
+        <div class="input-group">
+            <label for="categoryname">Image</label>
+            {{ form.image }}
+        </div>
+        <div class="input-group">
+            <label for="categoryname">Caption/label>
+            {{ form.caption }}
+        </div>
+        <div class="input-group">
+            <label for="categoryname">Likes</label>
+            {{ form.likes }}
+        </div>
+        
+        <div class="btn-container">
+            <button type="submit" class="btn" name="update">Update</button>    
+            <button type="submit" class="btn" name="delete">Delete</button>    
+            <button type="submit" class="btn" name="cancel">Cancel</button>
+           
+        </div>
+    </form>
+</div>
+{% endblock %}

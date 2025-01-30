@@ -1,0 +1,53 @@
+{% extends 'admin_dashboard/index.html' %}
+{% load static %}
+{% block content %}
+<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/list_form.css' %}">
+<div class="content">
+    <section>
+        <div class="section-header">
+             <div class="field_name"><span>User Membership</span></div>
+             <form method="post" action="{% url 'membership:add_user_membership' %}">
+                {% csrf_token %}
+                <button type="submit" class='create-btn '>Create New</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="content-body">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User Id</th>
+                    <th>Plan Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for membership in memberships %}
+                <tr>
+                    <td>{{ membership.id }}</td>
+                    <td>{{ membership.user_id }}</td>
+                    <td>{{ membership.plan.plan_name }}</td>
+                    <td>{{ membership.membership_start_date }}</td>
+                    <td>{{ membership.membership_end_date }}</td>
+                    <td>{{ membership.status }}</td>
+                    <td>
+                        {% comment %} <a href='{% url "socialmedia:post_view_details" post.pk %}' >View Details</a> {% endcomment %}
+                        <a href="{% url 'membership:user_membership_details' membership.pk %}" >View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+{% endblock %}

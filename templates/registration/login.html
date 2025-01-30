@@ -1,0 +1,54 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    {% block head %}
+    
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <div class="container">
+        <div class="login-box">
+            <h2>Login</h2>
+            <form method="POST" action="{% url 'account:login' %}">
+                {% csrf_token %}
+                
+                {% comment %} <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div> {% endcomment %}
+    
+                <div class="input-group">
+                    {% comment %} <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required> {% endcomment %}
+                    {{form.as_p}}
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="{% url 'password_reset' %}">Forget Password?</a>
+                </div>
+                
+                
+                <div class="form-submit">
+                    <button type="submit" class="login-btn">Login</button>
+                </div>
+            </form>
+            <div class="register-link">
+                Don’t have an account? <a href="{% url 'account:registration' %}">Register</a>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+</body>
+
+</html>

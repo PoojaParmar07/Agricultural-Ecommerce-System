@@ -1,0 +1,44 @@
+{% extends 'admin_dashboard/index.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+<link rel="stylesheet" href="{% static 'css/add_form.css' %}">
+<!-- Load Open Sans font -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+<div class="content">
+    <section>
+        <div class="section-header">
+            <div class="field_name"><span>Add {{model_name}}</span></div>
+        </div>
+    </section>
+    <div class="form-container">
+        {% comment %} <h2>Add {{model_name}}</h2> {% endcomment %}
+        <form method='post' enctype="multipart/form-data">
+            {% csrf_token %}
+            
+           
+            <div class="input-group">
+               
+                {% for field in form %}
+                
+                  <label>{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.errors %}
+                    
+                  {% endif %}
+               
+              {% endfor %}
+              
+            </div>
+                  
+            <div class="btn-container">
+                <button type="submit" class="btn">Save</button>
+                <a href="{% url list %}" class="btn-cancel">Cancel</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

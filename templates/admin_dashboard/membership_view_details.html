@@ -1,0 +1,49 @@
+{% extends 'admin_dashboard/index.html' %}
+{% load static %}
+{% block content %}
+
+{% block head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/view_details.css' %}">
+{% endblock %}
+
+<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+
+<!-- Load Open Sans font -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <div class="content">
+        <section>
+            <div class="section-header">
+                <div class="field_name"><span>Update Membership plan</span></div>
+                
+            </div>
+        </section>
+        
+        <form method="post" action="{% url 'membership:membership_view_details' pk=plan.pk %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="categorname">Membership Plan Name</label>
+                {{ form.plan_name }}
+            </div>
+            <div class="input-group">
+                <label for="categoryname">Annual fees</label>
+                {{ form.annual_fees }}
+            </div>
+            <div class="input-group">
+                <label for="categoryname">Discount Rate</label>
+                {{ form.discount_rate }}
+            </div>
+            <div class="input-group">
+                <label for="categoryname">Discription</label>
+                {{ form.description }}
+            </div>
+            <div class="btn-container">
+                <button type="submit" class="btn" name="update">Update</button>
+                <button type="submit" class="btn" name="delete">Delete</button>    
+                <button type="submit" class="btn" name="cancel">Cancel</button>
+            
+            </div>
+        </form>
+    </div>
+    {% endblock %}

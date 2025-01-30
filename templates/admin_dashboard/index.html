@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jyoti Agro Admin Template</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+           
+                {% comment %} <div id="logo"> {% endcomment %}
+                    <img id='logo' src="/media/company_logo.jpg" alt="Jyoti Agro Logo">
+                {% comment %} </div> {% endcomment %}
+            
+            {% comment %} <div id="logo">
+                <img src="/media/company_logo.jpg" alt="Jyoti Agro" srcset="">
+        </div> {% endcomment %}
+            <nav>
+                <ul>
+                    <div class="dashboard">
+                        <img src="/media/dashboard_home.png" alt="" srcset="">
+                        <a id="text1" href="{% url 'admin_dashboard' %}">Dashboard</a>
+
+                    </div>
+
+                    <li class="accounts">
+                        <span class="accounts_text">Accounts</span>
+                        <ul>
+                            <li><a href="{% url 'account:user_list' %}">Users</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="account">
+                        <span>Ecommerce</span>
+                        <ul>
+                            <li><a href="{% url 'Ecommerce:category_list' %}">Category</a>
+                            </li>
+                            <li><a href="{% url 'Ecommerce:product_list' %}">Products</a></li>
+                            <li><a href="{% url 'Ecommerce:product_variant_list' %}">ProductVariant</a></li>
+                            <li><a href="">Orders</a></li>
+                            <li><a href="#">Reviews</a></li>
+                            <li><a href="#">Feedback</a></li>
+                        </ul>
+                    </li>
+                    <li class="account">
+                        <span>Membership</span>
+                        <ul>
+                            <li><a href="{% url 'membership:membership_plan_list' %}">Membership Plan</a></li>
+                            <li><a href="{% url 'membership:user_membership' %}">User Membership</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span>Social Media</span>
+                        <ul>
+                            <li><a href="">Comments</a></li>
+                            <li><a href="{% url 'socialmedia:post' %}">Posts</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div class="settings">
+                <li class="dropdown">
+                    <a  href="#"><box-icon name='cog'></box-icon>Settings</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'password_change' %}">Change Password</a></li>
+                        
+                    </ul>
+                </li>
+            </div>  
+         
+        </aside>
+        
+        <main class="content">
+            <header>
+                {% if user.is_authenticated %}
+               
+                <form method="post" action="{% url 'account:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            {% endif %}
+              
+            </header>
+                <!-- Messages Section -->
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li  class="message {{ message.tags }}">
+          {{ message }}
+      </li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+
+  
+            <div class="main-content">
+                {% block content %}{% endblock %}
+            </div>
+
+           
+
+            {% comment %}  {% endcomment %}
+        </main>
+    </div>
+</body>
+
+</html>
