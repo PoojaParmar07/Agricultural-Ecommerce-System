@@ -37,6 +37,7 @@ class ProductVariantForm(forms.ModelForm):
             'brand': forms.Select(attrs={'class': 'form-control'}),
             'units': forms.TextInput(attrs={'class': 'form-control'}),
         }
+        
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
