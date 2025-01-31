@@ -6,7 +6,7 @@ class Brand(models.Model):
     
     brand_id = models.AutoField(primary_key=True)
     brand_name = models.CharField(max_length=100)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table='Brand'
@@ -15,7 +15,7 @@ class Brand(models.Model):
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=100)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table = 'Category'
@@ -29,7 +29,7 @@ class Product(models.Model):
     product_image = models.ImageField(upload_to='media/products/')
     min_qty = models.ImageField(default=1)
     max_qty = models.IntegerField(default=5)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     
     class Meta:
@@ -41,7 +41,7 @@ class ProductVariant(models.Model):
     product = models.ForeignKey('Product',on_delete=models.CASCADE)    
     brand = models.ForeignKey('Brand',on_delete=models.CASCADE)
     units = models.CharField(max_length=50)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table = 'ProductVariant'
@@ -53,7 +53,7 @@ class ProductBatch(models.Model):
     manufacture_date = models.DateField()
     expiry_date = models.DateField()
     batch_code = models.CharField(max_length=100,unique=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     
     class Meta:
@@ -62,10 +62,10 @@ class ProductBatch(models.Model):
 class Inventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     batch = models.ForeignKey("ProductBatch", on_delete=models.CASCADE)
-    quatity = models.IntegerField()
+    quatity = models.IntegerField(default=0)
     purchase_price = models.DecimalField(max_digits=5, decimal_places=2)
     sales = models.DecimalField(max_digits=5, decimal_places=2)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table = 'Inventory'
@@ -97,7 +97,7 @@ class Order(models.Model):
     address = models.CharField(max_length=100)
     pincode = models.CharField(max_length=100)
     delivery_charges = models.DecimalField(max_digits=5, decimal_places=2)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     
     class Meta:
@@ -111,7 +111,7 @@ class Order_Item(models.Model):
     variant = models.ForeignKey("ProductVariant", on_delete=models.CASCADE)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table = 'OrderItem'
@@ -134,7 +134,7 @@ class Payment(models.Model):
     payment_status=models.CharField(max_length=100,choices=PAYMENT_STATUS_CHOICES,default='pending')
     transaction_id=models.CharField(unique=True,max_length=100, null=True)
     payment_date=models.DateTimeField(auto_now=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table='Payment'
@@ -145,10 +145,12 @@ class DeliveryZone(models.Model):
     pincode_start = models.IntegerField()         # Start of the pincode range
     pincode_end = models.IntegerField()           # End of the pincode range
     delivery_charge = models.DecimalField(max_digits=6, decimal_places=2)  # Delivery charge for this zone
-    create_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.zone_name} ({self.pincode_start} - {self.pincode_end})"
 
     class Meta:
-        db_name = "DeliveryZone"
+        db_table = "DeliveryZone"
+        
+        
