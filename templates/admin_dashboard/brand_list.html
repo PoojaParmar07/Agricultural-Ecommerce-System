@@ -24,16 +24,17 @@
                 <tr>
                     <th>Brand Id</th>
                     <th>Brand Name</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for obj in brands %}
+                {% for obj in brand %}
                     <tr>
                         <!-- Product Details (spanning over variants) -->
-                        <td >{{ obj.beand_id }}</td>
-                        <td >{{ obj.beand_name }}</td>
-                       
-                        <td ><a href="">View Details</a></td>
+                        <td >{{ obj.brand_id }}</td>
+                        <td >{{ obj.brand_name }}</td>
+                       <td> <a href="{% url 'Ecommerce:brand_view_details' pk=obj.brand_id %}">View Details</a></td>
+
                         </tr>
                         
                 {% endfor %}
