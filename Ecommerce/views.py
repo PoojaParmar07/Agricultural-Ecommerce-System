@@ -1,13 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import Http404
 from django.contrib import messages
-<<<<<<< Updated upstream
-from .models import Category, Brand,ProductVariant
-from .forms import BrandForm, CategoryForm,ProductVariantForm
-=======
-from .models import Category, Brand, Product
-from .forms import BrandForm, CategoryForm, ProductForm
->>>>>>> Stashed changes
+from .models import Category, Brand
+from .forms import BrandForm, CategoryForm
 # Create your views here.
 def is_admin_user(user):
     return user.is_staff  # or use is_superuser if you're referring to admin access
@@ -144,93 +139,3 @@ def brand_view_details(request,pk):
     context['form']=form
     context['brand']=brand
     return render(request, 'admin_dashboard/view_details.html',context)
-
-
-<<<<<<< Updated upstream
-
-
-def product_variant_list(request):
-    product_variant=ProductVariant.objects.all()
-    return render(request,'admin_dashboard/product_variant_list.html',{'product_variant':product_variant})
-
-
-
-def product_variant_add(request):
-    context={
-        'model_name':'Product Variant',
-        'list':'Ecommerce:product_variant_list',
-    }
-    if request.method == 'POST':
-        form = ProductVariantForm(request.POST)
-        if form.is_valid():
-                form.save()
-                messages.success(request, "Variant added successfully.")
-                return redirect('Ecommerce:product_variant_list')
-    else:
-        form = ProductVariantForm()
-        
-    context['form']=form
-    return render(request,'admin_dashboard/add_form.html',context)
-
-=======
-def product_list(request):
-    products = Product.objects.all()
-    return render(request,'admin_dashboard/product_list.html',{'products':products})
-
-
-
-def add_product(request):
-    context = {
-        'model_name': 'Product',
-        'list':'Ecommerce:product_list'
-    }
-    if request.method == 'POST' and 'product_name' in request.POST:
-
-        form=ProductForm(request.POST,request.FILES)
-        if form.is_valid():
-            product_name=form.cleaned_data['product_name']
-            if Product.objects.filter(product_name=product_name).exists():
-                messages.error(request,"Product already exists")
-            else:
-                form.save()
-                messages.success(request,"Product added successfully")
-                return redirect('Ecommerce:product_list')
-        else:
-            messages.error(request,"Not valid")
-            print(form.errors) 
-    else:
-        form=ProductForm()
-    
-    context['form']=form
-    return render(request,'admin_dashboard/add_form.html',context)
-
-
-def product_view_details(request):
-    context = {
-        'model_name': 'Product',
-    }
-    try:
-        product = get_object_or_404(Product, pk=pk)
-    except Http404:
-         return render(request, '404.html', status=404)
-        
-    form = ProductForm(instance=product)
-    if request.method=='POST':
-        if 'update' in request.POST:
-            form=ProductForm(request.POST,instance=product)
-            if form.is_valid():
-                form.save()
-                messages.success(request,"Product updated successfully")
-                return redirect('Ecommerce:product_list')
-            else:
-                messages.error(request,"Product update failed. Please correct the errors.")
-        elif 'delete' in request.POST:
-            product.delete()
-            messages.success(request,"Product deleted successfully")
-            return redirect('Ecommerce:product_list')
-        elif 'cancel' in request.POST:
-            return redirect('Ecommerce:product_list')
-    context['form']=form
-    context['product']=product
-    return render(request, 'admin_dashboard/view_details.html', context)
->>>>>>> Stashed changes
