@@ -1,9 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import Http404
 from django.contrib import messages
-from .models import Category, Brand, Product
-from .forms import BrandForm, CategoryForm, ProductForm
-# Create your views here.
+from .models import Category, Brand, Product,ProductVariant
+from .forms import BrandForm, CategoryForm, ProductForm,ProductVariantForm
 def is_admin_user(user):
     return user.is_staff  # or use is_superuser if you're referring to admin access
 
@@ -173,7 +172,7 @@ def add_product(request):
     return render(request,'admin_dashboard/add_form.html',context)
 
 
-def product_view_details(request):
+def product_view_details(request,pk):
     context = {
         'model_name': 'Product',
     }
@@ -201,3 +200,30 @@ def product_view_details(request):
     context['form']=form
     context['product']=product
     return render(request, 'admin_dashboard/view_details.html', context)
+
+
+
+def product_variant_list(request):
+    product_variant=ProductVariant.objects.all()
+    return render(request,'admin_dashboard/product_variant_list.html',{'product_variant':product_variant})
+
+
+
+def product_variant_add(request):
+    context={
+        'model_name':'Product Variant',
+        'list':'Ecommerce:product_variant_list',
+    }
+    if request.method == 'POST':
+        form = ProductVariantForm(request.POST)
+        if form.is_valid():
+                form.save()
+                messages.success(request, "Variant added successfully.")
+                return redirect('Ecommerce:product_variant_list')
+    else:
+        form = ProductVariantForm()
+        
+    context['form']=form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+

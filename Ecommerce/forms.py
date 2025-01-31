@@ -1,12 +1,6 @@
 from django import forms
 
-from .models import Category,Brand,ProductVariant
-
-from .models import Category,Brand, Product
-
-from .models import Category,Brand, Product
-
-from .models import Category,Brand, Product
+from .models import Category,Brand,ProductVariant,Product
 
 
 
@@ -42,10 +36,7 @@ class ProductVariantForm(forms.ModelForm):
             'product': forms.Select(attrs={'class': 'form-control'}),
             'brand': forms.Select(attrs={'class': 'form-control'}),
             'units': forms.TextInput(attrs={'class': 'form-control'}),
-
         }
-        
-
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
