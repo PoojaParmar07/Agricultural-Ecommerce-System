@@ -33,5 +33,5 @@ class ProductVariantForm(forms.ModelForm):
         widgets = {
             'product': forms.Select(attrs={'class': 'form-control'}),
             'brand': forms.Select(attrs={'class': 'form-control'}),
-            'units': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter units'}),
+            'units': forms.TextInput(attrs={'class': 'form-control'}),
         }
