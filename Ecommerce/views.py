@@ -9,3 +9,10 @@ def is_admin_user(user):
 
 def home(request):
     return render(request,'Ecommerce/base.html')
+
+def add_brand(request):
+    context={
+        'model_name':'Brand',
+        'list':'Ecommerce:brand_list',
+    }
+    return render(request,'admin_dashboard/add_form.html',context)
