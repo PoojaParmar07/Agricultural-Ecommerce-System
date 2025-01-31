@@ -151,6 +151,4 @@ class DeliveryZone(models.Model):
         return f"{self.zone_name} ({self.pincode_start} - {self.pincode_end})"
 
     class Meta:
-        db_table = "DeliveryZone"
-        
-        
+        db_name = "DeliveryZone"
