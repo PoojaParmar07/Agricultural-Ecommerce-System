@@ -1,5 +1,5 @@
 from django import forms
-from .models import Category,Brand
+from .models import Category,Brand,ProductVariant
 
 
 
@@ -23,4 +23,15 @@ class BrandForm(forms.ModelForm):
         labels = {'brand_name': 'Brand Name'}  # Customize label
         widgets = {
             'brand_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter brand name'}),
+        }
+        
+class ProductVariantForm(forms.ModelForm):
+    class Meta:
+        model = ProductVariant
+        fields = ['product', 'brand', 'units']  # Add any fields you want to include in the form
+        
+        widgets = {
+            'product': forms.Select(attrs={'class': 'form-control'}),
+            'brand': forms.Select(attrs={'class': 'form-control'}),
+            'units': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter units'}),
         }
