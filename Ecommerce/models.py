@@ -11,6 +11,9 @@ class Brand(models.Model):
     class Meta:
         db_table='Brand'
         
+    def __str__(self):
+        return self.brand_name
+        
         
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
@@ -19,6 +22,9 @@ class Category(models.Model):
     
     class Meta:
         db_table = 'Category'
+        
+    def __str__(self):
+        return self.category_name
         
 class Product(models.Model):
     
@@ -34,6 +40,10 @@ class Product(models.Model):
     
     class Meta:
         db_table = 'Product'
+        
+    def __str__(self):
+        return self.product_name
+        
 
 class ProductVariant(models.Model):
     
@@ -45,6 +55,7 @@ class ProductVariant(models.Model):
     
     class Meta:
         db_table = 'ProductVariant'
+        
         
 
 class ProductBatch(models.Model):
