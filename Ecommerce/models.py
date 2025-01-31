@@ -134,6 +134,21 @@ class Payment(models.Model):
     payment_status=models.CharField(max_length=100,choices=PAYMENT_STATUS_CHOICES,default='pending')
     transaction_id=models.CharField(unique=True,max_length=100, null=True)
     payment_date=models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         db_table='Payment'
+        
+        
+class DeliveryZone(models.Model):
+    zone_name = models.CharField(max_length=100)  # Name of the zone (e.g., Ahmedabad, Surat)
+    pincode_start = models.IntegerField()         # Start of the pincode range
+    pincode_end = models.IntegerField()           # End of the pincode range
+    delivery_charge = models.DecimalField(max_digits=6, decimal_places=2)  # Delivery charge for this zone
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.zone_name} ({self.pincode_start} - {self.pincode_end})"
+
+    class Meta:
+        db_name = "DeliveryZone"
