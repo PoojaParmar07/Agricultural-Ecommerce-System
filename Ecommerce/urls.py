@@ -2,8 +2,11 @@ from django.urls import path,include
 
 
 from .views import *
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 
 app_name = 'Ecommerce'
 urlpatterns = [
@@ -24,7 +27,7 @@ urlpatterns = [
     # Product List
     path('product_list/',product_list,name='product_list'),
     path('add_product/',add_product,name='add_product'),
-    path('product_view_details/<int:pk>',product_view_details,name='product_view_details'),
+    path('product_view_details/<int:pk>/',product_view_details,name='product_view_details'),
 
 ]
 
