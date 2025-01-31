@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import Http404
 from django.contrib import messages
-from .models import Category, Brand
+from .models import Category, Brand,ProductVariant
 from .forms import BrandForm, CategoryForm
 # Create your views here.
 def is_admin_user(user):
@@ -144,7 +144,8 @@ def brand_view_details(request,pk):
 
 
 def product_variant_list(request):
-    pass
+    product_variant=ProductVariant.objects.all()
+    return render(request,'admin_dashboard/product_variant_list.html',{'product_variant':product_variant})
 
 def product_variant_add(request):
     pass
