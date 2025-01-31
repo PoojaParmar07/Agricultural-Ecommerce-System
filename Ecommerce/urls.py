@@ -1,13 +1,6 @@
 from django.urls import path,include
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-from .views import home, category_list, category_add, category_view_details,list_brand,add_brand,brand_view_details,product_variant_list,product_variant_add
-=======
-from .views import home, category_list, category_add, category_view_details,list_brand,add_brand,brand_view_details, product_list, add_product, product_view_details
->>>>>>> Stashed changes
-=======
-from .views import home, category_list, category_add, category_view_details,list_brand,add_brand,brand_view_details, product_list, add_product, product_view_details
->>>>>>> Stashed changes
+from .views import home, category_list, category_add, category_view_details,list_brand,add_brand,brand_view_details,product_variant_list,product_variant_add,product_list,add_product,product_view_details
+
 
 app_name = 'Ecommerce'
 urlpatterns = [

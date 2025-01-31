@@ -1,13 +1,11 @@
 from django import forms
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 from .models import Category,Brand,ProductVariant
-=======
+
 from .models import Category,Brand, Product
->>>>>>> Stashed changes
-=======
+
 from .models import Category,Brand, Product
->>>>>>> Stashed changes
+
 
 
 
@@ -33,8 +31,6 @@ class BrandForm(forms.ModelForm):
             'brand_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter brand name'}),
         }
         
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 class ProductVariantForm(forms.ModelForm):
     class Meta:
         model = ProductVariant
@@ -44,12 +40,7 @@ class ProductVariantForm(forms.ModelForm):
             'product': forms.Select(attrs={'class': 'form-control'}),
             'brand': forms.Select(attrs={'class': 'form-control'}),
             'units': forms.TextInput(attrs={'class': 'form-control'}),
-=======
-=======
->>>>>>> Stashed changes
-        
-        
-
+        }
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -79,8 +70,5 @@ class ProductForm(forms.ModelForm):
                 'class': 'form-control',
                 'max': 100,  # You can set an appropriate maximum value
             }),
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
         }
