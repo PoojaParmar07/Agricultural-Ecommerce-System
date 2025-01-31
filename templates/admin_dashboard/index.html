@@ -45,10 +45,12 @@
                     <li class="account">
                         <span>Ecommerce</span>
                         <ul>
-                            <li><a href="{% url 'Ecommerce:category_list' %}">Category</a>
+                            <li><a href="{% url 'Ecommerce:list_brand' %}">Brand</a>
                             </li>
-                            <li><a href="{% url 'Ecommerce:product_list' %}">Products</a></li>
-                            <li><a href="{% url 'Ecommerce:product_variant_list' %}">ProductVariant</a></li>
+                            <li><a href="{%comment%}{% url 'Ecommerce:category_list' %}{%endcomment%}">Category</a>
+                            </li>
+                            <li><a href="{%comment%}{% url 'Ecommerce:product_list' %}{%endcomment%}">Products</a></li>
+                            <li><a href="{%comment%}{% url 'Ecommerce:product_variant_list' %}{%endcomment%}">ProductVariant</a></li>
                             <li><a href="">Orders</a></li>
                             <li><a href="#">Reviews</a></li>
                             <li><a href="#">Feedback</a></li>

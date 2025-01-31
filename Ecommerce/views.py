@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Brand
 
 # Create your views here.
 def is_admin_user(user):
@@ -9,6 +10,13 @@ def is_admin_user(user):
 
 def home(request):
     return render(request,'Ecommerce/base.html')
+
+
+
+def list_brand(request):
+    brand=Brand.objects.all()
+    return render(request, 'admin_dashboard/brand_list.html', {'brand':brand})
+
 
 def add_brand(request):
     context={
