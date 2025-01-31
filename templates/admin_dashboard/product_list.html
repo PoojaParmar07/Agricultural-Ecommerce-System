@@ -24,9 +24,12 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Category Id</th>
                     <th>Description</th>
-                    <th>Expiry Date</th>
-                    <th>Actions</th>
+                    <th>Product Image</th>
+                    <th>Min QTY</th>
+                    <th>Max QTY</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,8 +38,11 @@
                         <!-- Product Details (spanning over variants) -->
                         <td >{{ product.product_id }}</td>
                         <td >{{ product.product_name }}</td>
+                        <td >{{ product.category }}</td>
                         <td >{{ product.description }}</td>
-                        <td >{{ product.expiry_date }}</td>
+                        <td >{{ product.product_image }}</td>
+                        <td >{{ product.min_qty }}</td>
+                        <td >{{ product.max_qty }}</td>
                         <td ><a href="{% url 'Ecommerce:product_view_details' product.product_id %}">View Details</a></td>
                         </tr>
                         

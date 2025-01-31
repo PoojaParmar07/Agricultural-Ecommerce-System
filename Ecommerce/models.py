@@ -33,7 +33,7 @@ class Product(models.Model):
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
     description = models.TextField()
     product_image = models.ImageField(upload_to='media/products/')
-    min_qty = models.ImageField(default=1)
+    min_qty = models.IntegerField(default=1)
     max_qty = models.IntegerField(default=5)
     create_at = models.DateTimeField(auto_now=True)
     

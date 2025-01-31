@@ -65,7 +65,7 @@ class ProductForm(forms.ModelForm):
             }),
             'max_qty': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'max': 100,  # You can set an appropriate maximum value
+                'max': 5,  # You can set an appropriate maximum value
             }),
 
         }

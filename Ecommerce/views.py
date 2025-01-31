@@ -142,7 +142,7 @@ def brand_view_details(request,pk):
 
 def product_list(request):
     products = Product.objects.all()
-    return render(request,'admin_dashboard/product_list.html',{'products':products})
+    return render(request,'admin_dashboard/product_list.html', {'products':products})
 
 
 
