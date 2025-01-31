@@ -2,11 +2,6 @@ from django.urls import path,include
 
 
 from .views import *
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
 
 app_name = 'Ecommerce'
 urlpatterns = [
