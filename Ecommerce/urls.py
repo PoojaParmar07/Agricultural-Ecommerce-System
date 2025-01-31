@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import home, category_list, category_add, category_view_detail
+from .views import home, category_list, category_add, category_view_detail,list_brand,add_brand,brand_view_details
 
 app_name = 'Ecommerce'
 urlpatterns = [
@@ -7,6 +7,13 @@ urlpatterns = [
     path('category_list/',category_list,name='category_list'),
     path('category_add/',category_add,name='category_add'),
     path('category_view_detail/<int:pk>/',category_view_detail,name='category_view_detail'),
+    
+    
+    
+    # Brand List
+    path('list_brand/',list_brand,name='list_brand'),
+    path('add_brand/',add_brand,name='add_brand'),
+    path('brand_view_details/',brand_view_details,name='brand_view_details'),
 ]
 
 
