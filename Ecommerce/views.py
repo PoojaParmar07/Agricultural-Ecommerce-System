@@ -139,3 +139,12 @@ def brand_view_details(request,pk):
     context['form']=form
     context['brand']=brand
     return render(request, 'admin_dashboard/view_details.html',context)
+
+
+
+
+def product_variant_list(request):
+    pass
+
+def product_variant_add(request):
+    pass
