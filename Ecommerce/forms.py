@@ -1,5 +1,6 @@
 from django import forms
-from .models import Category
+from .models import Category,Brand
+
 
 
 class CategoryForm(forms.ModelForm):
