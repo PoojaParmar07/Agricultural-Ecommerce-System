@@ -11,7 +11,7 @@ urlpatterns = [
     # Brand List
     path('list_brand/',list_brand,name='list_brand'),
     path('add_brand/',add_brand,name='add_brand'),
-    path('brand_view_details/',brand_view_details,name='brand_view_details'),
+    path('brand_view_details/<int:pk>/',brand_view_details,name='brand_view_details'),
 ]
 
 
