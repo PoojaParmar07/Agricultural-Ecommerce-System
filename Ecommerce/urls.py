@@ -1,7 +1,7 @@
 from django.urls import path,include
 
 
-from .views import home, category_list, category_add, category_view_details, list_brand, add_brand, brand_view_details, product_variant_list, product_variant_add, product_list, add_product, product_view_details
+from .views import *
 
 app_name = 'Ecommerce'
 
@@ -19,6 +19,7 @@ urlpatterns = [
     # Product Variant
     path('product_variant_list/',product_variant_list,name='product_variant_list'),
     path('product_variant_add/',product_variant_add,name='product_variant_add'),
+    path('product_variant_view_details/<int:pk>/',product_variant_view_details,name='product_variant_view_details'),
 
     # Product List
     path('product_list/',product_list,name='product_list'),

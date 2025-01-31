@@ -41,16 +41,17 @@ class ProductVariantForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['product_name', 'category', 'description', 'product_image', 'min_qty', 'max_qty']
+        fields = ['category','product_name',  'description', 'product_image', 'min_qty', 'max_qty']
         
         widgets = {
+             'category': forms.Select(attrs={
+                'class': 'form-select',
+            }),
             'product_name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter product name',
             }),
-            'category': forms.Select(attrs={
-                'class': 'form-select',
-            }),
+           
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 4,
