@@ -227,3 +227,38 @@ def product_variant_add(request):
     return render(request,'admin_dashboard/add_form.html',context)
 
 
+
+
+def product_variant_view_details(request,pk):
+    context = {
+        'model_name': 'Product Variant',
+    }
+    try:
+        product_variant = get_object_or_404(ProductVariant, pk=pk)
+    except Http404:
+         return render(request, '404.html', status=404)
+        
+    form = ProductVariantForm(instance=product_variant)
+    if request.method=='POST':
+        if 'update' in request.POST:
+            form=ProductVariantForm(request.POST,instance=product_variant)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Product variant updated successfully")
+                return redirect('Ecommerce:product_variant_list')
+            else:
+                messages.error(request,"Product update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            product_variant.delete()
+            messages.success(request,"Product deleted successfully")
+            return redirect('Ecommerce:product_variant_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:product_variant_list')
+    context['form']=form
+    context['product']=product_variant
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+
+
+
+
