@@ -152,3 +152,6 @@ class DeliveryZone(models.Model):
 
     class Meta:
         db_table = "DeliveryZone"
+        
+        
+        

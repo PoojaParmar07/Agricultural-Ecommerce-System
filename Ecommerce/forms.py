@@ -14,3 +14,4 @@ class CategoryForm(forms.ModelForm):
                 'maxlength': '100',  # Limit input length
         }),
     }
+        
