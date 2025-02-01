@@ -36,7 +36,8 @@ urlpatterns = [
     path('inventory_add/',inventory_add,name='inventory_add'),
     path('inventory_view_details/<int:pk>/',inventory_view_details,name='inventory_view_details'),
 
-
+    # Order
+    path('order_list/',order_list,name='order_list'),
 
 ]
 

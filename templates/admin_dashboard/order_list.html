@@ -1,0 +1,62 @@
+{% extends 'admin_dashboard/index.html' %}
+{% load static %}
+{% block content %}
+<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/list_form.css' %}">
+<div class="content">
+    <section>
+        <div class="section-header">
+             <div class="field_name"><span>Order</span></div>
+             <form method="post" action="{% url 'Ecommerce:category_add' %}">
+                {% csrf_token %}
+                <button type="submit" class='create-btn '>Create New</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="content-body">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Order User Type</th>
+                    <th>Total Price</th>
+                    <th>Discounted Price</th>
+                    <th>Order Status</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Address</th>
+                    <th>Pincode</th>
+                    <th>Delivery Charges</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.user }}</td>
+                    <td>{{ order.order_user_type }}</td>
+                    <td>{{ order.total_price }}</td>
+                    <td>{{ order.discounted_price }}</td>
+                    <td>{{ order.order_status }}</td>
+                    <td>{{ order.state }}</td>
+                    <td>{{ order.city }}</td>
+                    <td>{{ order.address }}</td>
+                    <td>{{ order.pincode }}</td>
+                    <td>{{ order.delivery_charges }}</td>
+                    <td>
+                        <a href="#" >View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+{% endblock %}
