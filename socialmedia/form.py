@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import *
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -10,3 +10,6 @@ class PostForm(forms.ModelForm):
             'caption': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Write a caption...'}),
             'likes': forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
         }
+
+
+

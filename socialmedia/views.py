@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect,get_object_or_404
 from django.conf import settings
-from .models import Post
-from .form import PostForm
+from .models import *
+from .form import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.http import Http404
@@ -73,3 +73,15 @@ def post_view_details(request, pk):
 
     return render(request, 'admin_dashboard/post_view_details.html', {'form': form, 'post': post})
 
+
+
+def post_comment_list(request):
+    post_comment=PostComment.objects.all()
+    return render(request,'admin_dashboard/post_comment_list.html',{'post_comment':post_comment})
+
+
+def post_comment_add(request):
+    pass
+
+def post_comment_view_details(request):
+    pass

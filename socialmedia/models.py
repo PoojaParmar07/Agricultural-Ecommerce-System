@@ -20,7 +20,7 @@ class Post(models.Model):
         db_table = 'post'
         
     def __str__(self):
-        return self.user_name
+        return self.user
     
     
     
@@ -28,7 +28,14 @@ class PostComment(models.Model):
     comment_id=models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     post=models.ForeignKey('Post',on_delete=models.CASCADE)
-    parentComment_id=models.ForeignKey('self',on_delete=models.CASCADE)
+    parentComment_id=models.ForeignKey('self',on_delete=models.CASCADE,null=True)
     comment_text=models.TextField()
-    created_at=models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Comment {self.comment_id} by {self.user}"
+    
+    class Meta:
+        db_table='PostComment'
     
