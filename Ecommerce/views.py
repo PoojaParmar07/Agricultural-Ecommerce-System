@@ -350,3 +350,9 @@ def productbatch_add(request):
     context['form'] = form
     
     return render(request,'admin_dashboard/add_form.html',context)
+
+
+# def productbatch_view_details(request):
+#     context = {
+#         'model_name':'Product Update'
+#     }
