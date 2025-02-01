@@ -10,6 +10,7 @@ Jyoti Agro is an e-commerce platform designed to sell agricultural seeds and fer
 - **Shopping Cart**: Add products to the cart.
 - **Order Processing**: Supports online payments and Cash on Delivery (COD).
 - **Bill Generation**: Generates bills for completed orders.
+- **Post Management**: Social media management where users can post.
 
 ## Tech Stack
 - **Backend**: Django (Python)
