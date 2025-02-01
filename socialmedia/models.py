@@ -1,5 +1,8 @@
 from django.db import models
 from django.conf import settings
+from account.models import *
+from Ecommerce.models  import *
+# from .models import PostComment
 
 # Create your models here.
 
@@ -18,4 +21,14 @@ class Post(models.Model):
         
     def __str__(self):
         return self.user_name
+    
+    
+    
+class PostComment(models.Model):
+    comment_id=models.AutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post=models.ForeignKey('Post',on_delete=models.CASCADE)
+    parentComment_id=models.ForeignKey('self',on_delete=models.CASCADE)
+    comment_text=models.TextField()
+    created_at=models.DateTimeField()
     
