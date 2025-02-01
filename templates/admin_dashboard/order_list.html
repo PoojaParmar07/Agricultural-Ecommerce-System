@@ -51,7 +51,7 @@
                     <td>{{ order.pincode }}</td>
                     <td>{{ order.delivery_charges }}</td>
                     <td>
-                        <a href="#" >View Details</a>
+                        <a href="{% url 'Ecommerce:order_view_details' order.pk %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

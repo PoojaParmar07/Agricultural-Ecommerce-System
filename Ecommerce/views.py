@@ -425,5 +425,37 @@ def order_add(request):
     context['form'] = form
     return render(request,'admin_dashboard/add_form.html',context)
         
-        
+def order_view_details(request, pk):
+    context = {
+        'model_name':"Order",
+        'list':'Ecommerce:order_list',
+    }
+    
+    try:
+        order = get_object_or_404(Order, pk = pk)
+    except Http404:
+        return render(request, '404.html', status=404)
+    
+    form = OrderForm(instance = order)
+    
+    if request.method == "POST":
+        if 'update' in request.POST:
+            form=ProductVariantForm(request.POST,instance=order)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Order updated successfully")
+                return redirect('Ecommerce:order_list')
+            else:
+                messages.error(request,"Order update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            order.delete()
+            messages.success(request,"Order deleted successfully")
+            return redirect('Ecommerce:order_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:order_list')
+    context['form']=form
+    context['order']=order
+    return render(request, 'admin_dashboard/view_details.html', context)
+  
+    
         
