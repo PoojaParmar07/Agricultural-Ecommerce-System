@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Inventory</span></div>
-            <form method="post" action="{% url 'Ecommerce:add_brand' %}">
+            <form method="post" action="{% url 'Ecommerce:inventory_add' %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
