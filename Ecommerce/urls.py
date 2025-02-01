@@ -45,6 +45,7 @@ urlpatterns = [
     # Order
     path('order_list/',order_list,name='order_list'),
     path('order_add/',order_add,name='order_add'),
+    path('order_view_details/<int:pk>/',order_view_details,name='order_view_details'),
 
 ]
 
