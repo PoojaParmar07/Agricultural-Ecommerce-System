@@ -28,6 +28,7 @@ urlpatterns = [
 
     # Product Batch
     path('productbatch_list/',productbatch_list,name='productbatch_list'),
+    path('productbatch_add/',productbatch_add,name='productbatch_add'),
 
     # Inventory
     path('inventory_list',inventory_list,name='inventory_list'),

@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
              <div class="field_name"><span>Product Batch</span></div>
-             <form method="post" action="#">
+             <form method="post" action="{% url 'Ecommerce:productbatch_add' %}">
                 {% csrf_token %}
                 <button type="submit" class='create-btn '>Create New</button>
             </form>

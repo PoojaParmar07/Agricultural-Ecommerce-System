@@ -273,3 +273,25 @@ def inventory_list(request):
     return render(request,'admin_dashboard/inventory_list.html',{'inventory':inventory})
 
 
+def productbatch_add(request):
+    context = {
+        'model_name' : 'Product Batch',
+        'list' : 'Ecommerce:productbatch_list',
+    }
+    
+    if request.method == "POST" and 'batch_code' in request.POST:
+        form = ProductBatchForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Product batch added successfully")
+            return redirect('Ecommerce:productbatch_list')
+        else:
+            messages.error(request,"Product batch add failed. Please correct the errors.")
+    
+    else:
+        form = ProductBatchForm()
+        
+    context['form'] = form
+    
+    return render(request,'admin_dashboard/add_form.html',context)
