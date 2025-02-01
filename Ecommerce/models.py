@@ -57,7 +57,7 @@ class ProductVariant(models.Model):
         db_table = 'ProductVariant'
         
     def __str__(self):
-        return self.units
+        return f"{self.product.product_name} - {self.brand.brand_name} - {self.units}"
         
         
 
