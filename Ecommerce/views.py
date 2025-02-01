@@ -335,7 +335,6 @@ def productbatch_add(request):
     
     if request.method == "POST" and 'batch_code' in request.POST:
         form = ProductBatchForm(request.POST)
-        
         if form.is_valid():
             form.save()
             messages.success(request,"Product batch added successfully")
