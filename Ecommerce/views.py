@@ -487,4 +487,6 @@ def order_view_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
   
     
-        
+def orderitem_list(request):
+    orderitems = Order_Item.objects.all()
+    return render(request,'admin_dashboard/orderitem_list.html',{'orderitems':orderitems})
