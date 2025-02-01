@@ -56,6 +56,9 @@ class ProductVariant(models.Model):
     class Meta:
         db_table = 'ProductVariant'
         
+    def __str__(self):
+        return self.units
+        
         
 
 class ProductBatch(models.Model):
