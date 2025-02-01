@@ -273,5 +273,3 @@ def inventory_list(request):
     return render(request,'admin_dashboard/inventory_list.html',{'inventory':inventory})
 
 
-def productbatch_add(request):
-    
