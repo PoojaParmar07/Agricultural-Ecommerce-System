@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import Http404
 from django.contrib import messages
-from .models import Category, Brand, Product,ProductVariant, ProductBatch
-from .forms import BrandForm, CategoryForm, ProductForm,ProductVariantForm
+from .models import Category, Brand, Product,ProductVariant, ProductBatch,Inventory
+from .forms import BrandForm, CategoryForm, ProductForm,ProductVariantForm,InventoryForm
 
 def is_admin_user(user):
     return user.is_staff  # or use is_superuser if you're referring to admin access
@@ -268,3 +268,6 @@ def productbatch_list(request):
 
 
     
+def inventory_list(request):
+    inventory=Inventory.objects.all()
+    return render(request,'admin_dashboard/inventory_list.html',{'inventory':inventory})
