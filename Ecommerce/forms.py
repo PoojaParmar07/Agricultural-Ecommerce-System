@@ -72,31 +72,19 @@ class ProductForm(forms.ModelForm):
         }
         
         
-
 class ProductBatchForm(forms.ModelForm):
     class Meta:
         model = ProductBatch
-        fields = ['product', 'variant', 'manufacture_date', 'expiry_date', 'batch_code']
-        
+        fields = ['variant', 'manufacture_date', 'expiry_date', 'batch_code']
+
         widgets = {
-            'product': forms.Select(attrs={'class': 'form-control', 'onchange': 'this.form.submit()'}),  # Auto-submit on change
             'variant': forms.Select(attrs={'class': 'form-control'}),
-            'manufacture_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'batch_code': forms.TextInput(attrs={'class': 'form-control'}),
+            'manufacture_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'expiry_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'batch_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Batch Code'}),
         }
-
-    def __init__(self, *args, **kwargs):
-        super(ProductBatchForm, self).__init__(*args, **kwargs)
-
-        if 'product' in self.data:
-            try:
-                product_id = int(self.data.get('product'))  # Get selected product ID from form data
-                self.fields['variant'].queryset = ProductVariant.objects.filter(product_id=product_id)  # Filter variants
-            except (ValueError, TypeError):
-                self.fields['variant'].queryset = ProductVariant.objects.none()  # No product selected
-        else:
-            self.fields['variant'].queryset = ProductVariant.objects.none()  # Default empty queryset
+        
+        
 
 class InventoryForm(forms.ModelForm):
     class Meta:
