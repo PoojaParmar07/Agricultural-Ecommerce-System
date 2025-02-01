@@ -33,7 +33,7 @@ urlpatterns = [
     # Inventory
     path('inventory_list/',inventory_list,name='inventory_list'),
     path('inventory_add/',inventory_add,name='inventory_add'),
-    path('inventory_view_details/',inventory_view_details,name='inventory_view_details'),
+    path('inventory_view_details/<int:pk>/',inventory_view_details,name='inventory_view_details'),
 
 
 
