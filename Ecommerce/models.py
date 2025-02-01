@@ -189,3 +189,32 @@ class DeliveryZone(models.Model):
         
         
         
+class Feedback(models.Model):
+    
+    feedback_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("account.CustomUser", on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    description = models.TextField(max_length=255)
+    create_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = "Feedback"
+    
+    def __str__(self):
+        return f"{self.feedback_id}"
+    
+class Review(models.Model):
+    review_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("account.CustomUser", on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    review = models.CharField(max_length=255)
+    create_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = "Review"
+        
+    def __str__(self):
+        return f"{self.review_id}"
+    
+    

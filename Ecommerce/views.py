@@ -8,10 +8,12 @@ def is_admin_user(user):
     return user.is_staff  # or use is_superuser if you're referring to admin access
 
 
-
+# Home
 
 def home(request):
     return render(request,'Ecommerce/base.html')
+
+# Category View
 
 def category_list(request):
     categories = Category.objects.all()
@@ -20,7 +22,7 @@ def category_list(request):
 
 def category_add(request):
     context = {
-        'model_name': 'Category',
+        'model_name': 'Add Category',
         'list':'Ecommerce:category_list'
     }
     if request.method == 'POST':
@@ -43,7 +45,7 @@ def category_add(request):
 
 def category_view_details(request, pk):
     context = {
-        'model_name': 'Category',
+        'model_name': 'Update Category',
     }
     try:
         category = get_object_or_404(Category, pk=pk)
@@ -78,7 +80,7 @@ def category_view_details(request, pk):
 
 
 
-
+# Brand View
 
 def list_brand(request):
     brand=Brand.objects.all()
@@ -87,7 +89,7 @@ def list_brand(request):
 
 def add_brand(request):
     context={
-        'model_name':'Brand',
+        'model_name':'Add Brand',
         'list':'Ecommerce:list_brand',
     }
     if request.method == 'POST':
@@ -109,7 +111,7 @@ def add_brand(request):
 
 def brand_view_details(request,pk):
     context={
-        'model_name':'Brand',
+        'model_name':'Update Brand',
     }
     try:
         brand = get_object_or_404(Brand, pk = pk)
@@ -141,6 +143,8 @@ def brand_view_details(request,pk):
     return render(request, 'admin_dashboard/view_details.html',context)
 
 
+# Product View
+
 def product_list(request):
     products = Product.objects.all()
     return render(request,'admin_dashboard/product_list.html', {'products':products})
@@ -149,7 +153,7 @@ def product_list(request):
 
 def add_product(request):
     context = {
-        'model_name': 'Product',
+        'model_name': 'Add Product',
         'list':'Ecommerce:product_list'
     }
     if request.method == 'POST' and 'product_name' in request.POST:
@@ -175,7 +179,7 @@ def add_product(request):
 
 def product_view_details(request,pk):
     context = {
-        'model_name': 'Product',
+        'model_name': 'Update Product',
     }
     try:
         product = get_object_or_404(Product, pk=pk)
@@ -202,7 +206,7 @@ def product_view_details(request,pk):
     context['product']=product
     return render(request, 'admin_dashboard/view_details.html', context)
 
-
+# Product Variant View
 
 def product_variant_list(request):
     product_variant=ProductVariant.objects.all()
@@ -212,7 +216,7 @@ def product_variant_list(request):
 
 def product_variant_add(request):
     context={
-        'model_name':'Product Variant',
+        'model_name':'Add Product Variant',
         'list':'Ecommerce:product_variant_list',
     }
     if request.method == 'POST':
@@ -232,7 +236,7 @@ def product_variant_add(request):
 
 def product_variant_view_details(request,pk):
     context = {
-        'model_name': 'Product Variant',
+        'model_name': 'Update Product Variant',
     }
     try:
         product_variant = get_object_or_404(ProductVariant, pk=pk)
@@ -248,10 +252,10 @@ def product_variant_view_details(request,pk):
                 messages.success(request,"Product variant updated successfully")
                 return redirect('Ecommerce:product_variant_list')
             else:
-                messages.error(request,"Product update failed. Please correct the errors.")
+                messages.error(request,"Product variant update failed. Please correct the errors.")
         elif 'delete' in request.POST:
             product_variant.delete()
-            messages.success(request,"Product deleted successfully")
+            messages.success(request,"Product variant deleted successfully")
             return redirect('Ecommerce:product_variant_list')
         elif 'cancel' in request.POST:
             return redirect('Ecommerce:product_variant_list')
@@ -259,77 +263,16 @@ def product_variant_view_details(request,pk):
     context['product_variant']=product_variant
     return render(request, 'admin_dashboard/view_details.html', context)
 
-
+# Product Batch View
 
 def productbatch_list(request):
     productbatchies = ProductBatch.objects.all()
     return render(request, 'admin_dashboard/productbatch_list.html',{'productbatchies':productbatchies})
 
 
-    
-def inventory_list(request):
-    inventory=Inventory.objects.all()
-    return render(request,'admin_dashboard/inventory_list.html',{'inventory':inventory})
-
-def inventory_add(request):
-   context = {
-        'model_name' : 'Inventory',
-        'list' : 'Ecommerce:inventory_list',
-    }
-    
-   if request.method == "POST" and 'batch' in request.POST:
-        form = InventoryForm(request.POST)
-        
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Inventory added successfully")
-            return redirect('Ecommerce:inventory_list')
-        else:
-            messages.error(request,"Inventory add failed. Please correct the errors.")
-    
-   else:
-        form = InventoryForm()
-        
-   context['form'] = form
-    
-   return render(request,'admin_dashboard/add_form.html',context)
-
-
-def inventory_view_details(request,pk):
-    context={
-        'modeal_name':"Inventory",
-    }
-    try:
-        inventory=get_object_or_404(Inventory,pk=pk)
-    except Http404:
-        return render(request,'404.html',status=404)
-    
-    form=InventoryForm(instance=inventory)
-    if request.method=='POST':
-        if 'update' in request.POST:
-            form=InventoryForm(request.POST,instance=inventory)
-            if form.is_valid():
-                form.save()
-                messages.success(request,"Inventory updated successfully")
-                return redirect('Ecommerce:inventory_list')
-            else:
-                messages.error(request,"Inventory update failed. Please correct the errors.")
-        elif 'delete' in request.POST:
-            inventory.delete()
-            messages.success(request,"Inventory deleted successfully")
-            return redirect('Ecommerce:inventory_list')
-        elif 'cancel' in request.POST:
-            return redirect('Ecommerce:inventory_list')
-    context['form']=form
-    context['inventory']=inventory
-    return render(request, 'admin_dashboard/view_details.html', context)
-
-        
-
-
 def productbatch_add(request):
     context = {
-        'model_name' : 'Product Batch',
+        'model_name' : 'Add Product Batch',
         'list' : 'Ecommerce:productbatch_list',
     }
     
@@ -352,7 +295,7 @@ def productbatch_add(request):
 
 def productbatch_view_details(request, pk):
     context = {
-        'model_name':'Product Update'
+        'model_name':'Update Product Batch'
     }
     
     try:
@@ -386,6 +329,70 @@ def productbatch_view_details(request, pk):
     context['productbatch']=productbatch
     return render(request, 'admin_dashboard/view_details.html', context)
 
+   
+# Inventory View
+ 
+def inventory_list(request):
+    inventory=Inventory.objects.all()
+    return render(request,'admin_dashboard/inventory_list.html',{'inventory':inventory})
+
+def inventory_add(request):
+   context = {
+        'model_name' : 'Add Inventory',
+        'list' : 'Ecommerce:inventory_list',
+    }
+    
+   if request.method == "POST" and 'batch' in request.POST:
+        form = InventoryForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Inventory added successfully")
+            return redirect('Ecommerce:inventory_list')
+        else:
+            messages.error(request,"Inventory add failed. Please correct the errors.")
+    
+   else:
+        form = InventoryForm()
+        
+   context['form'] = form
+    
+   return render(request,'admin_dashboard/add_form.html',context)
+
+
+def inventory_view_details(request,pk):
+    context={
+        'modeal_name':"Update Inventory",
+    }
+    try:
+        inventory=get_object_or_404(Inventory,pk=pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form=InventoryForm(instance=inventory)
+    if request.method=='POST':
+        if 'update' in request.POST:
+            form=InventoryForm(request.POST,instance=inventory)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Inventory updated successfully")
+                return redirect('Ecommerce:inventory_list')
+            else:
+                messages.error(request,"Inventory update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            inventory.delete()
+            messages.success(request,"Inventory deleted successfully")
+            return redirect('Ecommerce:inventory_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:inventory_list')
+    context['form']=form
+    context['inventory']=inventory
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+        
+
+
+# Delivery View
 
 def deliveryzone_list(request):
     delivery_zone=DeliveryZone.objects.all()
@@ -394,7 +401,7 @@ def deliveryzone_list(request):
 def deliveryzone_add(request):
      
     context = {
-        'model_name': 'Delivery Zone',
+        'model_name': 'Add Delivery Zone',
         'list': 'Ecommerce:deliveryzone_list'
     }
 
@@ -425,7 +432,7 @@ def deliveryzone_add(request):
 
 def deliveryzone_view_details(request,pk):
     context = {
-        'model_name':'Delivery Zone'
+        'model_name':'Update Delivery Zone'
     }
     
     try:
@@ -459,6 +466,8 @@ def deliveryzone_view_details(request,pk):
     context['delivery_zone']=delivery_zone
     return render(request, 'admin_dashboard/view_details.html', context)
 
+# Order View
+
 def order_list(request):
     orders=Order.objects.all()
     return render(request,'admin_dashboard/order_list.html',{'orders':orders})
@@ -466,7 +475,7 @@ def order_list(request):
 
 def order_add(request):
     context = {
-        'model_name':"Order",
+        'model_name':"Add Order",
         'list':'Ecommerce:order_list'
     }
     
@@ -489,7 +498,7 @@ def order_add(request):
         
 def order_view_details(request, pk):
     context = {
-        'model_name':"Order",
+        'model_name':"Update Order",
         'list':'Ecommerce:order_list',
     }
     
@@ -520,13 +529,16 @@ def order_view_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
   
     
+    
+# Order Item View
+
 def orderitem_list(request):
     orderitems = Order_Item.objects.all()
     return render(request,'admin_dashboard/orderitem_list.html',{'orderitems':orderitems})
 
 def orderitem_add(request):
     context ={
-        'model_name':"Order Item",
+        'model_name':"Add Order Item",
         'list':'Ecommerce:orderitem_list',
     }
     
@@ -541,3 +553,149 @@ def orderitem_add(request):
         
     context['form']=form
     return render(request,'admin_dashboard/add_form.html',context)
+
+
+def orderitem_view_details(request, pk):
+    context = {
+        'model_name': 'Update OrderItem',
+    }
+    try:
+        orderitem = get_object_or_404(Order_Item, pk=pk)
+    except Http404:
+         return render(request, '404.html', status=404)
+        
+    form = OrderItemForm(instance=orderitem)
+    if request.method=='POST':
+        if 'update' in request.POST:
+            form=OrderItemForm(request.POST,instance=orderitem)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Ordet Item updated successfully")
+                return redirect('Ecommerce:orderitem_list')
+            else:
+                messages.error(request,"Order Item update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            orderitem.delete()
+            messages.success(request,"Order Item deleted successfully")
+            return redirect('Ecommerce:orderitem_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:orderitem_list')
+    context['form']=form
+    context['orderitem']=orderitem
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+
+# feedback view
+
+def feedback_list(request):
+    feedbacks = Feedback.objects.all()
+    return render(request,'admin_dashboard/feedback_list.html',{'feedbacks':feedbacks})
+
+def feedback_add(request):
+    context={
+        'model_name':'Add Feedback',
+        'list':'Ecommerce:feedback_list',
+    }
+     
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+                form.save()
+                messages.success(request, "Feedback added successfully.")
+                return redirect('Ecommerce:feedback_list')
+    else:
+        form = FeedbackForm()
+        
+    context['form']=form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+
+def feedback_view_details(request, pk):
+    context = {
+        'model_name': 'Update Feedback',
+    }
+    try:
+        feedback = get_object_or_404(Feedback, pk=pk)
+    except Http404:
+         return render(request, '404.html', status=404)
+        
+    form = FeedbackForm(instance=feedback)
+    if request.method=='POST':
+        if 'update' in request.POST:
+            form=FeedbackForm(request.POST,instance=feedback)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Feedback updated successfully")
+                return redirect('Ecommerce:feedback_list')
+            else:
+                messages.error(request,"feedback update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            feedback.delete()
+            messages.success(request,"Feedback deleted successfully")
+            return redirect('Ecommerce:feedback_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:feedback_list')
+    context['form']=form
+    context['feedback']=feedback
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+
+# Review View
+
+def review_list(request):
+    reviews = Review.objects.all()
+    return render(request,'admin_dashboard/review_list.html',{'reviews':reviews})
+
+def review_add(request):
+    
+    context = {
+        'model_name':'Add Review',
+        'list':'Ecommerce:review_list',
+    }
+    
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Review added successfully")
+            return redirect('Ecommerce:review_list')
+
+    else:
+        form = ReviewForm()
+    
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+
+            
+def review_view_details(request, pk):
+    context = {
+        'model_name':'Update Review',
+    }
+    
+    try:
+        review = get_object_or_404(Review,pk = pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form = ReviewForm(instance=review)
+    
+    if request.method == "POST":
+        
+        if 'update' in request.POST:
+            form=ReviewForm(request.POST,instance=review)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Review updated successfully")
+                return redirect('Ecommerce:review_list')
+            else:
+                messages.error(request,"Review update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            review.delete()
+            messages.success(request,"Review deleted successfully")
+            return redirect('Ecommerce:review_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:review_list')
+    context['form']=form
+    context['review']=review
+    return render(request, 'admin_dashboard/view_details.html', context)
