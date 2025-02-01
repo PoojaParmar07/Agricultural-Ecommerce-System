@@ -38,9 +38,9 @@ urlpatterns = [
 
 
     # Delivery Zone
-    path('delivery_list/',delivery_list,name='delivery_list'),
-    path('delivery_add',delivery_add,name='delivery_add'),
-    path('delivery_view_details/',delivery_view_details,name='delivery_view_details'),
+    path('deliveryzone_list/',deliveryzone_list,name='deliveryzone_list'),
+    path('deliveryzone_add',deliveryzone_add,name='deliveryzone_add'),
+    path('deliveryzone_view_details/',deliveryzone_view_details,name='deliveryzone_view_details'),
 
 
 ]

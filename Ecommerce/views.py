@@ -387,11 +387,11 @@ def productbatch_view_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
-def delivery_list(request):
+def deliveryzone_list(request):
     delivery_zone=DeliveryZone.objects.all()
     return render(request,'admin_dashboard/delivery_list.html',{'delivery_zone':delivery_zone})
 
-def delivery_add(request):
+def deliveryzone_add(request):
     context={
         'model_name':'Delivery Zone',
         'list':'Ecommerce:delivery_list',
@@ -417,5 +417,5 @@ def delivery_add(request):
             
             
             
-def delivery_view_details(request):
+def deliveryzone_view_details(request):
     pass
