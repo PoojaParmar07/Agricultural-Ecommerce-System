@@ -108,8 +108,7 @@ class InventoryForm(forms.ModelForm):
         
         
         
-from django import forms
-from .models import DeliveryZone
+
 
 class DeliveryZoneForm(forms.ModelForm):
     class Meta:
