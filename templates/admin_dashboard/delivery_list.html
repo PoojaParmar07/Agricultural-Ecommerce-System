@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Delivery Zone</span></div>
-            <form method="post" action="{% url 'Ecommerce:delivery_add' %}">
+            <form method="post" action="{% url 'Ecommerce:deliveryzone_add' %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
@@ -39,7 +39,7 @@
                         <td >{{ obj.pincode_start }}</td>
                         <td >{{ obj.pincode_end }}</td>
                         <td >{{ obj.delivery_charge }}</td>
-                       <td> <a href="{% url 'Ecommerce:inventory_view_details' pk=obj.inventory_id %}">View Details</a></td>
+                       <td> <a href="{% url 'Ecommerce:deliveryzone_view_details' pk=obj.inventory_id %}">View Details</a></td>
 
                         </tr>
                         
