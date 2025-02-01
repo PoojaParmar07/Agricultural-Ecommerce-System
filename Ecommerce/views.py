@@ -274,4 +274,5 @@ def inventory_list(request):
 
 
 def productbatch_add(request):
+    pass
     
