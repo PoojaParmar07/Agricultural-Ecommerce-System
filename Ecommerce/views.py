@@ -424,7 +424,40 @@ def deliveryzone_add(request):
 
 
 def deliveryzone_view_details(request,pk):
-    pass
+    context = {
+        'model_name':'Delivery Zone'
+    }
+    
+    try:
+        delivery_zone = get_object_or_404(DeliveryZone, pk=pk)
+    except Http404:
+         return render(request, '404.html', status=404)
+     
+    form = DeliveryZoneForm(instance=delivery_zone)
+    
+    if request.method == "POST":
+        
+        if 'update' in request.POST:
+            
+            form=DeliveryZoneForm(request.POST,instance=delivery_zone)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Delivery Zone updated successfully")
+                return redirect('Ecommerce:deliveryzone_list')
+            else:
+                messages.error(request,"Delivery Zone update failed. Please correct the errors.")
+                
+        elif 'delete' in request.POST:
+            delivery_zone.delete()
+            messages.success(request,"Product Batch deleted successfully")
+            return redirect('Ecommerce:deliveryzone_list')
+        
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:deliveryzone_list')
+        
+    context['form']=form
+    context['delivery_zone']=delivery_zone
+    return render(request, 'admin_dashboard/view_details.html', context)
 
 def order_list(request):
     orders=Order.objects.all()
