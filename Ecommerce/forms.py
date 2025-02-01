@@ -80,7 +80,7 @@ class ProductBatchForm(forms.ModelForm):
         
         widgets = {
             'product': forms.Select(attrs={'class': 'form-control', 'onchange': 'this.form.submit()'}),  # Auto-submit on change
-            'variant': forms.Select(attrs={'class': 'form-control'}),
+            'variant': forms.Select(attrs={'class': 'form-control' , 'onchange': 'this.form.submit()'}),
             'manufacture_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'batch_code': forms.TextInput(attrs={'class': 'form-control'}),

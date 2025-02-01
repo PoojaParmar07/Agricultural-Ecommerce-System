@@ -351,17 +351,38 @@ def productbatch_add(request):
     return render(request,'admin_dashboard/add_form.html',context)
 
 
-# def productbatch_view_details(request,pk):
-#     context = {
-#         'model_name':'Product Update'
-#     }
+def productbatch_view_details(request, pk):
+    context = {
+        'model_name':'Product Update'
+    }
     
-#     try:
-#         productbatch = get_object_or_404(Product, pk=pk)
-#     except Http404:
-#          return render(request, '404.html', status=404)
+    try:
+        productbatch = get_object_or_404(Product, pk=pk)
+    except Http404:
+         return render(request, '404.html', status=404)
      
-#     form = ProductBatchForm(instance=productbatch)
+    form = ProductBatchForm(instance=productbatch)
     
-#     if request.method == "POST":
+    if request.method == "POST":
         
+        if 'update' in request.POST:
+            
+            form=ProductBatchForm(request.POST,instance=productbatch)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Product Batch updated successfully")
+                return redirect('Ecommerce:productbatch_list')
+            else:
+                messages.error(request,"Product Batch update failed. Please correct the errors.")
+                
+        elif 'delete' in request.POST:
+            productbatch.delete()
+            messages.success(request,"Product Batch deleted successfully")
+            return redirect('Ecommerce:productbatch_list')
+        
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:productbatch_list')
+        
+    context['form']=form
+    context['productbatch']=productbatch
+    return render(request, 'admin_dashboard/view_details.html', context)

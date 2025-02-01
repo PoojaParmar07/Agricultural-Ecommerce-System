@@ -29,6 +29,7 @@ urlpatterns = [
     # Product Batch
     path('productbatch_list/',productbatch_list,name='productbatch_list'),
     path('productbatch_add/',productbatch_add,name='productbatch_add'),
+    path('productbatch_view_details/<int:pk>/',productbatch_view_details,name='productbatch_view_details'),
 
     # Inventory
     path('inventory_list/',inventory_list,name='inventory_list'),

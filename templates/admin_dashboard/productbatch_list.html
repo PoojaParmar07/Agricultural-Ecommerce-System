@@ -23,7 +23,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Variant Id</th>
+                    <th>Variant</th>
                     <th>Manufacture Date</th>
                     <th>Expiry Date</th>
                     <th>Batch Code</th>
@@ -39,7 +39,7 @@
                     <td>{{ productbatch.expiry_date }}</td>
                     <td>{{ productbatch.batch_code }}</td>
                     <td>
-                        <a href="#" >View Details</a>
+                        <a href="{% url 'Ecommerce:productbatch_view_details' productbatch.pk %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

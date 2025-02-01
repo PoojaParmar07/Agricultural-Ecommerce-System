@@ -63,7 +63,7 @@ class ProductVariant(models.Model):
 
 class ProductBatch(models.Model):
     batch_id = models.AutoField(primary_key=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
     variant = models.ForeignKey('ProductVariant',on_delete=models.CASCADE)
     manufacture_date = models.DateField()
     expiry_date = models.DateField()
