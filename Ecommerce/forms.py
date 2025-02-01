@@ -145,3 +145,15 @@ class OrderForm(forms.ModelForm):
             'delivery_charges': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
         
+        
+class OrderItemForm(forms.ModelForm):
+    class Meta:
+        model = Order_Item
+        fields = ['order', 'batch', 'variant', 'quantity', 'price']
+        widgets = {
+            'order': forms.Select(),
+            'batch': forms.Select(),
+            'variant': forms.Select(),
+            'quantity': forms.NumberInput(attrs={'min': 1}),
+            'price': forms.NumberInput(attrs={'step': '0.01'}),
+        }

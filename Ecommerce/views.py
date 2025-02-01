@@ -523,3 +523,21 @@ def order_view_details(request, pk):
 def orderitem_list(request):
     orderitems = Order_Item.objects.all()
     return render(request,'admin_dashboard/orderitem_list.html',{'orderitems':orderitems})
+
+def orderitem_add(request):
+    context ={
+        'model_name':"Order Item",
+        'list':'Ecommerce:orderitem_list',
+    }
+    
+    if request.method == 'POST':
+        form = OrderItemForm(request.POST)
+        if form.is_valid():
+                form.save()
+                messages.success(request, "Order Item added successfully.")
+                return redirect('Ecommerce:orderitem_list')
+    else:
+        form = OrderItemForm()
+        
+    context['form']=form
+    return render(request,'admin_dashboard/add_form.html',context)
