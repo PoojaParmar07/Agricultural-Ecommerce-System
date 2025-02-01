@@ -89,6 +89,10 @@ class Inventory(models.Model):
     class Meta:
         db_table = 'Inventory'
         
+    def __str__(self):
+        return f"{self.quantity}"
+
+        
 
 class Order(models.Model):
     
@@ -121,6 +125,9 @@ class Order(models.Model):
     
     class Meta:
         db_table = 'Order'
+        
+    def __str__(self):
+        return f"{self.order_id}"
 
 
 class Order_Item(models.Model):
@@ -135,6 +142,8 @@ class Order_Item(models.Model):
     class Meta:
         db_table = 'OrderItem'
     
+    def __str__(self):
+        return f"{self.order_item_id}"
     
 class Payment(models.Model):
     
@@ -158,6 +167,8 @@ class Payment(models.Model):
     class Meta:
         db_table='Payment'
         
+    def __str__(self):
+        return f"{self.payment_id}"
         
 class DeliveryZone(models.Model):
     zone_name = models.CharField(max_length=100)  # Name of the zone (e.g., Ahmedabad, Surat)
@@ -171,6 +182,10 @@ class DeliveryZone(models.Model):
 
     class Meta:
         db_table = "DeliveryZone"
+        
+    def __str__(self):
+        return f"{self.zone_name}"
+    
         
         
         
