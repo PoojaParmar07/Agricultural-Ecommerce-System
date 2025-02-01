@@ -82,7 +82,7 @@ class Inventory(models.Model):
     batch = models.ForeignKey("ProductBatch", on_delete=models.CASCADE)
     quatity = models.IntegerField(default=0)
     purchase_price = models.DecimalField(max_digits=5, decimal_places=2)
-    sales = models.DecimalField(max_digits=5, decimal_places=2)
+    sales_price = models.DecimalField(max_digits=5, decimal_places=2)
     create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
