@@ -264,10 +264,14 @@ def product_variant_view_details(request,pk):
 
 def productbatch_list(request):
     productbatchies = ProductBatch.objects.all()
-    return render(request, 'admin_dashboard/view_details.html',{'productbatch_list':productbatchies})
+    return render(request, 'admin_dashboard/productbatch_list.html',{'productbatch_list':productbatchies})
 
 
     
 def inventory_list(request):
     inventory=Inventory.objects.all()
     return render(request,'admin_dashboard/inventory_list.html',{'inventory':inventory})
+
+
+def productbatch_add(request):
+    
