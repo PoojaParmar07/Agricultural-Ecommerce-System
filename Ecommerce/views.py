@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import Http404
 from django.contrib import messages
-from .models import Category, Brand, Product,ProductVariant
+from .models import Category, Brand, Product,ProductVariant, ProductBatch
 from .forms import BrandForm, CategoryForm, ProductForm,ProductVariantForm
 
 def is_admin_user(user):
@@ -262,4 +262,6 @@ def product_variant_view_details(request,pk):
 
 
 
-
+def productbatch_list(request):
+    productbatch_list = ProductBatch.objects.all()
+    
