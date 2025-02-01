@@ -70,6 +70,10 @@ class ProductBatch(models.Model):
     class Meta:
         db_table = 'ProductBatch'
         
+        
+    def __str__(self):
+        return self.batch_code
+        
 class Inventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     batch = models.ForeignKey("ProductBatch", on_delete=models.CASCADE)

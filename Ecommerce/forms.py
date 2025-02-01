@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Category,Brand,ProductVariant,Product
+from .models import Category,Brand,ProductVariant,Product, ProductBatch
 
 
 
@@ -69,4 +69,17 @@ class ProductForm(forms.ModelForm):
                 'max': 5,  # You can set an appropriate maximum value
             }),
 
+        }
+        
+        
+class ProductBatchForm(forms.ModelForm):
+    class Meta:
+        model = ProductBatch
+        fields = ['variant', 'manufacture_date', 'expiry_date', 'batch_code']
+
+        widgets = {
+            'variant': forms.Select(attrs={'class': 'form-control'}),
+            'manufacture_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'expiry_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'batch_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Batch Code'}),
         }
