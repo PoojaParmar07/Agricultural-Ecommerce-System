@@ -31,7 +31,8 @@ urlpatterns = [
     path('productbatch_add/',productbatch_add,name='productbatch_add'),
 
     # Inventory
-    path('inventory_list',inventory_list,name='inventory_list'),
+    path('inventory_list/',inventory_list,name='inventory_list'),
+    path('inventory_add/',inventory_add,name='inventory_add'),
 
 
 
