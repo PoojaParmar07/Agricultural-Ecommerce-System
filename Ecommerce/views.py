@@ -256,7 +256,7 @@ def product_variant_view_details(request,pk):
         elif 'cancel' in request.POST:
             return redirect('Ecommerce:product_variant_list')
     context['form']=form
-    context['product']=product_variant
+    context['product_variant']=product_variant
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
@@ -294,6 +294,38 @@ def inventory_add(request):
    context['form'] = form
     
    return render(request,'admin_dashboard/add_form.html',context)
+
+
+def inventory_view_details(request,pk):
+    context={
+        'modeal_name':"Inventory",
+    }
+    try:
+        inventory=get_object_or_404(Inventory,pk=pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form=InventoryForm(instance=inventory)
+    if request.method=='POST':
+        if 'update' in request.POST:
+            form=InventoryForm(request.POST,instance=inventory)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Inventory updated successfully")
+                return redirect('Ecommerce:inventory_list')
+            else:
+                messages.error(request,"Inventory update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            inventory.delete()
+            messages.success(request,"Inventory deleted successfully")
+            return redirect('Ecommerce:inventory_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:inventory_list')
+    context['form']=form
+    context['inventory']=inventory
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+        
 
 
 def productbatch_add(request):
