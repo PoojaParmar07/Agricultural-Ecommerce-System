@@ -50,6 +50,19 @@ urlpatterns = [
     # Order Item
     path('orderitem_list/',orderitem_list,name='orderitem_list'),
     path('orderitem_add/',orderitem_add,name='orderitem_add'),
+    path('orderitem_view_details/<int:pk>/',orderitem_view_details,name='orderitem_view_details'),
+    
+    
+    # Feedback
+    path('feedback_list/',feedback_list,name='feedback_list'),
+    path('feedback_add/',feedback_add,name='feedback_add'),
+    path('feedback_view_details/<int:pk>/',feedback_view_details,name='feedback_view_details'),
+    
+    # Review
+    path('review_list/',review_list,name='review_list'),
+    path('review_add/',review_add,name='review_add'),
+    path('review_view_details/<int:pk>/',review_view_details,name='review_view_details'),
+    
 ]
 
 

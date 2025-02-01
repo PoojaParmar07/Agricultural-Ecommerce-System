@@ -157,3 +157,27 @@ class OrderItemForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={'min': 1}),
             'price': forms.NumberInput(attrs={'step': '0.01'}),
         }
+        
+        
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['user', 'product', 'description']
+        widgets = {
+            'user': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select User'}),
+            'product': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select Product'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Write your feedback here...'}),
+        }
+        
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['user', 'product', 'rating', 'review']
+        widgets = {
+            'user': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select User'}),
+            'product': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Select Product'}),
+            'rating': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 5, 'placeholder': 'Rating (1-5)'}),
+            'review': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Write your review here...'}),
+        }
+

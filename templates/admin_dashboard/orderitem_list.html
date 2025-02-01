@@ -42,7 +42,7 @@
                     <td>{{ order.price }}</td>
                     
                     <td>
-                        <a href="#" >View Details</a>
+                        <a href="{% url 'Ecommerce:orderitem_view_details' order.pk %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}
