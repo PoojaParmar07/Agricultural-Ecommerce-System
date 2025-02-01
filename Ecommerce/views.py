@@ -385,3 +385,13 @@ def productbatch_view_details(request, pk):
     context['form']=form
     context['productbatch']=productbatch
     return render(request, 'admin_dashboard/view_details.html', context)
+
+
+def delivery_list(request):
+    pass
+
+def delivery_add(request):
+    pass
+
+def delivery_view_details(request):
+    pass

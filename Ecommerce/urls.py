@@ -37,6 +37,11 @@ urlpatterns = [
     path('inventory_view_details/<int:pk>/',inventory_view_details,name='inventory_view_details'),
 
 
+    # Delivery Zone
+    path('delivery_list/',delivery_list,name='delivery_list'),
+    path('delivery_add',delivery_add,name='delivery_add'),
+    path('delivery_view_details/',delivery_view_details,name='delivery_view_details'),
+
 
 ]
 
