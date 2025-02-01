@@ -40,7 +40,11 @@
                         <td >{{ product.product_name }}</td>
                         <td >{{ product.category }}</td>
                         <td >{{ product.description }}</td>
-                        <td >{{ product.product_image }}</td>
+                        <td > {% if product.product_image %}
+                            <img src="{{ product.product_image.url }}" alt="Product Image" width="100">
+                        {% else %}
+                            No Image
+                        {% endif %}</td>
                         <td >{{ product.min_qty }}</td>
                         <td >{{ product.max_qty }}</td>
                         <td ><a href="{% url 'Ecommerce:product_view_details' product.product_id %}">View Details</a></td>
