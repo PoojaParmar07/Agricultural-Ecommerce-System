@@ -3,6 +3,7 @@ from django.http import Http404
 from django.contrib import messages
 from .models import Category, Brand, Product,ProductVariant
 from .forms import BrandForm, CategoryForm, ProductForm,ProductVariantForm
+
 def is_admin_user(user):
     return user.is_staff  # or use is_superuser if you're referring to admin access
 
