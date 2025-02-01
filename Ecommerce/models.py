@@ -190,7 +190,6 @@ class DeliveryZone(models.Model):
         
         
 class Feedback(models.Model):
-    
     feedback_id = models.AutoField(primary_key=True)
     user = models.ForeignKey("account.CustomUser", on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
