@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import Http404
 from django.contrib import messages
-from .models import Category, Brand, Product,ProductVariant, ProductBatch,Inventory
-from .forms import BrandForm, CategoryForm, ProductForm,ProductVariantForm,ProductBatchForm,InventoryForm
+from .models import *
+from .forms import *
 
 def is_admin_user(user):
     return user.is_staff  # or use is_superuser if you're referring to admin access
@@ -388,7 +388,8 @@ def productbatch_view_details(request, pk):
 
 
 def delivery_list(request):
-    pass
+    delivery_zone=DeliveryZone.objects.all()
+    return render(request,'admin_dashboard/delivery_list.html',{'delivery_zone':delivery_zone})
 
 def delivery_add(request):
     pass
