@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Category,Brand,ProductVariant,Product, ProductBatch
+from .models import Category,Brand,ProductVariant,Product, ProductBatch,Inventory
 
 
 
@@ -82,4 +82,18 @@ class ProductBatchForm(forms.ModelForm):
             'manufacture_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'expiry_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'batch_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Batch Code'}),
+        }
+        
+        
+
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        model = Inventory
+        fields = ['batch', 'quatity', 'purchase_price', 'sales_price']
+        
+        widgets = {
+            'batch': forms.Select(attrs={'class': 'form-control'}),
+            'quatity': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
+            'purchase_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'sales_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
