@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Category,Brand,ProductVariant,Product, ProductBatch,Inventory
+from .models import *
 
 
 
@@ -105,3 +105,24 @@ class InventoryForm(forms.ModelForm):
             'purchase_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'sales_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
+        
+        
+        
+from django import forms
+from .models import DeliveryZone
+
+class DeliveryZoneForm(forms.ModelForm):
+    class Meta:
+        model = DeliveryZone
+        fields = ['zone_name', 'pincode_start', 'pincode_end', 'delivery_charge']
+        
+        widgets = {
+            'zone_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'pincode_start': forms.NumberInput(attrs={'class': 'form-control'}),
+            'pincode_end': forms.NumberInput(attrs={'class': 'form-control'}),
+            'delivery_charge': forms.NumberInput(attrs={
+                'class': 'form-control','step': '0.01'}),
+        }
+
+        
+        
