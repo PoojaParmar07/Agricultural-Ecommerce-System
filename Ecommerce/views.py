@@ -423,7 +423,7 @@ def deliveryzone_add(request):
     return render(request, 'admin_dashboard/add_form.html', context)
 
 
-def deliveryzone_view_details(request):
+def deliveryzone_view_details(request,pk):
     pass
 
 def order_list(request):

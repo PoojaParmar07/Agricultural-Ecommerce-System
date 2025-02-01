@@ -40,7 +40,7 @@ urlpatterns = [
     # Delivery Zone
     path('deliveryzone_list/',deliveryzone_list,name='deliveryzone_list'),
     path('deliveryzone_add',deliveryzone_add,name='deliveryzone_add'),
-    path('deliveryzone_view_details/',deliveryzone_view_details,name='deliveryzone_view_details'),
+    path('deliveryzone_view_details/<int:pk>',deliveryzone_view_details,name='deliveryzone_view_details'),
 
     # Order
     path('order_list/',order_list,name='order_list'),
