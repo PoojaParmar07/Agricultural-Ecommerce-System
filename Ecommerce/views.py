@@ -356,7 +356,7 @@ def productbatch_view_details(request, pk):
     }
     
     try:
-        productbatch = get_object_or_404(Product, pk=pk)
+        productbatch = get_object_or_404(ProductBatch, pk=pk)
     except Http404:
          return render(request, '404.html', status=404)
      
