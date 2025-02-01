@@ -351,7 +351,17 @@ def productbatch_add(request):
     return render(request,'admin_dashboard/add_form.html',context)
 
 
-# def productbatch_view_details(request):
+# def productbatch_view_details(request,pk):
 #     context = {
 #         'model_name':'Product Update'
 #     }
+    
+#     try:
+#         productbatch = get_object_or_404(Product, pk=pk)
+#     except Http404:
+#          return render(request, '404.html', status=404)
+     
+#     form = ProductBatchForm(instance=productbatch)
+    
+#     if request.method == "POST":
+        
