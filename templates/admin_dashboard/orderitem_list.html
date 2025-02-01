@@ -32,9 +32,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for order in orders %}
+                {% for order in orderitems %}
                 <tr>
-                    <td>{{ order.orderitem_id }}</td>
+                    <td>{{ order.order_item_id }}</td>
                     <td>{{ order.order }}</td>
                     <td>{{ order.batch }}</td>
                     <td>{{ order.variant }}</td>
