@@ -42,6 +42,9 @@ urlpatterns = [
     path('delivery_add',delivery_add,name='delivery_add'),
     path('delivery_view_details/',delivery_view_details,name='delivery_view_details'),
 
+    # Order
+    path('order_list/',order_list,name='order_list'),
+    path('order_add/',order_add,name='order_add'),
 
 ]
 

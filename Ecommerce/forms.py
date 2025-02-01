@@ -123,5 +123,25 @@ class DeliveryZoneForm(forms.ModelForm):
                 'class': 'form-control','step': '0.01'}),
         }
 
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = [
+            'user', 'order_user_type', 'total_price', 'discounted_price', 
+            'order_status', 'state', 'city', 'address', 'pincode', 'delivery_charges'
+        ]
         
+        widgets = {
+            'user': forms.Select(attrs={'class': 'form-control'}),
+            'order_user_type': forms.Select(attrs={'class': 'form-control'}),
+            'total_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'discounted_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'order_status': forms.Select(attrs={'class': 'form-control'}),
+            'state': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'pincode': forms.TextInput(attrs={'class': 'form-control'}),
+            'delivery_charges': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }
         

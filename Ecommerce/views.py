@@ -396,3 +396,34 @@ def delivery_add(request):
 
 def delivery_view_details(request):
     pass
+
+def order_list(request):
+    orders=Order.objects.all()
+    return render(request,'admin_dashboard/order_list.html',{'orders':orders})
+
+
+def order_add(request):
+    context = {
+        'model_name':"Order",
+        'list':'Ecommerce:order_list'
+    }
+    
+    if request.method == "POST" and 'state' in request.POST:
+        form = OrderForm(request.POST)
+        
+        if form.is_valid():
+            
+            form.save()
+            messages.success(request,"Order added successfully")
+            return redirect('Ecommerce:order_list')
+        else:
+            messages.error(request,"Order add failed. Please correct the errors.")
+    
+    else:
+        form = OrderForm()
+        
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
+        
+        
+        
