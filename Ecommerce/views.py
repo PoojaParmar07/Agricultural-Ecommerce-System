@@ -392,7 +392,36 @@ def deliveryzone_list(request):
     return render(request,'admin_dashboard/delivery_list.html',{'delivery_zone':delivery_zone})
 
 def deliveryzone_add(request):
-    pass
+     
+    context = {
+        'model_name': 'Delivery Zone',
+        'list': 'Ecommerce:deliveryzone_list'
+    }
+
+    if request.method == 'POST' and 'zone_name' in request.POST:
+        form = DeliveryZoneForm(request.POST)
+
+        if form.is_valid():
+            zone_name = form.cleaned_data['zone_name']
+            
+            # Check if the delivery zone already exists
+            if DeliveryZone.objects.filter(zone_name=zone_name).exists():
+                messages.error(request, "Delivery Zone already exists")
+            else:
+                form.save()
+                messages.success(request, "Delivery Zone added successfully")
+                return redirect('Ecommerce:deliveryzone_list')  # Redirect to correct list
+
+        else:
+            messages.error(request, "Not valid")
+            print(form.errors)  # Debugging purpose
+    
+    else:
+        form = DeliveryZoneForm()
+
+    context['form'] = form
+    return render(request, 'admin_dashboard/add_form.html', context)
+
 
 def deliveryzone_view_details(request):
     pass
