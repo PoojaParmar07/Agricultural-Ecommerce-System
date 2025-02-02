@@ -292,7 +292,7 @@ class WishlistItem(models.Model):
         unique_together = (('wishlist', 'product_batch', 'product_variant'),)
         
     def __str__(self):
-        return f"WishlistItem: {self.product_variant}"
+        return f"WishlistItem: {str(self.product_variant)}"
     
     
     

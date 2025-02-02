@@ -14,6 +14,6 @@ urlpatterns = [
     # Post's Comment
     path('post_comment_list/',post_comment_list,name='post_comment_list'),
     path('post_comment_add/',post_comment_add,name='post_comment_add'),
-    path('post_comment_view_details/',post_comment_view_details,name='post_comment_view_details'), 
+    path('post_comment_view_details/<int:pk>/',post_comment_view_details,name='post_comment_view_details'), 
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

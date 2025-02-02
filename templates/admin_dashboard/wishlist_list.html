@@ -11,11 +11,11 @@
     <section>
       <div class="section-header">
         <div class="field_name">
-          <span>Post Comment</span>
+          <span>Wishlist</span>
         </div>
 
         
-        <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
+        <form method="post" action="{% url 'Ecommerce:wishlist_add' %}">
           {% csrf_token %}
           <button type="submit" class="create-btn">Create New</button>
         </form>
@@ -28,28 +28,16 @@
           <tr>
             <th>Id</th>
             <th>User</th>
-            <th>Post</th>
-            <th>Parent Comment Id</th>
-            <th>Comment Text</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {% for comment in post_comment %}
+          {% for obj in wishlist %}
             <tr>
-              <td>{{ comment.comment_id }}</td>
-              <td>{{ comment.user }}</td>
-              <td>{{ comment.post }}</td>
+              <td>{{ obj.wishlist_id }}</td>
+              <td>{{ obj.user }}</td>
               <td>
-                {% if comment.parent_comment %}
-                  {{ comment.parent_comment.comment_id }}
-                {% else %}
-                  None
-                {% endif %}
-              </td>
-              <td>{{ comment.comment_text }}</td>
-              <td>
-                <a href="{% url 'socialmedia:post_comment_view_details' comment.comment_id %}">View Details</a>
+                <a href="{% url 'Ecommerce:wishlist_view_details' obj.wishlist_id %}">View Details</a>
               </td>
             </tr>
           {% endfor %}
