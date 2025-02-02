@@ -72,6 +72,12 @@ urlpatterns = [
     path('wishlist_add/',wishlist_add,name='wishlist_add'),
     path('wishlist_view_details/<int:pk>',wishlist_view_details,name='wishlist_view_details'),
     
+    
+    # WishlistItem 
+    path('wishlist_item_list/',wishlist_item_list,name='wishlist_item_list'),
+    path('wishlist_item_add/',wishlist_item_add,name='wishlist_item_add'),
+    path('wishlist_item_view_details/<int:pk>',wishlist_item_view_details,name='wishlist_item_view_details'),
+    
 ]
 
 

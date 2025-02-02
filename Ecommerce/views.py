@@ -816,5 +816,62 @@ def wishlist_view_details(request,pk):
         elif 'cancel' in request.POST:
             return redirect('Ecommerce:wishlist_list')
     context['form']=form
-    context['review']=wishlist
+    context['wishlist']=wishlist
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+
+
+def wishlist_item_list(request):
+    wishlist_item=WishlistItem.objects.all()
+    return render(request,'admin_dashboard/wishlist_item_list.html',{'wishlist_item':wishlist_item})
+
+def wishlist_item_add(request):
+    context = {
+        'model_name':'Wishlist Item',
+        'list':'Ecommerce:wishlist_item_list',
+    }
+    
+    if request.method == "POST":
+        form = WishlistItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Wishlist Item added successfully")
+            return redirect('Ecommerce:wishlist_item_list')
+
+    else:
+        form = WishlistItemForm()
+    
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+def wishlist_item_view_details(request,pk):
+    context = {
+        'model_name':' Wishlist Item',
+    }
+    
+    try:
+        wishlist_item = get_object_or_404(WishlistItem,pk=pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form = WishlistItemForm(instance=wishlist_item)
+    
+    if request.method == "POST":
+        
+        if 'update' in request.POST:
+            form=WishlistItemForm(request.POST,instance=wishlist_item)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Wishlist Item updated successfully")
+                return redirect('Ecommerce:wishlist_item_list')
+            else:
+                messages.error(request,"Wishlist Item update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            wishlist_item.delete()
+            messages.success(request,"Wishlist Item deleted successfully")
+            return redirect('Ecommerce:wishlist_item_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:wishlist_item_list')
+    context['form']=form
+    context['wishlist_item']=wishlist_item
     return render(request, 'admin_dashboard/view_details.html', context)

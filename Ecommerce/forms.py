@@ -214,3 +214,16 @@ class WishlistForm(forms.ModelForm):
         fields= '__all__'
         
         
+class WishlistItemForm(forms.ModelForm):
+    class Meta:
+        model=WishlistItem
+        fields='__all__'
+        
+        widgets = {
+            'wishlist': forms.Select(attrs={'class': 'form-control'}),
+            'product_batch': forms.Select(attrs={'class': 'form-control'}),
+            'product_variant': forms.Select(attrs={'class': 'form-control'}),
+            'added_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }
+        
+        
