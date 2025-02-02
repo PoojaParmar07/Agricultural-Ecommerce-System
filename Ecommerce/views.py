@@ -475,7 +475,7 @@ def order_list(request):
 
 def order_add(request):
     context = {
-        'model_name':"Add Order",
+        'model_name':"Order",
         'list':'Ecommerce:order_list'
     }
     
@@ -498,7 +498,7 @@ def order_add(request):
         
 def order_view_details(request, pk):
     context = {
-        'model_name':"Update Order",
+        'model_name':"Order",
         'list':'Ecommerce:order_list',
     }
     
