@@ -67,6 +67,11 @@ urlpatterns = [
     path('review_add/',review_add,name='review_add'),
     path('review_view_details/<int:pk>/',review_view_details,name='review_view_details'),
     
+    # Wishlist
+    path('wishlist_list/',wishlist_list,name='wishlist_list'),
+    path('wishlist_add/',wishlist_add,name='wishlist_add'),
+    path('wishlist_view_details/<int:pk>',wishlist_view_details,name='wishlist_view_details'),
+    
 ]
 
 
