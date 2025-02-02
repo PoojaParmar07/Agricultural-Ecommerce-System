@@ -35,6 +35,12 @@ def membership_plan_list(request):
 @login_required
 @user_passes_test(is_admin_user) 
 def membership_plan_add(request):
+    
+    context = {
+        'model_name' : "Add Membership Plan",
+        'list':'membership:membership_plan_list',
+    }
+    
     if request.method == 'POST':
         form = MembershipplanForm(request.POST)
         if form.is_valid():
@@ -47,8 +53,9 @@ def membership_plan_add(request):
                 return redirect('membership:membership_plan_list')
     else:
         form = MembershipplanForm()
-        
-    return render(request,'admin_dashboard/membership_plan_add.html',{'form' : form})
+       
+    context['form'] = form 
+    return render(request,'admin_dashboard/add_form.html',context)
 
 
 
@@ -58,6 +65,11 @@ def membership_plan_add(request):
 @login_required
 @user_passes_test(is_admin_user) 
 def membership_view_details(request, pk):
+    
+    context = {
+        'model_name': 'Update Membership Plan'
+    }
+    
     try:
         plan = get_object_or_404(Membership_plan, pk = pk)
     except Http404:
@@ -84,7 +96,9 @@ def membership_view_details(request, pk):
         elif 'cancel' in request.POST:
             return redirect('membership:membership_plan_list')
         
-    return render(request, 'admin_dashboard/membership_view_details.html',{"form":form, 'plan':plan})
+    context['form'] = form
+    context['plan'] = plan
+    return render(request, 'admin_dashboard/view_details.html',context)
 
 
 
@@ -102,6 +116,12 @@ def user_membership(request):
 @login_required
 @user_passes_test(is_admin_user)  # Ensure only admin users can access
 def add_user_membership(request):
+    
+    context = {
+        'model_name' : "Add User Member",
+        'list':'membership:membership_plan_list',
+    }
+    
     if request.method == "POST" and 'plan' in request.POST:
         form = UserMembershipForm(request.POST)
         if form.is_valid():
