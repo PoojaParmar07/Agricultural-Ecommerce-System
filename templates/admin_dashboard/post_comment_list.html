@@ -1,51 +1,72 @@
 {% extends 'admin_dashboard/index.html' %}
 {% load static %}
 {% block content %}
-<link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/list_form.css' %}">
+  <link rel="icon" type="image/x-icon" href="/media/company_logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/list_form.css' %}" />
 
-<div class="content">
+  <div class="content">
     <section>
-        <div class="section-header">
-            <div class="field_name"><span>Post Comment</span></div>
-            <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
-                {% csrf_token %}
-                <button type="submit" class="create-btn">Create New</button>
-            </form>
+      <div class="section-header">
+        <div class="field_name">
+          <span>Post Comment</span>
         </div>
+        {% comment %} <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
+          {% csrf_token %}
+          <button type="submit" class="create-btn">Create New</button>
+        </form> {% endcomment %}
+        {% for post in posts %}
+    <p>Post Title: {{ post.title }}</p>  
+    <p>Post ID: {{ post.post_id }}</p>  
+
+    {% if post.post_id %}
+        <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
+            {% csrf_token %}
+            <button type="submit">Add Comment</button>
+        </form>
+    {% else %}
+        <p>No Post ID Found</p>
+    {% endif %}
+{% endfor %}
+      </div>
     </section>
 
     <section class="content-body">
-        <table class="list-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>user</th>
-                    <th>Post</th>
-                    <th>Parent Comment Id</th>
-                    <th>Comment Text</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for comment in post_comment %}
-                    <tr>
-                        <!-- Product Details (spanning over variants) -->
-                        <td >{{ comment.comment_id }}</td>
-                        <td >{{ comment.user }}</td>
-                        <td >{{ comment.post }}</td>
-                        <td >{% if comment.parent_comment %} {{ comment.parent_comment.comment_id }} {% else %} None {% endif %}</td>
-                        <td >{{ comment.comment_text }}</td>
-                       <td> <a href="{% url 'socialmedia:post_comment_view_details' comment=comment.id %}">View Details</a></td>
-
-                        </tr>
-                        
-                {% endfor %}
-            </tbody>
-        </table>
+      <table class="list-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>user</th>
+            <th>Post</th>
+            <th>Parent Comment Id</th>
+            <th>Comment Text</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for comment in post_comment %}
+            <tr>
+              <!-- Product Details (spanning over variants) -->
+              <td>{{ comment.comment_id }}</td>
+              <td>{{ comment.user }}</td>
+              <td>{{ comment.post }}</td>
+              <td>
+                {% if comment.parent_comment %}
+                  {{ comment.parent_comment.comment_id }}
+                {% else %}
+                  None
+                {% endif %}
+              </td>
+              <td>{{ comment.comment_text }}</td>
+              <td>
+                <a href="{% url 'socialmedia:post_comment_view_details' comment.comment_id %}">View Details</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </section>
-</div>
+  </div>
 {% endblock %}

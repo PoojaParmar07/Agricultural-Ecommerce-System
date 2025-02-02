@@ -33,7 +33,7 @@ class PostComment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'PostComment'
+        db_table = 'PostComment'        
 
     def __str__(self):
         return f"Comment {self.comment_id} by {self.user.username}"
