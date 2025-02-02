@@ -37,7 +37,7 @@ def membership_plan_list(request):
 def membership_plan_add(request):
     
     context = {
-        'model_name' : "Add Membership Plan",
+        'model_name' : "Membership Plan",
         'list':'membership:membership_plan_list',
     }
     
@@ -67,7 +67,7 @@ def membership_plan_add(request):
 def membership_view_details(request, pk):
     
     context = {
-        'model_name': 'Update Membership Plan'
+        'model_name': 'Membership Plan'
     }
     
     try:
@@ -118,8 +118,8 @@ def user_membership(request):
 def add_user_membership(request):
     
     context = {
-        'model_name' : "Add User Member",
-        'list':'membership:membership_plan_list',
+        'model_name' : "User Member",
+        'list':'membership:user_membership',
     }
     
     if request.method == "POST" and 'plan' in request.POST:
@@ -151,13 +151,18 @@ def add_user_membership(request):
     else:
         form = UserMembershipForm()
 
-    return render(request, 'admin_dashboard/add_user_membership.html', {'form': form})
+    return render(request, 'admin_dashboard/add_form.html', {'form': form})
 
 
 
     
     
 def user_membership_details(request, pk):
+    
+    context = {
+        'model_name': 'User Membership'
+    }
+    
     try:
         # Fetch the category or raise Http404 if not found
         membership = get_object_or_404(User_membership, pk=pk)
@@ -184,7 +189,9 @@ def user_membership_details(request, pk):
         elif 'cancel' in request.POST:  # Cancel action
             return redirect('membership:user_membership')
 
-    return render(request, 'admin_dashboard/user_membership_details.html', {'form': form, 'membership': membership})
+    context['form'] = form
+    context['membership'] = membership
+    return render(request, 'admin_dashboard/view_details.html', {'form': form, 'membership': membership})
 
 
         
