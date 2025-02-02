@@ -87,13 +87,10 @@ def post_comment_list(request):
     post_comment=PostComment.objects.all()
     return render(request,'admin_dashboard/post_comment_list.html',{'post_comment':post_comment})
 
-
- 	
-
 def post_comment_add(request):
     
     context = {
-        'model_name':'Add Review',
+        'model_name':'Review',
         'list':'Ecommerce:post_comment_list',
     }
     
