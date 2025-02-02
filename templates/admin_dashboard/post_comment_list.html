@@ -13,13 +13,43 @@
         <div class="field_name">
           <span>Post Comment</span>
         </div>
+
         
         <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
           {% csrf_token %}
           <button type="submit" class="create-btn">Create New</button>
         </form>
         
+
+        <p>Post Title: {{ post.title }}</p>
+        <p>Post ID: {{ post.post_id }}</p>
         
+        {% if post %}
+            <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
+                {% csrf_token %}
+                <button type="submit">Add Comment</button>
+            </form>
+        {% else %}
+            <p>No post found.</p>
+        {% endif %}
+
+        
+    
+          
+          {% for post in posts %}
+            <p>Post Title: {{ post.title }}</p>  
+            <p>Post ID: {{ post.post_id }}</p>  
+
+            {% if post.post_id %}
+            <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
+              {% csrf_token %}
+              {{ comment_form.as_p }}  <!-- Renders the form -->
+              <button type="submit">Add Comment</button>
+          </form>
+          
+            {% endif %}
+          {% endfor %}
+        {% comment %} {% endif %} {% endcomment %}
       </div>
     </section>
 
@@ -28,7 +58,7 @@
         <thead>
           <tr>
             <th>Id</th>
-            <th>user</th>
+            <th>User</th>
             <th>Post</th>
             <th>Parent Comment Id</th>
             <th>Comment Text</th>
@@ -37,9 +67,7 @@
         </thead>
         <tbody>
           {% for comment in post_comment %}
-            {% if post.post_id %}
             <tr>
-              <!-- Product Details (spanning over variants) -->
               <td>{{ comment.comment_id }}</td>
               <td>{{ comment.user }}</td>
               <td>{{ comment.post }}</td>
@@ -55,7 +83,6 @@
                 <a href="{% url 'socialmedia:post_comment_view_details' comment.comment_id %}">View Details</a>
               </td>
             </tr>
-            {% endif %}
           {% endfor %}
         </tbody>
       </table>

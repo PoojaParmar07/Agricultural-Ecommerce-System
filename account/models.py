@@ -20,3 +20,6 @@ class CustomUser(AbstractUser):
 
     class Meta:
          db_table = 'user' 
+         
+    def __str__(self):
+        return str(self.username) if self.username else "Unnamed User"   
