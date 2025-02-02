@@ -590,7 +590,7 @@ def orderitem_view_details(request, pk):
 def payment_list(request):
     payments=Payment.objects.all()
     return render(request,'admin_dashboard/payment_list.html',{'payments':payments})
-    pass
+   
 
 def payment_add(request):
     pass
