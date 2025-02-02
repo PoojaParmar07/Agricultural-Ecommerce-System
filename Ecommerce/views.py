@@ -595,7 +595,7 @@ def payment_list(request):
 def payment_add(request):
     context ={
         'model_name':"Payment",
-        'list':'Ecommerce:orderitem_list',
+        'list':'Ecommerce:payment_list',
     }
     
     if request.method == 'POST':
