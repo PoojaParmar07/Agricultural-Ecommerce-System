@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 # Create your models here.
 
@@ -241,15 +242,61 @@ class Review(models.Model):
     
     
 class Cart(models.Model):
-    pass
+    cart_id=models.AutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'Cart'
+        
+    def __str__(self):
+        return f"Cart of {self.user}"    
+        
 
 class CartItem(models.Model):
-    pass
+    cart_item_id=models.AutoField(primary_key=True)
+    cart = models.ForeignKey('Cart',on_delete=models.CASCADE)
+    product_batch = models.ForeignKey('ProductBatch',on_delete=models.CASCADE)
+    product_variant = models.ForeignKey('ProductVariant',on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'CartItem'
+        unique_together = (('cart', 'product_batch', 'product_variant'),)
+        
+    def __str__(self):
+        return f"CartItem: {self.product_variant} (Qty: {self.quantity})"
+
 
 class Wishlist(models.Model):
-    pass
+    wishlist_id=models.AutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'Wishlist'
+        
+    def __str__(self):
+        return f"Wishlist of {self.user}"
 
 class WishlistItem(models.Model):
-    pass
+    wishlist = models.ForeignKey(Wishlist,on_delete=models.CASCADE)
+    product_batch = models.ForeignKey('ProductBatch',on_delete=models.CASCADE)
+    product_variant = models.ForeignKey('ProductVariant',on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'WishlistItem'
+        unique_together = (('wishlist', 'product_batch', 'product_variant'),)
+        
+    def __str__(self):
+        return f"WishlistItem: {self.product_variant}"
     
     
+    
+    
+    
+    
+
