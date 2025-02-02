@@ -191,7 +191,7 @@ def user_membership_details(request, pk):
 
     context['form'] = form
     context['membership'] = membership
-    return render(request, 'admin_dashboard/view_details.html', {'form': form, 'membership': membership})
+    return render(request, 'admin_dashboard/view_details.html', context)
 
 
         
