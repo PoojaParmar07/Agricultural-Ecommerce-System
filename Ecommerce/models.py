@@ -239,3 +239,17 @@ class Review(models.Model):
         return f"{self.review_id}"
     
     
+    
+class Cart(models.Model):
+    pass
+
+class CartItem(models.Model):
+    pass
+
+class Wishlist(models.Model):
+    pass
+
+class WishlistItem(models.Model):
+    pass
+    
+    
