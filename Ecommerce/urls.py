@@ -67,6 +67,16 @@ urlpatterns = [
     path('review_add/',review_add,name='review_add'),
     path('review_view_details/<int:pk>/',review_view_details,name='review_view_details'),
     
+    # Cart
+    path('cart_list/',cart_list,name='cart_list'),
+    path('add_cart/',add_cart,name='add_cart'),
+    path('cart_view_details/<int:pk>/',cart_view_details,name='cart_view_details'),
+    
+    # cart Item
+    path('cartitem_list/',cartitem_list,name='cartitem_list'),
+    path('cartitem_add/',cartitem_add,name='cartitem_add'),
+    path('cartitem_view_details/<int:pk>/',cartitem_view_details,name='cartitem_view_details'),
+    
 ]
 
 

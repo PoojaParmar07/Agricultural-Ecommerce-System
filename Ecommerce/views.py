@@ -759,3 +759,121 @@ def review_view_details(request, pk):
     context['form']=form
     context['review']=review
     return render(request, 'admin_dashboard/view_details.html', context)
+
+
+# Cart view
+
+def cart_list(request):
+    carts = Cart.objects.all()
+    return render(request,'admin_dashboard/cart_list.html',{'carts':carts})
+
+def add_cart(request):
+    context = {
+        'model_name':'Cart',
+        'list':'Ecommerce:cart_list',
+    }
+    
+    if request.method == "POST":
+        form = CartForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Product added to cart added successfully")
+            return redirect('Ecommerce:cart_list')
+
+    else:
+        form = CartForm()
+    
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+
+def cart_view_details(request, pk):
+    context = {
+        'model_name':'Cart',
+    }
+    
+    try:
+        cart = get_object_or_404(Cart,pk = pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form = CartForm(instance=cart)
+    
+    if request.method == "POST":
+        
+        if 'update' in request.POST:
+            form=CartForm(request.POST,instance=cart)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Cart updated successfully")
+                return redirect('Ecommerce:cart_list')
+            else:
+                messages.error(request,"cart update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            cart.delete()
+            messages.success(request,"cart deleted successfully")
+            return redirect('Ecommerce:cart_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:cart_list')
+    context['form']=form
+    context['cart']=cart
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+
+# Cart Item
+
+def cartitem_list(request):
+    cartitems = CartItem.objects.all()
+    return render(request,'admin_dashboard/cartitem_list.html',{'cartitems':cartitems})
+
+def cartitem_add(request):
+    context = {
+        'model_name':'Cart Item',
+        'list':'Ecommerce:cartitem_list',
+    }
+    
+    if request.method == "POST":
+        form = CartItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Cart Item added successfully")
+            return redirect('Ecommerce:cartitem_list')
+
+    else:
+        form = CartForm()
+    
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+def cartitem_view_details(request, pk):
+    context = {
+        'model_name':'Cart Item',
+    }
+    
+    try:
+        cartitem = get_object_or_404(CartItem,pk = pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form = CartItemForm(instance=cartitem)
+    
+    if request.method == "POST":
+        
+        if 'update' in request.POST:
+            form=CartItemForm(request.POST,instance=cartitem)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Cart Item updated successfully")
+                return redirect('Ecommerce:cartitem_list')
+            else:
+                messages.error(request,"cart Item update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            cartitem.delete()
+            messages.success(request,"cart Item deleted successfully")
+            return redirect('Ecommerce:cartitem_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:cartitem_list')
+    context['form']=form
+    context['cartitem']=cartitem
+    return render(request, 'admin_dashboard/view_details.html', context)
+
