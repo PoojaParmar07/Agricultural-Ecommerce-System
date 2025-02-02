@@ -20,7 +20,7 @@ class Post(models.Model):
         db_table = 'post'
         
     def __str__(self):
-        return self.user
+        return str(self.post_id) 
     
     
 class PostComment(models.Model):

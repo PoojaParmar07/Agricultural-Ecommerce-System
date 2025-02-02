@@ -19,37 +19,6 @@
           {% csrf_token %}
           <button type="submit" class="create-btn">Create New</button>
         </form>
-        
-
-        <p>Post Title: {{ post.title }}</p>
-        <p>Post ID: {{ post.post_id }}</p>
-        
-        {% if post %}
-            <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
-                {% csrf_token %}
-                <button type="submit">Add Comment</button>
-            </form>
-        {% else %}
-            <p>No post found.</p>
-        {% endif %}
-
-        
-    
-          
-          {% for post in posts %}
-            <p>Post Title: {{ post.title }}</p>  
-            <p>Post ID: {{ post.post_id }}</p>  
-
-            {% if post.post_id %}
-            <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
-              {% csrf_token %}
-              {{ comment_form.as_p }}  <!-- Renders the form -->
-              <button type="submit">Add Comment</button>
-          </form>
-          
-            {% endif %}
-          {% endfor %}
-        {% comment %} {% endif %} {% endcomment %}
       </div>
     </section>
 
