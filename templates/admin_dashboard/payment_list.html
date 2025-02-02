@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Payment</span></div>
-            <form method="post" action="{% url 'Ecommerce:add_brand' %}">
+            <form method="post" action="{% url 'Ecommerce:payment_add' %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
@@ -29,6 +29,7 @@
                     <th>Total Price</th>
                     <th>Order Id</th>
                     <th>Membership Id</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +43,7 @@
                         <td >{{ obj.total_price }}</td>
                         <td >{{ obj.order.order_id }}</td>
                         <td >{{ obj.membership.id }}</td>
-                       <td> <a href="{% url 'Ecommerce:payment_view_details' pk=obj.brand_id %}">View Details</a></td>
+                       <td> <a href="{% url 'Ecommerce:payment_view_details' obj.pk %}">View Details</a></td>
 
                         </tr>
                         

@@ -538,7 +538,7 @@ def orderitem_list(request):
 
 def orderitem_add(request):
     context ={
-        'model_name':"Add Order Item",
+        'model_name':"Order Item",
         'list':'Ecommerce:orderitem_list',
     }
     
@@ -557,7 +557,7 @@ def orderitem_add(request):
 
 def orderitem_view_details(request, pk):
     context = {
-        'model_name': 'Update OrderItem',
+        'model_name': 'OrderItem',
     }
     try:
         orderitem = get_object_or_404(Order_Item, pk=pk)
@@ -593,10 +593,52 @@ def payment_list(request):
    
 
 def payment_add(request):
-    pass
+    context ={
+        'model_name':"Payment",
+        'list':'Ecommerce:orderitem_list',
+    }
+    
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+                form.save()
+                messages.success(request, "Payment added successfully.")
+                return redirect('Ecommerce:payment_list')
+    else:
+        form = PaymentForm()
+        
+    context['form']=form
+    return render(request,'admin_dashboard/add_form.html',context)
 
-def payment_view_details(request):
-    pass
+def payment_view_details(request,pk):
+    context = {
+        'model_name': 'Payment',
+    }
+    try:
+        payment = get_object_or_404(Payment, pk=pk)
+    except Http404:
+         return render(request, '404.html', status=404)
+        
+    form = PaymentForm(instance=payment)
+    if request.method=='POST':
+        if 'update' in request.POST:
+            form=OrderItemForm(request.POST,instance=payment)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Payment updated successfully")
+                return redirect('Ecommerce:payment_list')
+            else:
+                messages.error(request,"Payment update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            payment.delete()
+            messages.success(request,"Payment deleted successfully")
+            return redirect('Ecommerce:payment_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:payment_list')
+    context['form']=form
+    context['payment']=payment
+    return render(request, 'admin_dashboard/view_details.html', context)
+
 
 
 

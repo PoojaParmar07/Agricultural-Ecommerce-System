@@ -33,4 +33,4 @@ class User_membership(models.Model):
         
     
     def __str__(self):
-        return f"{self.user_name} - {self.plan_name} ({self.status})"
+        return f"{self.user} - {self.plan} ({self.status})"

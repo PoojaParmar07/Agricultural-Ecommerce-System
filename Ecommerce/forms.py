@@ -165,9 +165,9 @@ class PaymentForm(forms.ModelForm):
         model = Payment
         fields = '__all__'
         widgets = {
-            'payment_mode': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Payment Mode'}),
+            'payment_mode': forms.Select(attrs={'class': 'form-control'}),
             'payment_status': forms.Select(attrs={'class': 'form-select'}),
-            'transaction_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Transaction ID'}),
+            'transaction_id': forms.TextInput(attrs={'class': 'form-control'}),
             'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'order': forms.Select(attrs={'class': 'form-select'}),
             'membership': forms.Select(attrs={'class': 'form-select'}),
