@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -145,8 +146,8 @@ class Order_Item(models.Model):
     def __str__(self):
         return f"{self.order_item_id}"
     
-from django.db import models
-from django.core.exceptions import ValidationError
+
+
 
 class Payment(models.Model):
     
