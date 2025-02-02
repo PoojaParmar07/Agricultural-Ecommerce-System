@@ -131,7 +131,7 @@ def add_user_membership(request):
             
             if existing_membership:
                 messages.error(request, "You already have an active membership for this plan.")
-                return render(request, 'admin_dashboard/add_user_membership.html', {'form': form})
+                return render(request, 'admin_dashboard/add_form.html', {'form': form})
             
             # Proceed to create the membership if no active membership exists
             membership = form.save(commit=False)
@@ -151,7 +151,8 @@ def add_user_membership(request):
     else:
         form = UserMembershipForm()
 
-    return render(request, 'admin_dashboard/add_form.html', {'form': form})
+    context['form'] = form
+    return render(request, 'admin_dashboard/add_form.html', context)
 
 
 

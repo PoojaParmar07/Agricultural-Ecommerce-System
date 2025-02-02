@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Post Comment</span></div>
-            <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
+            <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
@@ -31,15 +31,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for obj in post_comment %}
+                {% for comment in post_comment %}
                     <tr>
                         <!-- Product Details (spanning over variants) -->
-                        <td >{{ obj.comment_id }}</td>
-                        <td >{{ obj.user }}</td>
-                        <td >{{ obj.post }}</td>
-                        <td >{{ obj.parentComment_id }}</td>
-                        <td >{{ obj.comment_text }}</td>
-                       <td> <a href="{% url 'socialmedia:post_comment_view_details' pk=obj.id %}">View Details</a></td>
+                        <td >{{ comment.comment_id }}</td>
+                        <td >{{ comment.user }}</td>
+                        <td >{{ comment.post }}</td>
+                        <td >{% if comment.parent_comment %} {{ comment.parent_comment.comment_id }} {% else %} None {% endif %}</td>
+                        <td >{{ comment.comment_text }}</td>
+                       <td> <a href="{% url 'socialmedia:post_comment_view_details' comment=comment.id %}">View Details</a></td>
 
                         </tr>
                         
