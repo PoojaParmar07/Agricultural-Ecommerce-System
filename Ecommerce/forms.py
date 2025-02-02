@@ -208,6 +208,25 @@ class ReviewForm(forms.ModelForm):
         }
 
 
+class WishlistForm(forms.ModelForm):
+    class Meta:
+        model=Wishlist
+        fields= '__all__'
+        
+        
+class WishlistItemForm(forms.ModelForm):
+    class Meta:
+        model=WishlistItem
+        fields='__all__'
+        widgets = {
+            'wishlist': forms.Select(attrs={'class': 'form-control'}),
+            'product_batch': forms.Select(attrs={'class': 'form-control'}),
+            'product_variant': forms.Select(attrs={'class': 'form-control'}),
+            'added_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }
+        
+        
+        
 class CartForm(forms.ModelForm):
     class Meta:
         model = Cart
@@ -219,6 +238,7 @@ class CartForm(forms.ModelForm):
         }
         
 class CartItemForm(forms.ModelForm):
+
     class Meta:
         model = CartItem
         fields = '__all__'  # Include all fields
