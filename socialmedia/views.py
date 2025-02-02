@@ -131,34 +131,34 @@ def post_comment_view_details(request):
 # 	comment_data={'post_comment':post_comment,'comments':comments,'user':request.user,'replyDict':replyDict}
 # 	return render(request,'Socialmedia/postcomment.html',comment_data)
 
-def post_comment_add(request, pk):
-    post = get_object_or_404(Post, post_id=pk)  # Fetch the single post
-    post_comments = PostComment.objects.filter(post=post)  # Get comments for the post
+# def post_comment_add(request, pk):
+#     post = get_object_or_404(Post, post_id=pk)  # Fetch the single post
+#     post_comments = PostComment.objects.filter(post=post)  # Get comments for the post
 
-    print(f"DEBUG: Retrieved Post - ID: {post.post_id}, Title: {post.title}")  # Debugging
+#     print(f"DEBUG: Retrieved Post - ID: {post.post_id}, Title: {post.title}")  # Debugging
 
-    if request.method == 'POST':
-        print("DEBUG: POST request received.")
-        comment_form = PostCommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.user = request.user
-            comment.post = post  # Assign the post to the comment
-            comment.save()
-            messages.success(request, 'Comment posted successfully')
-            print(f"DEBUG: Comment saved - ID: {comment.comment_id}, Post ID: {comment.post.post_id}")
-            return redirect('socialmedia:post_comment_list')
-        else:
-            print("DEBUG: Form errors", comment_form.errors)  # Print form errors if invalid
+#     if request.method == 'POST':
+#         print("DEBUG: POST request received.")
+#         comment_form = PostCommentForm(request.POST)
+#         if comment_form.is_valid():
+#             comment = comment_form.save(commit=False)
+#             comment.user = request.user
+#             comment.post = post  # Assign the post to the comment
+#             comment.save()
+#             messages.success(request, 'Comment posted successfully')
+#             print(f"DEBUG: Comment saved - ID: {comment.comment_id}, Post ID: {comment.post.post_id}")
+#             return redirect('socialmedia:post_comment_list')
+#         else:
+#             print("DEBUG: Form errors", comment_form.errors)  # Print form errors if invalid
 
-    else:
-        comment_form = PostCommentForm()
+#     else:
+#         comment_form = PostCommentForm()
 
-    context = {
-        'model_name': 'Post comment',
-        'comment_form': comment_form,
-        'post': post,  # Pass the single post, not a list
-        'post_comment': post_comments,  # Pass the comments for this post
-    }
+#     context = {
+#         'model_name': 'Post comment',
+#         'comment_form': comment_form,
+#         'post': post,  # Pass the single post, not a list
+#         'post_comment': post_comments,  # Pass the comments for this post
+#     }
 
-    return render(request, 'admin_dashboard/add_form.html', context)
+#     return render(request, 'admin_dashboard/add_form.html', context)
