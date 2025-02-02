@@ -16,7 +16,7 @@
         {% comment %} <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
           {% csrf_token %}
           <button type="submit" class="create-btn">Create New</button>
-        </form> {% endcomment %}
+        </form> {% endcomment %} 
         {% for post in posts %}
     <p>Post Title: {{ post.title }}</p>  
     <p>Post ID: {{ post.post_id }}</p>  
