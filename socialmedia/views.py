@@ -91,7 +91,7 @@ def post_comment_add(request):
     
     context = {
         'model_name':'Review',
-        'list':'socialmedia:post_comment_list',
+        'list':'Ecommerce:post_comment_list',
     }
     
     if request.method == "POST":
@@ -99,7 +99,7 @@ def post_comment_add(request):
         if form.is_valid():
             form.save()
             messages.success(request,"Post comment added successfully")
-            return redirect('socialmedia:post_comment_list')
+            return redirect('Ecommerce:post_comment_list')
 
     else:
         form = PostCommentForm()
@@ -107,43 +107,5 @@ def post_comment_add(request):
     context['form'] = form
     return render(request,'admin_dashboard/add_form.html',context)
 
-
-def post_comment_view_details(request,pk):
-    
-    context = {
-        'model_name':'Post Comment',
-    }
-    
-    try:
-        # Fetch the category or raise Http404 if not found
-        post_comment = get_object_or_404(PostComment, pk=pk)
-    except Http404:
-        # Render the custom 404 page
-        return render(request, '404.html', status=404)
-
-    form = PostCommentForm(instance=post_comment)
-
-    if request.method == 'POST':
-        if 'update' in request.POST:  # Update action
-            form = PostCommentForm(request.POST, instance=post_comment)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Post comment updated successfully!")
-                return redirect('socialmedia:post_comment_list')
-            else:
-                messages.error(request, "Post comment failed. Please correct the errors.")
-        if 'delete' in request.POST:  # Delete action
-            post_comment.delete()
-            messages.success(request, "Post comment deleted successfully!")
-            return redirect('socialmedia:post_comment_list')
-
-        elif 'cancel' in request.POST:  # Cancel action
-            return redirect('socialmedia:post_comment_list')
-
-    context['form'] = form
-    context['post_comment'] = post_comment
-    return render(request, 'admin_dashboard/view_details.html', context)
-
-    
-
-
+def post_comment_view_details(request):
+    pass

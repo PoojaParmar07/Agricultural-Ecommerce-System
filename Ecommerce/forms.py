@@ -208,22 +208,24 @@ class ReviewForm(forms.ModelForm):
         }
 
 
-class WishlistForm(forms.ModelForm):
+class CartForm(forms.ModelForm):
     class Meta:
-        model=Wishlist
-        fields= '__all__'
-        
-        
-class WishlistItemForm(forms.ModelForm):
-    class Meta:
-        model=WishlistItem
-        fields='__all__'
-        
+        model = Cart
+        fields = '__all__'  # Includes all model fields
         widgets = {
-            'wishlist': forms.Select(attrs={'class': 'form-control'}),
-            'product_batch': forms.Select(attrs={'class': 'form-control'}),
-            'product_variant': forms.Select(attrs={'class': 'form-control'}),
-            'added_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'user': forms.Select(attrs={'class': 'form-control'}),
+            'created_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'updated_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
         }
         
-        
+class CartItemForm(forms.ModelForm):
+    class Meta:
+        model = CartItem
+        fields = '__all__'  # Include all fields
+        widgets = {
+            'cart': forms.Select(attrs={'class': 'form-control'}),
+            'product_batch': forms.Select(attrs={'class': 'form-control'}),
+            'product_variant': forms.Select(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'added_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }

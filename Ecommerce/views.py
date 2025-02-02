@@ -653,7 +653,7 @@ def feedback_list(request):
 
 def feedback_add(request):
     context={
-        'model_name':'Feedback',
+        'model_name':'Add Feedback',
         'list':'Ecommerce:feedback_list',
     }
      
@@ -672,7 +672,7 @@ def feedback_add(request):
 
 def feedback_view_details(request, pk):
     context = {
-        'model_name': 'Feedback',
+        'model_name': 'Update Feedback',
     }
     try:
         feedback = get_object_or_404(Feedback, pk=pk)
@@ -709,7 +709,7 @@ def review_list(request):
 def review_add(request):
     
     context = {
-        'model_name':'Review',
+        'model_name':'Add Review',
         'list':'Ecommerce:review_list',
     }
     
@@ -730,7 +730,7 @@ def review_add(request):
             
 def review_view_details(request, pk):
     context = {
-        'model_name':' Review',
+        'model_name':'Update Review',
     }
     
     try:
@@ -761,117 +761,119 @@ def review_view_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
+# Cart view
 
-# Wishlist View
+def cart_list(request):
+    carts = Cart.objects.all()
+    return render(request,'admin_dashboard/cart_list.html',{'carts':carts})
 
-def wishlist_list(request):
-    wishlist=Wishlist.objects.all()
-    return render(request,'admin_dashboard/wishlist_list.html',{'wishlist':wishlist})
-
-def wishlist_add(request):
+def add_cart(request):
     context = {
-        'model_name':'Wishlist',
-        'list':'Ecommerce:wishlist_list',
+        'model_name':'Cart',
+        'list':'Ecommerce:cart_list',
     }
     
     if request.method == "POST":
-        form = WishlistForm(request.POST)
+        form = CartForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request,"Wishlist added successfully")
-            return redirect('Ecommerce:wishlist_list')
+            messages.success(request,"Product added to cart added successfully")
+            return redirect('Ecommerce:cart_list')
 
     else:
-        form = WishlistForm()
+        form = CartForm()
     
     context['form'] = form
     return render(request,'admin_dashboard/add_form.html',context)
 
-def wishlist_view_details(request,pk):
+
+def cart_view_details(request, pk):
     context = {
-        'model_name':' Wishlist',
+        'model_name':'Cart',
     }
     
     try:
-        wishlist = get_object_or_404(Wishlist,pk=pk)
+        cart = get_object_or_404(Cart,pk = pk)
     except Http404:
         return render(request,'404.html',status=404)
     
-    form = WishlistForm(instance=wishlist)
+    form = CartForm(instance=cart)
     
     if request.method == "POST":
         
         if 'update' in request.POST:
-            form=WishlistForm(request.POST,instance=wishlist)
+            form=CartForm(request.POST,instance=cart)
             if form.is_valid():
                 form.save()
-                messages.success(request,"Wishlist updated successfully")
-                return redirect('Ecommerce:wishlist_list')
+                messages.success(request,"Cart updated successfully")
+                return redirect('Ecommerce:cart_list')
             else:
-                messages.error(request,"Wishlist update failed. Please correct the errors.")
+                messages.error(request,"cart update failed. Please correct the errors.")
         elif 'delete' in request.POST:
-            wishlist.delete()
-            messages.success(request,"Wishlist deleted successfully")
-            return redirect('Ecommerce:wishlist_list')
+            cart.delete()
+            messages.success(request,"cart deleted successfully")
+            return redirect('Ecommerce:cart_list')
         elif 'cancel' in request.POST:
-            return redirect('Ecommerce:wishlist_list')
+            return redirect('Ecommerce:cart_list')
     context['form']=form
-    context['wishlist']=wishlist
+    context['cart']=cart
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
+# Cart Item
 
-def wishlist_item_list(request):
-    wishlist_item=WishlistItem.objects.all()
-    return render(request,'admin_dashboard/wishlist_item_list.html',{'wishlist_item':wishlist_item})
+def cartitem_list(request):
+    cartitems = CartItem.objects.all()
+    return render(request,'admin_dashboard/cartitem_list.html',{'cartitems':cartitems})
 
-def wishlist_item_add(request):
+def cartitem_add(request):
     context = {
-        'model_name':'Wishlist Item',
-        'list':'Ecommerce:wishlist_item_list',
+        'model_name':'Cart Item',
+        'list':'Ecommerce:cartitem_list',
     }
     
     if request.method == "POST":
-        form = WishlistItemForm(request.POST)
+        form = CartItemForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request,"Wishlist Item added successfully")
-            return redirect('Ecommerce:wishlist_item_list')
+            messages.success(request,"Cart Item added successfully")
+            return redirect('Ecommerce:cartitem_list')
 
     else:
-        form = WishlistItemForm()
+        form = CartForm()
     
     context['form'] = form
     return render(request,'admin_dashboard/add_form.html',context)
 
-def wishlist_item_view_details(request,pk):
+def cartitem_view_details(request, pk):
     context = {
-        'model_name':' Wishlist Item',
+        'model_name':'Cart Item',
     }
     
     try:
-        wishlist_item = get_object_or_404(WishlistItem,pk=pk)
+        cartitem = get_object_or_404(CartItem,pk = pk)
     except Http404:
         return render(request,'404.html',status=404)
     
-    form = WishlistItemForm(instance=wishlist_item)
+    form = CartItemForm(instance=cartitem)
     
     if request.method == "POST":
         
         if 'update' in request.POST:
-            form=WishlistItemForm(request.POST,instance=wishlist_item)
+            form=CartItemForm(request.POST,instance=cartitem)
             if form.is_valid():
                 form.save()
-                messages.success(request,"Wishlist Item updated successfully")
-                return redirect('Ecommerce:wishlist_item_list')
+                messages.success(request,"Cart Item updated successfully")
+                return redirect('Ecommerce:cartitem_list')
             else:
-                messages.error(request,"Wishlist Item update failed. Please correct the errors.")
+                messages.error(request,"cart Item update failed. Please correct the errors.")
         elif 'delete' in request.POST:
-            wishlist_item.delete()
-            messages.success(request,"Wishlist Item deleted successfully")
-            return redirect('Ecommerce:wishlist_item_list')
+            cartitem.delete()
+            messages.success(request,"cart Item deleted successfully")
+            return redirect('Ecommerce:cartitem_list')
         elif 'cancel' in request.POST:
-            return redirect('Ecommerce:wishlist_item_list')
+            return redirect('Ecommerce:cartitem_list')
     context['form']=form
-    context['wishlist_item']=wishlist_item
+    context['cartitem']=cartitem
     return render(request, 'admin_dashboard/view_details.html', context)
+
