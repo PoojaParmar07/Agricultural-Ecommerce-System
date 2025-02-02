@@ -84,14 +84,8 @@ def post_view_details(request, pk):
 
 
 def post_comment_list(request):
-    # post_comment=PostComment.objects.all()
-    # return render(request,'admin_dashboard/post_comment_list.html',{'post_comment':post_comment})
-    
-    posts = Post.objects.all()  # Fetch posts from the database
-    context = {
-        'posts': posts,  # Pass posts to the template
-    }
-    return render(request, 'admin_dashboard/post_comment_list.html', context)
+    post_comment=PostComment.objects.all()
+    return render(request,'admin_dashboard/post_comment_list.html',{'post_comment':post_comment})
 
 
 # def post_comment_add(request, post_id):

@@ -13,23 +13,13 @@
         <div class="field_name">
           <span>Post Comment</span>
         </div>
-        {% comment %} <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
+        {% if post.post_id %}
+        <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
           {% csrf_token %}
           <button type="submit" class="create-btn">Create New</button>
-        </form> {% endcomment %}
-        {% for post in posts %}
-    <p>Post Title: {{ post.title }}</p>  
-    <p>Post ID: {{ post.post_id }}</p>  
-
-    {% if post.post_id %}
-        <form method="post" action="{% url 'socialmedia:post_comment_add' post.post_id %}">
-            {% csrf_token %}
-            <button type="submit">Add Comment</button>
         </form>
-    {% else %}
-        <p>No Post ID Found</p>
-    {% endif %}
-{% endfor %}
+        {% endif %}
+        
       </div>
     </section>
 
@@ -47,6 +37,7 @@
         </thead>
         <tbody>
           {% for comment in post_comment %}
+            {% if post.post_id %}
             <tr>
               <!-- Product Details (spanning over variants) -->
               <td>{{ comment.comment_id }}</td>
@@ -64,6 +55,7 @@
                 <a href="{% url 'socialmedia:post_comment_view_details' comment.comment_id %}">View Details</a>
               </td>
             </tr>
+            {% endif %}
           {% endfor %}
         </tbody>
       </table>
