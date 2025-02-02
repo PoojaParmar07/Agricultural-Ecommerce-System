@@ -13,12 +13,12 @@
         <div class="field_name">
           <span>Post Comment</span>
         </div>
-        {% if post.post_id %}
+        
         <form method="post" action="{% url 'socialmedia:post_comment_add' %}">
           {% csrf_token %}
           <button type="submit" class="create-btn">Create New</button>
         </form>
-        {% endif %}
+        
         
       </div>
     </section>

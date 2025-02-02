@@ -88,73 +88,27 @@ def post_comment_list(request):
     return render(request,'admin_dashboard/post_comment_list.html',{'post_comment':post_comment})
 
 
-# def post_comment_add(request, post_id):
-    
-#     context = {
-#         'model_table':'Post comment',
-#         'list':'socialmedia:post_comment_list'
-#     }
-    
-#     post = Post.objects.get(id=post_id)
-    
-#     if request.method == "POST":
-#         form = PostCommentForm(request.POST)
-#         if form.is_valid():
-#             comment = form.save(commit=False)
-#             comment.user = request.user  # Assign logged-in user
-#             comment.post = post
-#             comment.save()
-#             return redirect('socialmedia:post_comment_list', post_id=post.id)  # Redirect to post details page
+ 	
 
-#     else:
-#         form = PostCommentForm()
+def post_comment_add(request):
     
-#     context['form'] = form
-#     return render(request, 'admin_dashboard/add_form.html', context)
+    context = {
+        'model_name':'Add Review',
+        'list':'Ecommerce:post_comment_list',
+    }
+    
+    if request.method == "POST":
+        form = PostCommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Post comment added successfully")
+            return redirect('Ecommerce:post_comment_list')
+
+    else:
+        form = PostCommentForm()
+    
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
 
 def post_comment_view_details(request):
     pass
-
-
-# def postcomment(request,post_id): 
-# 	post_comment=Post.objects.filter(post_id=post_id).first() 
-# 	comments=PostComment.objects.filter(post_id=post_comment,parent=None)
-# 	replies=PostComment.objects.filter(post_id=post_comment).exclude(parent=None)
-
-# 	replyDict={}
-# 	for reply in replies:
-# 		if reply.parent.comment_id not in replyDict.keys():
-# 			replyDict[reply.parent.comment_id] = [reply]
-# 		else:
-# 			replyDict[reply.parent.comment_id].append(reply)
-
-# 	comment_data={'post_comment':post_comment,'comments':comments,'user':request.user,'replyDict':replyDict}
-# 	return render(request,'Socialmedia/postcomment.html',comment_data)
-
-def post_comment_add(request,pk):
-    
-     # Fetch all comments
-    posts = get_object_or_404(Post, post_id=pk)  # Fetch all posts
-    
-    context = {
-        'model_name':'Post comment',
-    }
-    
-    # post = get_object_or_404(Post, post_id=post_id)
- 
-    if request.method == 'POST':
-        comment_form = PostCommentForm(request.POST)
-        
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.user = request.user
-            comment.post = posts
-            comment.save()
-            messages.success(request,'Comment posted successfully')
-            return redirect('socialmedia:post_comment_list')
-    else:
-        comment_form = PostCommentForm()
-     
-    context['comment_form'] = comment_form   
-      
-    return render(request,'admin_dashboard/add_form.html',context)        
