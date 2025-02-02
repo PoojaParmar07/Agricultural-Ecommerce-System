@@ -207,3 +207,4 @@ class ReviewForm(forms.ModelForm):
             'review': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Write your review here...'}),
         }
 
+
