@@ -23,19 +23,17 @@ class Post(models.Model):
         return self.user
     
     
-    
 class PostComment(models.Model):
-    comment_id=models.AutoField(primary_key=True)
+    comment_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    post=models.ForeignKey('Post',on_delete=models.CASCADE)
-    parentComment_id=models.ForeignKey('self',on_delete=models.CASCADE,null=True)
-    comment_text=models.TextField()
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return f"Comment {self.comment_id} by {self.user}"
-    
+
     class Meta:
-        db_table='PostComment'
-    
+        db_table = 'PostComment'
+
+    def __str__(self):
+        return f"Comment {self.comment_id} by {self.user.username}"

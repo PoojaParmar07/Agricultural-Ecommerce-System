@@ -36,6 +36,7 @@ def add_post(request):
 
     else:
         form = PostForm()
+        
     context['form']=form
     return render(request, 'admin_dashboard/add_form.html', context)
 
@@ -45,6 +46,11 @@ def add_post(request):
 @login_required
 @user_passes_test(is_admin_user)
 def post_view_details(request, pk):
+    
+    context = {
+        'model_name':'Post',
+    }
+    
     try:
         # Fetch the category or raise Http404 if not found
         post = get_object_or_404(Post, pk=pk)
@@ -71,7 +77,9 @@ def post_view_details(request, pk):
         elif 'cancel' in request.POST:  # Cancel action
             return redirect('socialmedia:post')
 
-    return render(request, 'admin_dashboard/post_view_details.html', {'form': form, 'post': post})
+    context['form'] = form
+    context['post'] = post
+    return render(request, 'admin_dashboard/view_details.html', context)
 
 
 
@@ -80,8 +88,29 @@ def post_comment_list(request):
     return render(request,'admin_dashboard/post_comment_list.html',{'post_comment':post_comment})
 
 
-def post_comment_add(request):
-    pass
+def post_comment_add(request, post_id):
+    
+    context = {
+        'model_table':'Post comment',
+        'list':'socialmedia:post_comment_list'
+    }
+    
+    post = Post.objects.get(id=post_id)
+    
+    if request.method == "POST":
+        form = PostCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user  # Assign logged-in user
+            comment.post = post
+            comment.save()
+            return redirect('socialmedia:post_comment_list', post_id=post.id)  # Redirect to post details page
+
+    else:
+        form = PostCommentForm()
+    
+    context['form'] = form
+    return render(request, 'admin_dashboard/add_form.html', context)
 
 def post_comment_view_details(request):
     pass
