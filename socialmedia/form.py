@@ -4,7 +4,7 @@ from .models import *
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['image', 'caption', 'likes']
+        fields = '__all__'
 
         widgets = {
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),

@@ -109,6 +109,41 @@ def post_comment_add(request):
 
 
 def post_comment_view_details(request,pk):
-    return render(request,'admin_dashboard/view_details.html')
+    
+    context = {
+        'model_name':'Post Comment',
+    }
+    
+    try:
+        # Fetch the category or raise Http404 if not found
+        post_comment = get_object_or_404(PostComment, pk=pk)
+    except Http404:
+        # Render the custom 404 page
+        return render(request, '404.html', status=404)
+
+    form = PostCommentForm(instance=post_comment)
+
+    if request.method == 'POST':
+        if 'update' in request.POST:  # Update action
+            form = PostCommentForm(request.POST, instance=post_comment)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Post comment updated successfully!")
+                return redirect('socialmedia:post_comment_list')
+            else:
+                messages.error(request, "Post comment failed. Please correct the errors.")
+        if 'delete' in request.POST:  # Delete action
+            post_comment.delete()
+            messages.success(request, "Post comment deleted successfully!")
+            return redirect('socialmedia:post_comment_list')
+
+        elif 'cancel' in request.POST:  # Cancel action
+            return redirect('socialmedia:post_comment_list')
+
+    context['form'] = form
+    context['post_comment'] = post_comment
+    return render(request, 'admin_dashboard/view_details.html', context)
+
+    
 
 
