@@ -145,6 +145,9 @@ class Order_Item(models.Model):
     def __str__(self):
         return f"{self.order_item_id}"
     
+from django.db import models
+from django.core.exceptions import ValidationError
+
 class Payment(models.Model):
     
     PAYMENT_STATUS_CHOICES = [
@@ -153,22 +156,40 @@ class Payment(models.Model):
         ('failed', 'Failed'),
         ('refunded', 'Refunded'),
     ]
+    PAYMENT_MODE=[
+        ('cash','Cash'),
+        ('online','Online'),
+    ]
     
     payment_id = models.AutoField(primary_key=True)
-    order = models.ForeignKey("Order", on_delete=models.CASCADE)
-    membership= models.ForeignKey('membership.User_membership', on_delete=models.CASCADE)
-    total_price = models.DecimalField(max_digits=5, decimal_places=2,default=0.00)
-    payment_mode = models.CharField(max_length=50)
-    payment_status=models.CharField(max_length=100,choices=PAYMENT_STATUS_CHOICES,default='pending')
-    transaction_id=models.CharField(unique=True,max_length=100, null=True)
-    payment_date=models.DateTimeField(auto_now=True)
+    order = models.ForeignKey("Order", on_delete=models.CASCADE, blank=True, null=True)
+    membership = models.ForeignKey('membership.User_membership', on_delete=models.CASCADE, blank=True, null=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    payment_mode = models.CharField(max_length=50,choices=PAYMENT_MODE, default='cash')
+    payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES, default='pending')
+    transaction_id = models.CharField(unique=True, max_length=100, null=True, blank=True)
+    payment_date = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
-        db_table='Payment'
-        
+        db_table = 'Payment'
+    
+    def clean(self):
+        """
+        Ensures that at a time either order or membership is filled, not both.
+        """
+        if self.order and self.membership:
+            raise ValidationError("Either 'order' or 'membership' should be filled, but not both.")
+        if not self.order and not self.membership:
+            raise ValidationError("Either 'order' or 'membership' must be provided.")
+
+    def save(self, *args, **kwargs):
+        self.clean()  # Validate before saving
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.payment_id}"
+        return f"Payment {self.payment_id}"
+
         
 class DeliveryZone(models.Model):
     zone_name = models.CharField(max_length=100)  # Name of the zone (e.g., Ahmedabad, Surat)

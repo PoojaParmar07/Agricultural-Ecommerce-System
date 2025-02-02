@@ -52,6 +52,10 @@ urlpatterns = [
     path('orderitem_add/',orderitem_add,name='orderitem_add'),
     path('orderitem_view_details/<int:pk>/',orderitem_view_details,name='orderitem_view_details'),
     
+    # Payment 
+    path('payment_list/',payment_list,name='payment_list'),
+    path('payment_add/',payment_add,name='payment_add'),
+    path('payment_view_details/<int:pk>/',payment_view_details,name='payment_view_details'),
     
     # Feedback
     path('feedback_list/',feedback_list,name='feedback_list'),

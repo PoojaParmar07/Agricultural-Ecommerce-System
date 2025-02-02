@@ -159,6 +159,32 @@ class OrderItemForm(forms.ModelForm):
         }
         
         
+        
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+        widgets = {
+            'payment_mode': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Payment Mode'}),
+            'payment_status': forms.Select(attrs={'class': 'form-select'}),
+            'transaction_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Transaction ID'}),
+            'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'order': forms.Select(attrs={'class': 'form-select'}),
+            'membership': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        order = cleaned_data.get('order')
+        membership = cleaned_data.get('membership')
+
+        if order and membership:
+            raise ValidationError("You can only select either 'Order' or 'Membership', not both.")
+        if not order and not membership:
+            raise ValidationError("You must select either 'Order' or 'Membership'.")
+
+        return cleaned_data
+        
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback

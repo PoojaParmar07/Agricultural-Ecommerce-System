@@ -585,6 +585,24 @@ def orderitem_view_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
+# Payment View
+
+def payment_list(request):
+    payments=Payment.objects.all()
+    return render(request,'admin_dashboard/payment_list.html',{'payments':payments})
+    pass
+
+def payment_add(request):
+    pass
+
+def payment_view_details(request):
+    pass
+
+
+
+
+
+
 # feedback view
 
 def feedback_list(request):
