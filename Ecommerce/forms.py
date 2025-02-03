@@ -107,21 +107,31 @@ class InventoryForm(forms.ModelForm):
         }
         
         
-        
-
-
-class DeliveryZoneForm(forms.ModelForm):
+class CityForm(forms.ModelForm):
     class Meta:
-        model = DeliveryZone
-        fields = ['zone_name', 'pincode_start', 'pincode_end', 'delivery_charge']
+        model = City
+        fields = ['city_name']
         
         widgets = {
-            'zone_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'pincode_start': forms.NumberInput(attrs={'class': 'form-control'}),
-            'pincode_end': forms.NumberInput(attrs={'class': 'form-control'}),
-            'delivery_charge': forms.NumberInput(attrs={
-                'class': 'form-control','step': '0.01'}),
-        }
+            'city_name': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Enter City Name'
+            }),
+        }        
+
+
+# class DeliveryZoneForm(forms.ModelForm):
+#     class Meta:
+#         model = DeliveryZone
+#         fields = ['zone_name', 'pincode_start', 'pincode_end', 'delivery_charge']
+        
+#         widgets = {
+#             'zone_name': forms.TextInput(attrs={'class': 'form-control'}),
+#             'pincode_start': forms.NumberInput(attrs={'class': 'form-control'}),
+#             'pincode_end': forms.NumberInput(attrs={'class': 'form-control'}),
+#             'delivery_charge': forms.NumberInput(attrs={
+#                 'class': 'form-control','step': '0.01'}),
+#         }
 
 
 class OrderForm(forms.ModelForm):
@@ -249,3 +259,5 @@ class CartItemForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'added_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
         }
+
+
