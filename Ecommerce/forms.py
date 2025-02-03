@@ -27,6 +27,9 @@ class BrandForm(forms.ModelForm):
         labels = {'brand_name': 'Brand Name'} 
         widgets = {
             'brand_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'category_image': forms.ClearableFileInput(attrs={
+            'class': 'form-control',
+            }),
         }
         
 class ProductVariantForm(forms.ModelForm):

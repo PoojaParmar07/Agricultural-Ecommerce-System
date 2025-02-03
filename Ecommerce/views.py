@@ -78,8 +78,6 @@ def category_view_details(request, pk):
 
 
 
-
-
 # Brand View
 
 def list_brand(request):
