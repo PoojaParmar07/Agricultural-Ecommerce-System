@@ -8,14 +8,15 @@ from .models import *
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['category_name']
+        fields = ['category_name','category_image']
 
         widgets = {
             'category_name': forms.TextInput(attrs={
                 'class': 'form-control',  # Add any custom CSS class
                 'placeholder': 'Enter Category Name',  # Add a placeholder
-                'maxlength': '100',  # Limit input length
+                'maxlength': '100',
         }),
+            'category_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name'}),# Limit input length
     }
         
 class BrandForm(forms.ModelForm):

@@ -90,7 +90,3 @@ urlpatterns = [
     
 ]
 
-
-
-
-

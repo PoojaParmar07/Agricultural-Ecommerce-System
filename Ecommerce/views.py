@@ -977,3 +977,4 @@ def city_view_details(request, pk):
     context['city']=city
     return render(request, 'admin_dashboard/view_details.html', context)
 
+

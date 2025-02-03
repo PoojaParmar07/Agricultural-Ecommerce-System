@@ -24,6 +24,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Category Image</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -32,6 +33,7 @@
                 <tr>
                     <td>{{ category.category_id }}</td>
                     <td>{{ category.category_name }}</td>
+                    <td>{{ category.category_image }}</td>
                     <td>
                         <a href="{% url 'Ecommerce:category_view_details' category.category_id %}" >View Details</a>
                     </td>
