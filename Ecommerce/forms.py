@@ -11,11 +11,7 @@ class CategoryForm(forms.ModelForm):
         fields = ['category_name']
 
         widgets = {
-            'category_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter Category Name',  
-                'maxlength': '100',  
-        }),
+            'category_name': forms.TextInput(attrs={'class': 'form-control','maxlength': '100'}),
     }
         
 class BrandForm(forms.ModelForm):
