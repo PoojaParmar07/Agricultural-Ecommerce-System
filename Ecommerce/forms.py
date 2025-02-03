@@ -14,16 +14,15 @@ class CategoryForm(forms.ModelForm):
             'category_name': forms.TextInput(attrs={
                 'class': 'form-control',  # Add any custom CSS class
                 'placeholder': 'Enter Category Name',  # Add a placeholder
-                'maxlength': '100',
+                'maxlength': '100',  # Limit input length
         }),
-            'category_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter category name'}),# Limit input length
     }
         
 class BrandForm(forms.ModelForm):
     class Meta:
         model = Brand
-        fields = ['brand_name']  # Add other fields if needed
-        labels = {'brand_name': 'Brand Name'}  # Customize label
+        fields = ['brand_name'] 
+        labels = {'brand_name': 'Brand Name'} 
         widgets = {
             'brand_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter brand name'}),
         }
@@ -31,7 +30,7 @@ class BrandForm(forms.ModelForm):
 class ProductVariantForm(forms.ModelForm):
     class Meta:
         model = ProductVariant
-        fields = ['product', 'brand', 'units']  # Add any fields you want to include in the form
+        fields = ['product', 'brand', 'units'] 
         
         widgets = {
             'product': forms.Select(attrs={'class': 'form-control'}),
@@ -63,11 +62,11 @@ class ProductForm(forms.ModelForm):
             }),
             'min_qty': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'min': 1,  # Minimum allowed quantity
+                'min': 1, 
             }),
             'max_qty': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'max': 5,  # You can set an appropriate maximum value
+                'max': 5,  
             }),
 
         }
@@ -80,7 +79,7 @@ class ProductBatchForm(forms.ModelForm):
 
         widgets = {
 
-            'product': forms.Select(attrs={'class': 'form-control', 'onchange': 'this.form.submit()'}),  # Auto-submit on change
+            'product': forms.Select(attrs={'class': 'form-control', 'onchange': 'this.form.submit()'}),  
             'variant': forms.Select(attrs={'class': 'form-control' , 'onchange': 'this.form.submit()'}),
             'manufacture_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
