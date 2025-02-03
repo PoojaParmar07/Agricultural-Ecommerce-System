@@ -91,7 +91,7 @@ def post_comment_add(request):
     
     context = {
         'model_name':'Review',
-        'list':'Ecommerce:post_comment_list',
+        'list':'socialmedia:post_comment_list',
     }
     
     if request.method == "POST":
@@ -99,7 +99,7 @@ def post_comment_add(request):
         if form.is_valid():
             form.save()
             messages.success(request,"Post comment added successfully")
-            return redirect('Ecommerce:post_comment_list')
+            return redirect('socialmedia:post_comment_list')
 
     else:
         form = PostCommentForm()
