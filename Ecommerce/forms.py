@@ -120,6 +120,28 @@ class CityForm(forms.ModelForm):
         }        
 
 
+class PincodeForm(forms.ModelForm):
+    class Meta:
+        model = Pincode
+        fields = ['pincode', 'city', 'delivery_charges']
+        
+        widgets = {
+            'pincode': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Pincode',
+                'maxlength': '10'
+            }),
+            'city': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'delivery_charges': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'step': '0.01',
+                'placeholder': 'Enter Delivery Charge'
+            }),
+        }
+
+
 # class DeliveryZoneForm(forms.ModelForm):
 #     class Meta:
 #         model = DeliveryZone
