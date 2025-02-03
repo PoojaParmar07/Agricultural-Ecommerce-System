@@ -3,13 +3,15 @@ from .models import CustomUser
 from django.core.exceptions import ValidationError
 
 class AdminLoginForm(forms.Form):
-    username = forms.CharField(max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(
+        max_length=100,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'})
+    )
 
 
-
-from django import forms
-from .models import CustomUser
 
 class AddUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Password")

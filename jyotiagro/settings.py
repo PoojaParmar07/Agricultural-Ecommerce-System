@@ -155,3 +155,9 @@ EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
 EMAIL_HOST_USER = '4c372aeca9eaf4'
 EMAIL_HOST_PASSWORD = 'fa4357b01739ea'
 EMAIL_PORT = '2525'
+
+
+AUTHENTICATION_BACKENDS = [
+    'account.backends.EmailBackend',  # Custom backend
+    'django.contrib.auth.backends.ModelBackend',  # Keep the default for admin login
+]

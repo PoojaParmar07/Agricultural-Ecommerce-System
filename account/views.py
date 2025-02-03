@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib import messages
 from .models import CustomUser
-# from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login,logout
 from .form import AdminLoginForm,AddUserForm,DeleteUserForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required,user_passes_test
@@ -12,18 +12,56 @@ from django.urls import reverse_lazy
 # Create your views here.
 
 
+
+
+
 class CustomLoginView(LoginView):
-    """Custom Login View to redirect based on user type."""
-    template_name = 'registration/login.html'  # Custom login template
+    """Custom Login View to authenticate users with email instead of username."""
+    
+    template_name = 'registration/login.html'  
+    form_class = AdminLoginForm  # Use your custom form
+
+    def dispatch(self, request, *args, **kwargs):
+        """Prevent already authenticated users from accessing the login page."""
+        if request.user.is_authenticated:
+            return redirect(self.get_success_url())  
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        """
+        Override get_form_kwargs to remove 'request' from form initialization.
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs.pop('request', None)  # Remove 'request' argument
+        return kwargs
+
+    def form_valid(self, form):
+        """Authenticate user using email instead of username."""
+        email = form.cleaned_data.get("email")  
+        password = form.cleaned_data.get("password")
+
+        user = authenticate(self.request, username=email, password=password)  # Authenticate using email
+
+        if user is not None:
+            login(self.request, user)
+            messages.success(self.request, "Successfully logged in")
+            return redirect(self.get_success_url())
+        else:
+            messages.error(self.request, "Invalid email or password")
+            return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        """Handles invalid login attempts."""
+        messages.error(self.request, "Invalid login details. Please try again.")
+        return super().form_invalid(form)
 
     def get_success_url(self):
-        
+        """Redirect users based on their role."""
         if self.request.user.is_staff:
-            messages.success(self.request, "Successfully logged in")
-            return reverse_lazy('admin_dashboard')  
-        else:
-         messages.success(self.request, "Successfully logged in")
-         return reverse_lazy('Ecommerce:home')  # Adjust to your home page route
+            return reverse_lazy('admin_dashboard')  # Redirect admin users
+        return reverse_lazy('Ecommerce:home')  # Redirect normal users
+
+    
 
 
 
@@ -43,8 +81,9 @@ def handleregi(request):
 
 
         # Validation checks
-        if CustomUser.objects.filter(username=username).exists():
-            messages.error(request, "Username already taken")
+        
+        if CustomUser.objects.filter(email=email).exists():
+            messages.error(request, "Email already taken")
             return redirect('account:registration')
 
         if pass1 != pass2:
