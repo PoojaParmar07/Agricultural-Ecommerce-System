@@ -390,82 +390,6 @@ def inventory_view_details(request,pk):
     return render(request, 'admin_dashboard/view_details.html', context)
 
         
-
-
-# Delivery View
-
-def deliveryzone_list(request):
-    delivery_zone=DeliveryZone.objects.all()
-    return render(request,'admin_dashboard/delivery_list.html',{'delivery_zone':delivery_zone})
-
-def deliveryzone_add(request):
-     
-    context = {
-        'model_name': 'Add Delivery Zone',
-        'list': 'Ecommerce:deliveryzone_list'
-    }
-
-    if request.method == 'POST' and 'zone_name' in request.POST:
-        form = DeliveryZoneForm(request.POST)
-
-        if form.is_valid():
-            zone_name = form.cleaned_data['zone_name']
-            
-            # Check if the delivery zone already exists
-            if DeliveryZone.objects.filter(zone_name=zone_name).exists():
-                messages.error(request, "Delivery Zone already exists")
-            else:
-                form.save()
-                messages.success(request, "Delivery Zone added successfully")
-                return redirect('Ecommerce:deliveryzone_list')  # Redirect to correct list
-
-        else:
-            messages.error(request, "Not valid")
-            print(form.errors)  # Debugging purpose
-    
-    else:
-        form = DeliveryZoneForm()
-
-    context['form'] = form
-    return render(request, 'admin_dashboard/add_form.html', context)
-
-
-def deliveryzone_view_details(request,pk):
-    context = {
-        'model_name':'Update Delivery Zone'
-    }
-    
-    try:
-        delivery_zone = get_object_or_404(DeliveryZone, pk=pk)
-    except Http404:
-         return render(request, '404.html', status=404)
-     
-    form = DeliveryZoneForm(instance=delivery_zone)
-    
-    if request.method == "POST":
-        
-        if 'update' in request.POST:
-            
-            form=DeliveryZoneForm(request.POST,instance=delivery_zone)
-            if form.is_valid():
-                form.save()
-                messages.success(request,"Delivery Zone updated successfully")
-                return redirect('Ecommerce:deliveryzone_list')
-            else:
-                messages.error(request,"Delivery Zone update failed. Please correct the errors.")
-                
-        elif 'delete' in request.POST:
-            delivery_zone.delete()
-            messages.success(request,"Product Batch deleted successfully")
-            return redirect('Ecommerce:deliveryzone_list')
-        
-        elif 'cancel' in request.POST:
-            return redirect('Ecommerce:deliveryzone_list')
-        
-    context['form']=form
-    context['delivery_zone']=delivery_zone
-    return render(request, 'admin_dashboard/view_details.html', context)
-
 # Order View
 
 def order_list(request):
@@ -885,9 +809,6 @@ def cart_list(request):
 
 def add_cart(request):
 
-
-
-
     context = {
         'model_name':'Cart',
         'list':'Ecommerce:cart_list',
@@ -996,3 +917,63 @@ def cartitem_view_details(request, pk):
     context['form']=form
     context['cartitem']=cartitem
     return render(request, 'admin_dashboard/view_details.html', context)
+
+
+# City
+
+
+def city_list(request):
+    cities = City.objects.all()
+    return render(request,'admin_dashboard/city_list.html',{'cities':cities})
+
+def add_city(request):
+    context = {
+        'model_name':'City',
+        'list':'Ecommerce:city_list',
+    }
+    
+    if request.method == "POST":
+        form = CityForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"City added successfully")
+            return redirect('Ecommerce:city_list')
+
+    else:
+        form = CityForm()
+    
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+def city_view_details(request, pk):
+    context = {
+        'model_name':' City',
+    }
+    
+    try:
+        city = get_object_or_404(City,pk = pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form = CityForm(instance=city)
+    
+    if request.method == "POST":
+        
+        if 'update' in request.POST:
+            form=CityForm(request.POST,instance=city)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"City updated successfully")
+                return redirect('Ecommerce:city_list')
+            else:
+                messages.error(request,"City update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            city.delete()
+            messages.success(request,"City deleted successfully")
+            return redirect('Ecommerce:city_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:city_list')
+    context['form']=form
+    context['city']=city
+    return render(request, 'admin_dashboard/view_details.html', context)
+

@@ -142,20 +142,6 @@ class PincodeForm(forms.ModelForm):
         }
 
 
-# class DeliveryZoneForm(forms.ModelForm):
-#     class Meta:
-#         model = DeliveryZone
-#         fields = ['zone_name', 'pincode_start', 'pincode_end', 'delivery_charge']
-        
-#         widgets = {
-#             'zone_name': forms.TextInput(attrs={'class': 'form-control'}),
-#             'pincode_start': forms.NumberInput(attrs={'class': 'form-control'}),
-#             'pincode_end': forms.NumberInput(attrs={'class': 'form-control'}),
-#             'delivery_charge': forms.NumberInput(attrs={
-#                 'class': 'form-control','step': '0.01'}),
-#         }
-
-
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order

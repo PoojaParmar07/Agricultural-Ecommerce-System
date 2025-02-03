@@ -36,12 +36,6 @@ urlpatterns = [
     path('inventory_add/',inventory_add,name='inventory_add'),
     path('inventory_view_details/<int:pk>/',inventory_view_details,name='inventory_view_details'),
 
-
-    # Delivery Zone
-    path('deliveryzone_list/',deliveryzone_list,name='deliveryzone_list'),
-    path('deliveryzone_add',deliveryzone_add,name='deliveryzone_add'),
-    path('deliveryzone_view_details/<int:pk>',deliveryzone_view_details,name='deliveryzone_view_details'),
-
     # Order
     path('order_list/',order_list,name='order_list'),
     path('order_add/',order_add,name='order_add'),
@@ -87,6 +81,12 @@ urlpatterns = [
     path('wishlist_item_list/',wishlist_item_list,name='wishlist_item_list'),
     path('wishlist_item_add/',wishlist_item_add,name='wishlist_item_add'),
     path('wishlist_item_view_details/<int:pk>',wishlist_item_view_details,name='wishlist_item_view_details'),
+    
+    #City
+    path('city_list/',city_list,name='city_list'),
+    path('add_city/',add_city,name='add_city'),
+    path('city_view_details/<int:pk>/',city_view_details,name='city_view_details'),
+    
     
 ]
 
