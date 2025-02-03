@@ -22,7 +22,7 @@ def category_list(request):
 
 def category_add(request):
     context = {
-        'model_name': 'Add Category',
+        'model_name': 'Category',
         'list':'Ecommerce:category_list'
     }
     if request.method == 'POST':
@@ -45,7 +45,7 @@ def category_add(request):
 
 def category_view_details(request, pk):
     context = {
-        'model_name': 'Update Category',
+        'model_name': 'Category',
     }
     try:
         category = get_object_or_404(Category, pk=pk)
