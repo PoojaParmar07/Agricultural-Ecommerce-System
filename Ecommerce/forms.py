@@ -15,6 +15,9 @@ class CategoryForm(forms.ModelForm):
                 'class': 'form-control',  
                 'maxlength': '100',  
         }),
+             'category_image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+            }),
     }
         
 class BrandForm(forms.ModelForm):

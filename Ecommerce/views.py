@@ -26,7 +26,7 @@ def category_add(request):
         'list':'Ecommerce:category_list'
     }
     if request.method == 'POST':
-        form = CategoryForm(request.POST)  
+        form = CategoryForm(request.POST,request.FILES)  
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
             if Category.objects.filter(category_name=category_name).exists():
@@ -57,7 +57,7 @@ def category_view_details(request, pk):
 
     if request.method == 'POST':
         if 'update' in request.POST:  # Update action
-            form = CategoryForm(request.POST, instance=category)
+            form = CategoryForm(request.POST,request.FILES,instance=category)
             if form.is_valid():
                 form.save()
                 messages.success(request, "Category updated successfully!")

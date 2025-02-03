@@ -1,5 +1,5 @@
 from django.urls import path,include
-
+from django.conf.urls.static import static
 
 from .views import *
 
@@ -91,5 +91,5 @@ urlpatterns = [
     path('pincode_list/',pincode_list,name='pincode_list'),
     path('pincode_add/',pincode_add,name='pincode_add'),
     path('pincode_view_details/<int:pk>/',pincode_view_details,name='pincode_view_details'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
