@@ -95,6 +95,30 @@ class Inventory(models.Model):
         return f"{self.quantity}"
 
         
+class City(models.Model):
+    city_id = models.AutoField(primary_key=True)
+    city_name = models.CharField(max_length=100)
+    create_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'City'
+
+    def get_delivery_charges(self, pincode):
+        try:
+            pincode_instance = self.pincode_set.get(pincode=pincode)
+            return pincode_instance.delivery_charges
+        except Pincode.DoesNotExist:
+            return None
+
+class Pincode(models.Model):
+    pincode_id = models.AutoField(primary_key=True)
+    pincode = models.CharField(max_length=10,unique=True)
+    city = models.ForeignKey('City', on_delete=models.CASCADE)
+    delivery_charges = models.DecimalField(max_digits=5, decimal_places=2, default=50.00)
+    create_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'Pincode'
 
 class Order(models.Model):
     
@@ -118,9 +142,9 @@ class Order(models.Model):
     discounted_price = models.DecimalField(max_digits=5, decimal_places=2)
     order_status = models.CharField(max_length=100,default='pending',choices=STATUS_CHOICES)
     state = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
+    city = models.ForeignKey('City',on_delete=models.CASCADE)
     address = models.CharField(max_length=100)
-    pincode = models.CharField(max_length=100)
+    pincode = models.ForeignKey('Pincode',on_delete=models.CASCADE)
     delivery_charges = models.DecimalField(max_digits=5, decimal_places=2)
     create_at = models.DateTimeField(auto_now=True)
     
