@@ -12,9 +12,8 @@ class CategoryForm(forms.ModelForm):
 
         widgets = {
             'category_name': forms.TextInput(attrs={
-                'class': 'form-control',  # Add any custom CSS class
-                'placeholder': 'Enter Category Name',  # Add a placeholder
-                'maxlength': '100',  # Limit input length
+                'class': 'form-control',  
+                'maxlength': '100',  
         }),
     }
         
@@ -24,7 +23,7 @@ class BrandForm(forms.ModelForm):
         fields = ['brand_name'] 
         labels = {'brand_name': 'Brand Name'} 
         widgets = {
-            'brand_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter brand name'}),
+            'brand_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
         
 class ProductVariantForm(forms.ModelForm):
@@ -48,14 +47,12 @@ class ProductForm(forms.ModelForm):
                 'class': 'form-select',
             }),
             'product_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter product name',
+                'class': 'form-control'
             }),
            
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
-                'rows': 4,
-                'placeholder': 'Enter product description',
+                'rows': 4
             }),
             'product_image': forms.ClearableFileInput(attrs={
                 'class': 'form-control',
@@ -88,7 +85,7 @@ class ProductBatchForm(forms.ModelForm):
             'variant': forms.Select(attrs={'class': 'form-control'}),
             'manufacture_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'expiry_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'batch_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Batch Code'}),
+            'batch_code': forms.TextInput(attrs={'class': 'form-control'}),
 
         }
         
@@ -114,8 +111,7 @@ class CityForm(forms.ModelForm):
         
         widgets = {
             'city_name': forms.TextInput(attrs={
-                'class': 'form-control', 
-                'placeholder': 'Enter City Name'
+                'class': 'form-control'
             }),
         }        
 
@@ -128,7 +124,6 @@ class PincodeForm(forms.ModelForm):
         widgets = {
             'pincode': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter Pincode',
                 'maxlength': '10'
             }),
             'city': forms.Select(attrs={
@@ -136,8 +131,7 @@ class PincodeForm(forms.ModelForm):
             }),
             'delivery_charges': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'step': '0.01',
-                'placeholder': 'Enter Delivery Charge'
+                'step': '0.01'
             }),
         }
 

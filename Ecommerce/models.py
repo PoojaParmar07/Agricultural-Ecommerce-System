@@ -20,7 +20,7 @@ class Brand(models.Model):
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=100)
-    category_image = models.ImageField(upload_to='media/products/')
+    category_image = models.ImageField(upload_to='media/products/',default='category.jpg/')
     create_at = models.DateTimeField(auto_now=True)
     
     class Meta:
