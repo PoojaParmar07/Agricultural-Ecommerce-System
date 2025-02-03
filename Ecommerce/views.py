@@ -978,3 +978,59 @@ def city_view_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
+def pincode_list(request):
+    pincodes = Pincode.objects.all()
+    return render(request,'admin_dashboard/pincode_list.html',{'pincodes':pincodes})
+
+def pincode_add(request):
+    context = {
+        'model_name':'Pincode',
+        'list':'Ecommerce:pincode_list',
+    }
+    
+    if request.method == "POST":
+        form = PincodeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Pincode added successfully")
+            return redirect('Ecommerce:pincode_list')
+
+    else:
+        form = PincodeForm()
+    
+    context['form'] = form
+    return render(request,'admin_dashboard/add_form.html',context)
+
+
+def pincode_view_details(request, pk):
+    context = {
+        'model_name':' Pincode',
+    }
+    
+    try:
+        pincode = get_object_or_404(Pincode,pk=pk)
+    except Http404:
+        return render(request,'404.html',status=404)
+    
+    form = PincodeForm(instance=pincode)
+    
+    if request.method == "POST":
+        
+        if 'update' in request.POST:
+            form=PincodeForm(request.POST,instance=pincode)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Pincode updated successfully")
+                return redirect('Ecommerce:pincode_list')
+            else:
+                messages.error(request,"Pincode update failed. Please correct the errors.")
+        elif 'delete' in request.POST:
+            pincode.delete()
+            messages.success(request,"Pincode deleted successfully")
+            return redirect('Ecommerce:pincode_list')
+        elif 'cancel' in request.POST:
+            return redirect('Ecommerce:pincode_list')
+    context['form']=form
+    context['pincode']=pincode
+    return render(request, 'admin_dashboard/view_details.html', context)
+

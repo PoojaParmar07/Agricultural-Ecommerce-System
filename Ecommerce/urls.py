@@ -87,6 +87,9 @@ urlpatterns = [
     path('add_city/',add_city,name='add_city'),
     path('city_view_details/<int:pk>/',city_view_details,name='city_view_details'),
     
-    
+    # Pincode
+    path('pincode_list/',pincode_list,name='pincode_list'),
+    path('pincode_add/',pincode_add,name='pincode_add'),
+    path('pincode_view_details/<int:pk>/',pincode_view_details,name='pincode_view_details'),
 ]
 
