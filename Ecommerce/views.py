@@ -1036,3 +1036,11 @@ def pincode_view_details(request, pk):
     context['pincode']=pincode
     return render(request, 'admin_dashboard/view_details.html', context)
 
+
+
+
+
+
+
+
+""" User Side Operations"""
