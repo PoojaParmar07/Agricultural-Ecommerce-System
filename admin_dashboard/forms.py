@@ -159,7 +159,7 @@ class OrderForm(forms.ModelForm):
             'state': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'pincode': forms.TextInput(attrs={'class': 'form-control'}),
+            'pincode': forms.Select(attrs={'class': 'form-control'}),
             'delivery_charges': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
         
