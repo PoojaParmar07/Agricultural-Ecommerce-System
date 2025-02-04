@@ -112,7 +112,7 @@ class City(models.Model):
             return None
         
     def __str__(self):
-        return self.city_name
+        return str(self.city_name)
 
 class Pincode(models.Model):
     pincode_id = models.AutoField(primary_key=True)
@@ -125,7 +125,7 @@ class Pincode(models.Model):
         db_table = 'Pincode'
         
     def __str__(self):
-        return self.pincode
+        return self.area_pincode
 
 class Order(models.Model):
     
