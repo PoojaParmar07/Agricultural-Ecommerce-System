@@ -7,6 +7,7 @@ app_name = 'Ecommerce'
 
 urlpatterns = [
     path('',home,name='home'),
+    path('product_list/',product_list,name='product_list'),
    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

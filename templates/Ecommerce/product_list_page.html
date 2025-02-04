@@ -1,21 +1,155 @@
+{% extends 'Ecommerce/base.html' %}
 {% block content %}
 <section class="product-list">
     <h2>Seeds</h2>
     <div class="products-container">
         {% for product in products %}
         <div class="product-card">
-            <img src="{{ product.image_url }}" alt="{{ product.name }}">
-            <h3>{{ product.name }}</h3>
-            <p>₹{{ product.price }}</p>
-            <div class="rating">
-                ⭐⭐⭐⭐⭐ ({{ product.rating }})
+            <div class="product-image-container">
+                <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
+                <span class="wishlist-icon"><box-icon name='heart'></box-icon></span>
             </div>
-            <button class="add-to-cart">Add to Cart</button>
+            <div class="product-details">
+                <h3>{{ product.product_name }}</h3>
+                <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+                <div class="rating-container">
+                    <span class="rating">{{ product.rating|default:0 }}</span>
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                </div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
         </div>
         {% endfor %}
     </div>
-    <div class="back-home">
-        <a href="{% url 'home' %}">Back to Home →</a>
-    </div>
 </section>
+
+<style>
+/* General Styling */
+.product-list {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Product Grid */
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+}
+
+/* Product Card */
+.product-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    width: 250px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.product-card:hover {
+    transform: scale(1.02);
+}
+
+/* Product Image Container */
+.product-image-container {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Wishlist Icon */
+.wishlist-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    padding: 5px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.wishlist-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Product Details */
+.product-details {
+    padding: 10px;
+}
+
+/* Product Name */
+.product-details h3 {
+    font-size: 16px;
+    color: #333;
+    margin: 5px 0;
+    font-weight: 600;
+}
+
+/* Price */
+.price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Rating */
+.rating-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 5px 0;
+}
+
+.rating {
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+}
+
+.stars {
+    font-size: 14px;
+    color: #FFD700; /* Gold color */
+}
+
+/* Add to Cart Button */
+.add-to-cart {
+    width: 100%;
+    background: #1C813E;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.add-to-cart:hover {
+    background: #14642D;
+}
+</style>
+
 {% endblock %}
