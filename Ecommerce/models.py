@@ -112,11 +112,11 @@ class City(models.Model):
             return None
         
     def __str__(self):
-        return self.city_name
+        return str(self.city_name)
 
 class Pincode(models.Model):
     pincode_id = models.AutoField(primary_key=True)
-    pincode = models.CharField(max_length=10,unique=True)
+    area_pincode = models.CharField(max_length=10,unique=True)
     city = models.ForeignKey('City', on_delete=models.CASCADE)
     delivery_charges = models.DecimalField(max_digits=5, decimal_places=2, default=50.00)
     create_at = models.DateTimeField(auto_now=True)
@@ -125,7 +125,7 @@ class Pincode(models.Model):
         db_table = 'Pincode'
         
     def __str__(self):
-        return self.pincode
+        return self.area_pincode
 
 class Order(models.Model):
     

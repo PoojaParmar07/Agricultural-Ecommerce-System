@@ -125,10 +125,10 @@ class CityForm(forms.ModelForm):
 class PincodeForm(forms.ModelForm):
     class Meta:
         model = Pincode
-        fields = ['pincode', 'city', 'delivery_charges']
+        fields = ['area_pincode', 'city', 'delivery_charges']
         
         widgets = {
-            'pincode': forms.TextInput(attrs={
+            'area_pincode': forms.TextInput(attrs={
                 'class': 'form-control',
                 'maxlength': '10'
             }),

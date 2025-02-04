@@ -450,6 +450,7 @@ def order_view_details(request, pk):
                 return redirect('admin_dashboard:order_list')
             else:
                 messages.error(request,"Order update failed. Please correct the errors.")
+                return redirect('admin_dashboard:order_list')
         elif 'delete' in request.POST:
             order.delete()
             messages.success(request,"Order deleted successfully")
