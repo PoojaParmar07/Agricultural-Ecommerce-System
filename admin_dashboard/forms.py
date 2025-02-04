@@ -157,9 +157,9 @@ class OrderForm(forms.ModelForm):
             'discounted_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'order_status': forms.Select(attrs={'class': 'form-control'}),
             'state': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.Select(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'pincode': forms.TextInput(attrs={'class': 'form-control'}),
+            'pincode': forms.Select(attrs={'class': 'form-control'}),
             'delivery_charges': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
         
@@ -185,7 +185,7 @@ class PaymentForm(forms.ModelForm):
         widgets = {
             'payment_mode': forms.Select(attrs={'class': 'form-control'}),
             'payment_status': forms.Select(attrs={'class': 'form-select'}),
-            'transaction_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'transaction_id': forms.Select(attrs={'class': 'form-control'}),
             'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'order': forms.Select(attrs={'class': 'form-select'}),
             'membership': forms.Select(attrs={'class': 'form-select'}),
