@@ -15,7 +15,7 @@
         </div>
 
         
-        <form method="post" action="{% url 'Ecommerce:wishlist_item_add' %}">
+        <form method="post" action="{% url 'admin_dashboard:wishlist_item_add' %}">
           {% csrf_token %}
           <button type="submit" class="create-btn">Create New</button>
         </form>
@@ -41,7 +41,7 @@
               <td>{{ obj.product_batch }}</td>
               <td>{{ obj.product_variant}}</td>
               <td>
-                <a href="{% url 'Ecommerce:wishlist_item_view_details' obj.pk %}">View Details</a>
+                <a href="{% url 'admin_dashboard:wishlist_item_view_details' obj.pk %}">View Details</a>
               </td>
             </tr>
           {% endfor %}

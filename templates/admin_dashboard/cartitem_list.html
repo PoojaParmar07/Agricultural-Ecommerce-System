@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
              <div class="field_name"><span>Cart Item</span></div>
-             <form method="post" action="{% url 'Ecommerce:cartitem_add' %}">
+             <form method="post" action="{% url 'admin_dashboard:cartitem_add' %}">
                 {% csrf_token %}
                 <button type="submit" class='create-btn '>Create New</button>
             </form>
@@ -39,7 +39,7 @@
                     <td>{{ cartitem.product_variant }}</td>
                     <td>{{ cartitem.quantity }}</td>
                     <td>
-                        <a href="{% url 'Ecommerce:cartitem_view_details' cartitem.pk %}" >View Details</a>
+                        <a href="{% url 'admin_dashboard:cartitem_view_details' cartitem.pk %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

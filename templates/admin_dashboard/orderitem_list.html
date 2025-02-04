@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
              <div class="field_name"><span>Order Item</span></div>
-             <form method="post" action="{% url 'Ecommerce:orderitem_add' %}">
+             <form method="post" action="{% url 'admin_dashboard:orderitem_add' %}">
                 {% csrf_token %}
                 <button type="submit" class='create-btn '>Create New</button>
             </form>
@@ -42,7 +42,7 @@
                     <td>{{ order.price }}</td>
                     
                     <td>
-                        <a href="{% url 'Ecommerce:orderitem_view_details' order.pk %}" >View Details</a>
+                        <a href="{% url 'admin_dashboard:orderitem_view_details' order.pk %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

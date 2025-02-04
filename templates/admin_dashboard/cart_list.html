@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
              <div class="field_name"><span>Cart</span></div>
-             <form method="post" action="{% url 'Ecommerce:add_cart' %}">
+             <form method="post" action="{% url 'admin_dashboard:add_cart' %}">
                 {% csrf_token %}
                 <button type="submit" class='create-btn '>Create New</button>
             </form>
@@ -33,7 +33,7 @@
                     <td>{{ cart.cart_id }}</td>
                     <td>{{ cart.user_id }}</td>
                     <td>
-                        <a href="{% url 'Ecommerce:cart_view_details' cart.cart_id %}" >View Details</a>
+                        <a href="{% url 'admin_dashboard:cart_view_details' cart.cart_id %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

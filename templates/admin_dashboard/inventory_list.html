@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Inventory</span></div>
-            <form method="post" action="{% url 'Ecommerce:inventory_add' %}">
+            <form method="post" action="{% url 'admin_dashboard:inventory_add' %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
@@ -39,7 +39,7 @@
                         <td >{{ obj.quatity }}</td>
                         <td >{{ obj.purchase_price }}</td>
                         <td >{{ obj.sales_price }}</td>
-                       <td> <a href="{% url 'Ecommerce:inventory_view_details' pk=obj.inventory_id %}">View Details</a></td>
+                       <td> <a href="{% url 'admin_dashboard:inventory_view_details' pk=obj.inventory_id %}">View Details</a></td>
 
                         </tr>
                         

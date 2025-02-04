@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
              <div class="field_name"><span>Pinocdes</span></div>
-             <form method="post" action="{% url 'Ecommerce:pincode_add' %}">
+             <form method="post" action="{% url 'admin_dashboard:pincode_add' %}">
                 {% csrf_token %}
                 <button type="submit" class='create-btn '>Add New</button>
             </form>
@@ -37,7 +37,7 @@
                     <td>{{ pincode.city }}</td>
                     <td>{{ pincode.delivery_charges }}</td>
                     <td>
-                        <a href="{% url 'Ecommerce:pincode_view_details' pincode.pincode_id %}" >View Details</a>
+                        <a href="{% url 'admin_dashboard:pincode_view_details' pincode.pincode_id %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Payment</span></div>
-            <form method="post" action="{% url 'Ecommerce:payment_add' %}">
+            <form method="post" action="{% url 'admin_dashboard:payment_add' %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
@@ -43,7 +43,7 @@
                         <td >{{ obj.total_price }}</td>
                         <td >{{ obj.order.order_id }}</td>
                         <td >{{ obj.membership.id }}</td>
-                       <td> <a href="{% url 'Ecommerce:payment_view_details' obj.pk %}">View Details</a></td>
+                       <td> <a href="{% url 'admin_dashboard:payment_view_details' obj.pk %}">View Details</a></td>
 
                         </tr>
                         

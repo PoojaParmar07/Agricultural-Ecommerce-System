@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
              <div class="field_name"><span>Product Batch</span></div>
-             <form method="post" action="{% url 'Ecommerce:productbatch_add' %}">
+             <form method="post" action="{% url 'admin_dashboard:productbatch_add' %}">
                 {% csrf_token %}
                 <button type="submit" class='create-btn '>Create New</button>
             </form>
@@ -39,7 +39,7 @@
                     <td>{{ productbatch.expiry_date }}</td>
                     <td>{{ productbatch.batch_code }}</td>
                     <td>
-                        <a href="{% url 'Ecommerce:productbatch_view_details' productbatch.pk %}" >View Details</a>
+                        <a href="{% url 'admin_dashboard:productbatch_view_details' productbatch.pk %}" >View Details</a>
                     </td>
                 </tr>
                 {% endfor %}

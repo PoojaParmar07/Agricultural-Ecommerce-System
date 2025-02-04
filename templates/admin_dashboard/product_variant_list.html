@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Product Variant</span></div>
-            <form method="post" action="{% url 'Ecommerce:product_variant_add' %}">
+            <form method="post" action="{% url 'admin_dashboard:product_variant_add' %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
@@ -37,7 +37,7 @@
                         <td >{{ variant.product }}</td>
                         <td >{{ variant.brand }}</td>
                         <td >{{ variant.units }}</td>
-                        <td ><a href="{% url 'Ecommerce:product_variant_view_details' variant.variant_id %}">View Details</a></td>
+                        <td ><a href="{% url 'admin_dashboard:product_variant_view_details' variant.variant_id %}">View Details</a></td>
                         </tr>
                         
                 {% endfor %}

@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Product</span></div>
-            <form method="post" action="{% url 'Ecommerce:add_product' %}">
+            <form method="post" action="{% url 'admin_dashboard:add_product' %}">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>
@@ -47,7 +47,7 @@
                         {% endif %}</td>
                         <td >{{ product.min_qty }}</td>
                         <td >{{ product.max_qty }}</td>
-                        <td ><a href="{% url 'Ecommerce:product_view_details' product.product_id %}">View Details</a></td>
+                        <td ><a href="{% url 'admin_dashboard:product_view_details' product.product_id %}">View Details</a></td>
                         </tr>
                         
                 {% endfor %}
