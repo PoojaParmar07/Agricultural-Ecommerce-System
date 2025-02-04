@@ -13,6 +13,10 @@ def is_admin_user(user):
 def home(request):
     return render(request,'Ecommerce/base.html')
 
+
+
+
+""" Admin Side CRUD Operation"""
 # Category View
 
 def category_list(request):
