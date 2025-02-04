@@ -151,7 +151,7 @@ class Order(models.Model):
     state = models.CharField(max_length=100)
     city = models.ForeignKey('City',on_delete=models.CASCADE)
     address = models.CharField(max_length=100)
-    pincode = models.ForeignKey('Pincode',on_delete=models.CASCADE)
+    pincode = models.ForeignKey('Pincode',on_delete=models.CASCADE,null=True, blank=True)
     delivery_charges = models.DecimalField(max_digits=5, decimal_places=2)
     create_at = models.DateTimeField(auto_now=True)
     
