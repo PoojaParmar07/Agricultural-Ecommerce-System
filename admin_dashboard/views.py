@@ -443,7 +443,7 @@ def order_view_details(request, pk):
     
     if request.method == "POST":
         if 'update' in request.POST:
-            form=ProductVariantForm(request.POST,instance=order)
+            form=OrderForm(request.POST,instance=order)
             if form.is_valid():
                 form.save()
                 messages.success(request,"Order updated successfully")
