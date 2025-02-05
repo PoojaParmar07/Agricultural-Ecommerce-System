@@ -17,31 +17,9 @@ def is_admin_user(user):
 def home(request):
     return render(request,'Ecommerce/base.html')
 
-@login_required
 
-
-def product_list(request):
-    products = Product.objects.all()
-    
-    product_data = []
-    for product in products:
-        variant = ProductVariant.objects.filter(product=product).first()  # Get first variant
-        if variant:
-            inventory = Inventory.objects.filter(batch__variant=variant).first()  # Get price from inventory
-            sales_price = inventory.sales_price if inventory else None
-        else:
-            sales_price = None
-        rating=Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
-
-        product_data.append({
-            'product_name': product.product_name,
-            'product_image': product.product_image.url,
-            'sales_price': sales_price,
-            'rating':rating
-        })
-
-    return render(request, 'Ecommerce/product_list_page.html', {'products': product_data})
-
+def homebody(request):
+    return render(request,'Ecommerce/homebody.html')
 
 
 

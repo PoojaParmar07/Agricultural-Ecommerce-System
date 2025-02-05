@@ -13,7 +13,7 @@ header {
     color: white;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    
     padding: 15px 50px;
 }
 
@@ -39,35 +39,42 @@ nav ul li a {
 
 /* Hero Section */
 .hero {
-    background: url('hero-bg.jpg') center/cover no-repeat;
-    color: white;
-    text-align: center;
-    padding: 100px 20px;
+    background-image: url('/media/Rectangle.png');
+    color: rgb(255, 255, 255);
+    padding: 30px 20px;
     position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-size: max(100px, 100vw);
+    height: 400px;
 }
 
-.hero .content {
-    max-width: 600px;
-    margin: auto;
+.sub-hero {
+    height: 400px;
+    width: 100%;
+    opacity: 0.89;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #2e6430;
+    background-size: max(100px, 100vw);
+    padding: 30px 20px;
 }
 
-.hero h1 {
-    font-size: 40px;
-    font-weight: bold;
+.sub-cont{
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-around;
 }
 
-.hero p {
-    font-size: 18px;
-    margin: 15px 0;
+.header h2{
+    font-size:50px;
 }
 
-.hero button {
-    background: #4CAF50;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
+.sub-cont img{
+    width: 10%;
+    height: 10%;
 }
 
 /* Categories Section */
