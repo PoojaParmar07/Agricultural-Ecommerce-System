@@ -13,7 +13,8 @@ def is_admin_user(user):
 def home(request):
     return render(request,'Ecommerce/base.html')
 
-
+def homepage(request):
+    return render(request, 'Ecommerce/homepage.html')
 
 
 

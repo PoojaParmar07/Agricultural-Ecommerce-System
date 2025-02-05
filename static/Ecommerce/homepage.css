@@ -39,16 +39,33 @@ nav ul li a {
 
 /* Hero Section */
 .hero {
-    background: url('hero-bg.jpg') center/cover no-repeat;
-    color: white;
-    text-align: center;
-    padding: 100px 20px;
+    background-image: url('/media/Rectangle.png');
+    color: rgb(255, 255, 255);
+    padding: 30px 20px;
     position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-size: max(100px, 100vw);
+    height: 400px;
+}
+
+.hero .sub-hero {
+    height: 400px;
+    width: 100%;
+    opacity: 0.89;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #2e6430;
+    background-size: max(100px, 100vw);
+    padding: 30px 20px;
 }
 
 .hero .content {
     max-width: 600px;
     margin: auto;
+    position: relative;
+    z-index: 10;
 }
 
 .hero h1 {

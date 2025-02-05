@@ -1,30 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jyoti Agro</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
-</head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">JyotiAgro</div>
-            <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Category</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Crop Info</a></li>
-                <li><a href="#">Kichan Charcha</a></li>
-            </ul>
-        </nav>
-        <section class="hero">
-            <h1>Jyoti Agro</h1>
-            <p>Get all of your important agricultural supplies and fertilizers in one place.</p>
-            <button>Enquiry</button>
-        </section>
-    </header>
+{% extends "Ecommerce/base.html" %} 
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'Ecommerce/homepage.css' %}">
+
+    <section class="hero">
+        <div class="sub-hero"></div>
+        <h1>Jyoti Agro</h1>
+        <p>Get all of your important agricultural supplies and fertilizers in one place.</p>
+        <button>Enquiry</button>
+    </section>
     
     <section class="categories">
         <h2>Category</h2>
@@ -90,5 +76,4 @@
         
     </script>
 
-</body>
-</html>
+{% endblock %}
