@@ -58,7 +58,7 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         """Redirect users based on their role."""
         if self.request.user.is_staff:
-            return reverse_lazy('admin_dashboard')  # Redirect admin users
+            return reverse_lazy('admin_dashboard:admin_dashboard')  # Redirect admin users
         return reverse_lazy('Ecommerce:home')  # Redirect normal users
 
     
