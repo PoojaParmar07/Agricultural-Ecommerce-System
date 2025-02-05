@@ -17,6 +17,9 @@ def is_admin_user(user):
 def home(request):
     return render(request,'Ecommerce/base.html')
 
+def homebody(request):
+    return render(request,'Ecommerce/homebody.html')
+
 @login_required
 
 
