@@ -109,6 +109,7 @@ body, ul, li, a {
     cursor: pointer;  
     padding: 0px; 
     font-size: 15px;
+    width: 100%;
 }
 
 /* Navbar Right Icons */
