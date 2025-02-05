@@ -8,7 +8,7 @@ app_name = 'Ecommerce'
 urlpatterns = [
     path('',home,name='home'),
 
-    path('homepage/',homepage,name='homepage'),
+    path('homebody/',homebody,name='homebody'),
 
     path('product_list/',product_list,name='product_list'),
 

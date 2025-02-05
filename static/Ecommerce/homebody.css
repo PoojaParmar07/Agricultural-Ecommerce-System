@@ -13,7 +13,7 @@ header {
     color: white;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    
     padding: 15px 50px;
 }
 
@@ -49,7 +49,7 @@ nav ul li a {
     height: 400px;
 }
 
-.hero .sub-hero {
+.sub-hero {
     height: 400px;
     width: 100%;
     opacity: 0.89;
@@ -61,30 +61,20 @@ nav ul li a {
     padding: 30px 20px;
 }
 
-.hero .content {
-    max-width: 600px;
-    margin: auto;
+.sub-cont{
     position: relative;
     z-index: 10;
+    display: flex;
+    justify-content: space-around;
 }
 
-.hero h1 {
-    font-size: 40px;
-    font-weight: bold;
+.header h2{
+    font-size:50px;
 }
 
-.hero p {
-    font-size: 18px;
-    margin: 15px 0;
-}
-
-.hero button {
-    background: #4CAF50;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
+.sub-cont img{
+    width: 10%;
+    height: 10%;
 }
 
 /* Categories Section */

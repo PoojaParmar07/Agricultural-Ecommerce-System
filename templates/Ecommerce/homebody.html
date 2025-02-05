@@ -3,34 +3,39 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'Ecommerce/homepage.css' %}">
+<link rel="stylesheet" href="{% static 'Ecommerce/homebody.css' %}">
 
-    <section class="hero">
-        <div class="sub-hero"></div>
-        <h1>Jyoti Agro</h1>
-        <p>Get all of your important agricultural supplies and fertilizers in one place.</p>
-        <button>Enquiry</button>
-    </section>
+<section class="hero">
+    <div class="sub-hero"></div>
+    <div class="sub-cont">
+        <div class="header">
+            <h2>JyotiAgro</h2>
+            <p>Get all of your important agricultural supplies and fertilizers seed in one place.</p>
+            <button>Enquiry</button>
+        </div>
+        <img src="/media/Header.png" alt="Home"> 
+    </div>
+</section>
     
-    <section class="categories">
-        <h2>Category</h2>
+<section class="categories">
+    <h2>Category</h2>
         <div class="category-list">
-            <div class="category-item">Vegetable Seeds</div>
-            <div class="category-item">Fertilizers</div>
-            <div class="category-item">Chemical Fertilizers</div>
-            <div class="category-item">Fruit Seeds</div>
-        </div>
-    </section>
+        <div class="category-item">Vegetable Seeds</div>
+        <div class="category-item">Fertilizers</div>
+        <div class="category-item">Chemical Fertilizers</div>
+        <div class="category-item">Fruit Seeds</div>
+    </div>
+</section>
     
-    <section class="products">
-        <h2>Seeds</h2>
-        <div class="product-list">
-            <div class="product-item">Jade Terrarium - $350</div>
-            <div class="product-item">Ficus Benjamina - $350</div>
-            <div class="product-item">Syngonium Plant - $350</div>
-            <div class="product-item">Cactus Peruvianus - $350</div>
-        </div>
-    </section>
+<section class="products">
+    <h2>Seeds</h2>
+    <div class="product-list">
+        <div class="product-item">Jade Terrarium - $350</div>
+        <div class="product-item">Ficus Benjamina - $350</div>
+        <div class="product-item">Syngonium Plant - $350</div>
+        <div class="product-item">Cactus Peruvianus - $350</div>
+    </div>
+</section>
     
     <section class="membership">
         <h2>Join Our Exclusive Membership</h2>
@@ -44,14 +49,6 @@
         <div class="faq-item">Another Question?</div>
         <div class="faq-item">Another Question?</div>
     </section>
-    
-    <footer>
-        <div class="footer-content">
-            <p>Contact Us: 9913883517 | jyotiagro123@gmail.com</p>
-            <p>Location: JamalPur Char, Ahmedabad, Gujarat</p>
-        </div>
-    </footer>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Handle FAQ Section
