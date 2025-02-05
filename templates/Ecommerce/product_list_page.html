@@ -13,8 +13,26 @@
                 <h3>{{ product.product_name }}</h3>
                 <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
                 <div class="rating-container">
-                    <span class="rating">{{ product.rating|default:0 }}</span>
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <span class="star-rating">
+                        {% if product.rating %}
+                            {% for i in "12345" %}
+                            {% if i|add:"0" <= product.rating %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                            <span class="rating">  ({{ product.rating|floatformat:1 }}/5)</span>
+                            {% else %}
+                           
+                            {% if i|add:"0" >= product.rating %}
+                            ★
+                        {% else %}
+                            ☆ ☆ ☆ ☆ ☆
+                        {% endif %}
+                        <span class="rating">  ({{ product.rating|default:0 }}/5)</span>
+                        {% endif %}
+                    </span>
                 </div>
                 <button class="add-to-cart">Add to Cart</button>
             </div>
@@ -150,6 +168,11 @@
 .add-to-cart:hover {
     background: #14642D;
 }
+
+ .star-rating {
+        color: gold;
+        font-size: 18px;
+    }
 </style>
 
 {% endblock %}
