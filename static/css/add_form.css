@@ -7,37 +7,17 @@ body {
     height: 100%;
 }
 
-
+/* Section Header */
 .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    
     background-color: white;
-    padding:7px 0px;
+    padding:20px;
     
 }
-section
-{
-    padding: 0px 15px 0px 15px;
-}
-
-
 .field_name span {
     font-size: 20px;
     font-weight: 600;
-    margin:0px 20px;
-}
-
-
-
-
-h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
-    margin-left: 10px;
-    display: block;
-    /* background-color: #3B823E; */
+    margin: 0px 20px;
 }
 
 /* Input Group */
@@ -51,112 +31,83 @@ h2 {
     display: block;
     margin-bottom: 8px;
     font-size: 16px;
-    color: #000000;
+    font-weight: 600;
+    color: #333;
     margin-left: 10px;
 }
 
-.input-group input {
-    width: 90%;
+/* Improved Dropdown (Select Box) */
+.input-group select,
+.form-select {
+    width: 100%;
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
-    margin-top: 8px;
+    margin-top: 5px;
     margin-left: 10px;
+    background-color: #fff;
+    cursor: pointer;
+    appearance: none; /* Removes default browser styles */
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+/* Dropdown Hover & Focus Effect */
+.input-group select:hover,
+.input-group select:focus,
+.form-select:hover,
+.form-select:focus {
+    border-color: #3B823E;
+    outline: none;
+    box-shadow: 0 0 8px rgba(59, 130, 62, 0.3);
 }
 
 /* Button Styles */
 .btn-container {
     display: flex;
-    justify-content:flex-start;
-    gap:100px;
+    justify-content: flex-start;
+    gap: 20px;
 }
 
-.btn {
+.btn, .btn-cancel {
     background-color: #3B823E;
     color: white;
     border: none;
-    padding: 12px 80px;
+    padding: 12px 40px;
     font-size: 16px;
     font-weight: 500;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-left:  10px;
+    transition: 0.3s ease;
 }
 
-.btn:hover {
-    background-color: #3B823E;
+.btn:hover, .btn-cancel:hover {
+    background-color: #2e6b30;
 }
 
-.btn-cancel  {
-    background-color: #3B823E;
-    color: white;
-    border: none;
-    padding: 12px 80px;
+/* Form Control Styles */
+.form-control {
+    width: 100%;
+    padding: 12px;
     font-size: 16px;
-    font-weight: 500;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-     margin-left: 10px;
-
-}
-
-.btn-cancel button:hover {
-    background-color: #ddd;
-}
-
-.messages {
-    margin: 10px 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.message {
-    border: 1px solid transparent;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-
-.message.error {
-    background-color: #ff0015;
-    color: #ffffff;
-    border-color: #ff0019;
-    margin:0px 20px;
-}
-
-.message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #c3e6cb;
-    margin:0px 20px;
-}
-
-.message.warning {
-    background-color: #fffef9;
-    color: #856404;
-    border-color: #ffeeba;
-    margin:0px 20px;
-}
- 
-/* General form row styling */
-.form-row {
-    display: flex;
-    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 6px;
     margin-bottom: 15px;
-    gap: 50px;
 }
 
- .checkbox-row label {
-    display: flex;
-    align-items: flex-start;
-    cursor: pointer;  /*Adds pointer cursor for better UX */
-} 
+/* Responsive Design */
+@media (max-width: 768px) {
+    .btn-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
 
-
-
+    .btn, .btn-cancel {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -97,7 +97,7 @@ def list_brand(request):
 
 def add_brand(request):
     context={
-        'model_name':'Add Brand',
+        'model_name':'Brand',
         'list':'admin_dashboard:list_brand',
     }
     if request.method == 'POST':
@@ -119,7 +119,7 @@ def add_brand(request):
 
 def brand_view_details(request,pk):
     context={
-        'model_name':'Update Brand',
+        'model_name':' Brand',
     }
     try:
         brand = get_object_or_404(Brand, pk = pk)
@@ -161,7 +161,7 @@ def product_list(request):
 
 def add_product(request):
     context = {
-        'model_name': 'Add Product',
+        'model_name': 'Product',
         'list':'admin_dashboard:product_list'
     }
     if request.method == 'POST' and 'product_name' in request.POST:
@@ -187,7 +187,7 @@ def add_product(request):
 
 def product_view_details(request,pk):
     context = {
-        'model_name': 'Update Product',
+        'model_name': 'Product',
     }
     try:
         product = get_object_or_404(Product, pk=pk)
@@ -224,7 +224,7 @@ def product_variant_list(request):
 
 def product_variant_add(request):
     context={
-        'model_name':'Add Product Variant',
+        'model_name':'Product Variant',
         'list':'admin_dashboard:product_variant_list',
     }
     if request.method == 'POST':
@@ -244,7 +244,7 @@ def product_variant_add(request):
 
 def product_variant_view_details(request,pk):
     context = {
-        'model_name': 'Update Product Variant',
+        'model_name': 'Product Variant',
     }
     try:
         product_variant = get_object_or_404(ProductVariant, pk=pk)
@@ -280,7 +280,7 @@ def productbatch_list(request):
 
 def productbatch_add(request):
     context = {
-        'model_name' : 'Add Product Batch',
+        'model_name' : 'Product Batch',
         'list' : 'admin_dashboard:productbatch_list',
     }
     
@@ -303,7 +303,7 @@ def productbatch_add(request):
 
 def productbatch_view_details(request, pk):
     context = {
-        'model_name':'Update Product Batch'
+        'model_name':'Product Batch'
     }
     
     try:
@@ -346,7 +346,7 @@ def inventory_list(request):
 
 def inventory_add(request):
    context = {
-        'model_name' : 'Add Inventory',
+        'model_name' : 'Inventory',
         'list' : 'admin_dashboard:inventory_list',
     }
     
@@ -370,7 +370,7 @@ def inventory_add(request):
 
 def inventory_view_details(request,pk):
     context={
-        'modeal_name':"Update Inventory",
+        'modeal_name':"Inventory",
     }
     try:
         inventory=get_object_or_404(Inventory,pk=pk)
@@ -443,7 +443,7 @@ def order_view_details(request, pk):
     
     if request.method == "POST":
         if 'update' in request.POST:
-            form=ProductVariantForm(request.POST,instance=order)
+            form=OrderForm(request.POST,instance=order)
             if form.is_valid():
                 form.save()
                 messages.success(request,"Order updated successfully")

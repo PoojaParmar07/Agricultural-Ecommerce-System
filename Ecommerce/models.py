@@ -125,7 +125,7 @@ class Pincode(models.Model):
         db_table = 'Pincode'
         
     def __str__(self):
-        return self.area_pincode
+        return f" {self.city} -{self.area_pincode}"
 
 class Order(models.Model):
     

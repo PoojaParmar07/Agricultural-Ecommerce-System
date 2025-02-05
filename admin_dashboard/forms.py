@@ -78,7 +78,7 @@ class ProductForm(forms.ModelForm):
 class ProductBatchForm(forms.ModelForm):
     class Meta:
         model = ProductBatch
-        fields = ['variant', 'manufacture_date', 'expiry_date', 'batch_code']
+        fields = ['product' ,'variant', 'manufacture_date', 'expiry_date', 'batch_code']
 
         widgets = {
 
