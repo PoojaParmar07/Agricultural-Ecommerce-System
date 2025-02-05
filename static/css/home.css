@@ -5,7 +5,9 @@ body, ul, li, a {
     list-style: none;
     text-decoration: none;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    /* font-family: Arial, sans-serif;
+     */
+     font-family: "Open Sans", serif;
 }
 
 /* Navbar Container */

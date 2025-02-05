@@ -11,7 +11,7 @@
     <section>
         <div class="section-header">
             <div class="field_name"><span>Product</span></div>
-            <form method="post" action="{% url 'admin_dashboard:add_product' %}">
+            <form method="post" action="{% url 'admin_dashboard:add_product' %}"   enctype="multipart/form-data">
                 {% csrf_token %}
                 <button type="submit" class="create-btn">Create New</button>
             </form>

@@ -197,7 +197,7 @@ def product_view_details(request,pk):
     form = ProductForm(instance=product)
     if request.method=='POST':
         if 'update' in request.POST:
-            form=ProductForm(request.POST,instance=product)
+            form=ProductForm(request.POST,request.FILES,instance=product)
             if form.is_valid():
                 form.save()
                 messages.success(request,"Product updated successfully")
@@ -285,7 +285,7 @@ def productbatch_add(request):
     }
     
     if request.method == "POST" and 'batch_code' in request.POST:
-        form = ProductBatchForm(request.POST)
+        form = ProductBatchForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request,"Product batch added successfully")
