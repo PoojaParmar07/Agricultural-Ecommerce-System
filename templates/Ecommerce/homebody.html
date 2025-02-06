@@ -23,7 +23,7 @@
     <div class="category-list">
         {% for category in categories %}
         <div class="category-item">
-            <img src="{{ category.category_image.url }}" alt="{{ category.category_name }} Seeds">
+            <img src="{{ category.category_image }}" alt="{{ category.category_name }}">
             <p>{{ category.category_name }}</p>
         </div>
         {% endfor %}
