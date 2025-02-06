@@ -21,12 +21,14 @@
 <section class="categories">
     <h2 class="category-title">Category</h2>
     <div class="category-list">
+        {% for category in categories %}
         <div class="category-item">
-            <img src="images/vegetable-seeds.jpg" alt="Vegetable Seeds">
-            <p>Vegetable Seeds</p>
+            <img src="{{ category.category_image.url }}" alt="{{ category.category_name }} Seeds">
+            <p>{{ category.category_name }}</p>
         </div>
+        {% endfor %}
         <div class="category-item">
-            <img src="images/fertilizer.jpg" alt="Fertilizer">
+            <img src="/static/images/fertilizer.jpg" alt="Fertilizer">
             <p>Fertilizer</p>
         </div>
         <div class="category-item">
@@ -39,24 +41,27 @@
         </div>
     </div>
 </section>
-    
-<section class="products">
-    <h2>Seeds</h2>
-    <div class="product-list">
-        <div class="product-item">Jade Terrarium - $350</div>
-        <div class="product-item">Ficus Benjamina - $350</div>
-        <div class="product-item">Syngonium Plant - $350</div>
-        <div class="product-item">Cactus Peruvianus - $350</div>
+
+
+<section>
+    <div class="products">
+        <h2>Seeds</h2>
+        <div class="product-list">
+            <div class="product-item">Jade Terrarium - $350</div>
+            <div class="product-item">Ficus Benjamina - $350</div>
+            <div class="product-item">Syngonium Plant - $350</div>
+            <div class="product-item">Cactus Peruvianus - $350</div>
+        </div>
     </div>
 </section>
-    
-    <section class="membership">
-        <h2>Join Our Exclusive Membership</h2>
-        <p>15% Discount, Free Shipping, Early Product Access</p>
-        <button>Join Now</button>
-    </section>
-    
-    <section class="faq">
+
+<section class="membership">
+    <h2>Join Our Exclusive Membership</h2>
+    <p>15% Discount, Free Shipping, Early Product Access</p>
+    <button>Join Now</button>
+</section>
+
+<section class="faq">
         <h2>Frequently Asked Questions</h2>
         <div class="faq-item">How does this work?</div>
         <div class="faq-item">Another Question?</div>
