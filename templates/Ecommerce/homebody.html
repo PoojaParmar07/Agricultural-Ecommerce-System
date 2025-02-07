@@ -1,94 +1,89 @@
-{% extends "Ecommerce/base.html" %} 
+{% extends 'Ecommerce/base.html' %}
 {% load static %}
 
 {% block content %}
+  <link rel="stylesheet" href="{% static 'Ecommerce/homebody.css' %}" />
 
-<link rel="stylesheet" href="{% static 'Ecommerce/homebody.css' %}">
-
-<section class="hero">
+  <section class="hero">
     <div class="sub-hero"></div>
     <div class="sub-cont">
-        <div class="header">
-            <h2>Jyoti Agro</h2>
-            <p>Get all of your important agricultural supplies and fertilizers<br>
-                 seed in one place.</p>
-            <button>Enquiry</button>
-        </div>
-        <img src="/media/header.jpg" alt="Home">
+      <div class="header">
+        <h2>Jyoti Agro</h2>
+        <p>
+          Get all of your important agricultural supplies and fertilizers<br />
+          seed in one place.
+        </p>
+        <button>Enquiry</button>
+      </div>
+      <img src="/media/header.jpg" alt="Home" />
     </div>
-</section>
-    
-<section class="categories">
+  </section>
+
+  <section class="categories">
     <h2 class="category-title">Category</h2>
     <div class="category-list">
         {% for category in categories %}
         <div class="category-item">
-            <img src="{{ category.category_image }}" alt="{{ category.category_name }}">
-            <p>{{ category.category_name }}</p>
+          {% comment %} <form method="POST" action="{% url 'Ecommerce:product_list' id=category.id %}"> {% endcomment %}
+            {% csrf_token %}
+                {% if category.category_image %}
+                    <img src="{{ category.category_image }}" alt="{{ category.category_name }} Seeds" />
+                {% else %}
+                    <img src="/static/images/default-image.jpg" alt="Default Image" />
+                {% endif %}
+                <h4>{{ category.category_name }}</h4>
+          {% comment %} </form> {% endcomment %}
         </div>
+        {% empty %}
+        <p>No categories available.</p>
         {% endfor %}
-        <div class="category-item">
-            <img src="/static/images/fertilizer.jpg" alt="Fertilizer">
-            <p>Fertilizer</p>
-        </div>
-        <div class="category-item">
-            <img src="images/chemical-fertilizer.jpg" alt="Chemical Fertilizers">
-            <p>Chemical Fertilizers</p>
-        </div>
-        <div class="category-item">
-            <img src="images/fruit-seeds.jpg" alt="Fruit Seeds">
-            <p>Fruit Seeds</p>
-        </div>
-    </div>
-</section>
+      
+  </section>
 
-
-<section>
+  <section>
     <div class="products">
-        <h2>Seeds</h2>
-        <div class="product-list">
-            <div class="product-item">Jade Terrarium - $350</div>
-            <div class="product-item">Ficus Benjamina - $350</div>
-            <div class="product-item">Syngonium Plant - $350</div>
-            <div class="product-item">Cactus Peruvianus - $350</div>
-        </div>
+      <h2>Seeds</h2>
+      <div class="product-list">
+        <div class="product-item">Jade Terrarium - $350</div>
+        <div class="product-item">Ficus Benjamina - $350</div>
+        <div class="product-item">Syngonium Plant - $350</div>
+        <div class="product-item">Cactus Peruvianus - $350</div>
+      </div>
     </div>
-</section>
+  </section>
 
-<section class="membership">
+  <section class="membership">
     <h2>Join Our Exclusive Membership</h2>
     <p>15% Discount, Free Shipping, Early Product Access</p>
     <button>Join Now</button>
-</section>
+  </section>
 
-<section class="faq">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-item">How does this work?</div>
-        <div class="faq-item">Another Question?</div>
-        <div class="faq-item">Another Question?</div>
-    </section>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Handle FAQ Section
-            const faqItems = document.querySelectorAll(".faq-item");
-        
-            faqItems.forEach(item => {
-                item.addEventListener("click", () => {
-                    const answer = item.querySelector(".faq-answer");
-                    answer.classList.toggle("visible");
-                });
-            });
-        
-            // Handle Add to Cart Buttons
-            const cartButtons = document.querySelectorAll(".add-to-cart");
-        
-            cartButtons.forEach(button => {
-                button.addEventListener("click", () => {
-                    alert("Product added to cart!");
-                });
-            });
-        });
-        
-    </script>
-
+  <section class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">How does this work?</div>
+    <div class="faq-item">Another Question?</div>
+    <div class="faq-item">Another Question?</div>
+  </section>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Handle FAQ Section
+      const faqItems = document.querySelectorAll('.faq-item')
+    
+      faqItems.forEach((item) => {
+        item.addEventListener('click', () => {
+          const answer = item.querySelector('.faq-answer')
+          answer.classList.toggle('visible')
+        })
+      })
+    
+      // Handle Add to Cart Buttons
+      const cartButtons = document.querySelectorAll('.add-to-cart')
+    
+      cartButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          alert('Product added to cart!')
+        })
+      })
+    })
+  </script>
 {% endblock %}

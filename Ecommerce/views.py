@@ -18,13 +18,26 @@ def home(request):
     return render(request,'Ecommerce/base.html')
 
 def homebody(request):
-    return render(request,'Ecommerce/homebody.html')
+    categories = Category.objects.all()  # Get all categories from DB
+    print(categories)
+    category_data = []
+
+    for category in categories:
+        category_data.append({
+            'category_name': category.category_name.capitalize(),  # capitalize()
+            'category_image': category.category_image.url if category.category_image else None,  # Handle missing images
+        })
+    
+    
+    return render(request, "Ecommerce/homebody.html", {'categories': category_data})  
+
+    # return render(request,'Ecommerce/homebody.html')
 
 @login_required
-
-
 def product_list(request):
+    # category = get_object_or_404(Category, id=category_id)
     products = Product.objects.all()
+    # products = Product.objects.filter(category = category)
     
     product_data = []
     for product in products:
@@ -49,4 +62,4 @@ def product_list(request):
 
 
 
-
+    
