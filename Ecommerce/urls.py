@@ -6,9 +6,9 @@ from .views import *
 app_name = 'Ecommerce'
 
 urlpatterns = [
-    path('',home,name='home'),
+    path('home/',home,name='home'),
 
-    path('homebody/',homebody,name='homebody'),
+    path('',homebody,name='homebody'),
     path('product_list/', product_list, name='product_list')
 
    

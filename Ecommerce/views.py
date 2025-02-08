@@ -27,9 +27,28 @@ def homebody(request):
             'category_name': category.category_name.capitalize(),  # capitalize()
             'category_image': category.category_image.url if category.category_image else None,  # Handle missing images
         })
+        
+    products = Product.objects.all()
     
+    product_data = []
     
-    return render(request, "Ecommerce/homebody.html", {'categories': category_data})  
+    for product in products:
+        variant = ProductVariant.objects.filter(product=product).first()  # Get first variant
+        if variant:
+            inventory = Inventory.objects.filter(batch__variant=variant).first()  # Get price from inventory
+            sales_price = inventory.sales_price if inventory else None
+        else:
+            sales_price = None
+        rating=Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
+
+        product_data.append({
+            'product_name': product.product_name,
+            'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
+            'sales_price': sales_price if sales_price is not None else "N/A",
+            'rating': rating if rating is not None else 0
+        })
+
+    return render(request, "Ecommerce/homebody.html", {'categories': category_data,'product_data':product_data})  
 
     # return render(request,'Ecommerce/homebody.html')
 

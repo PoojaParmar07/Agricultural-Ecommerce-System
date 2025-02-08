@@ -40,22 +40,72 @@
       
   </section>
 
-  <section>
-    <div class="products">
-      <h2>Seeds</h2>
-      <div class="product-list">
-        <div class="product-item">Jade Terrarium - $350</div>
-        <div class="product-item">Ficus Benjamina - $350</div>
-        <div class="product-item">Syngonium Plant - $350</div>
-        <div class="product-item">Cactus Peruvianus - $350</div>
-      </div>
+
+  <section class="product-list">
+    <h2>Seeds</h2>
+
+    <div class="products-container">
+      {% for product in product_data %}
+
+        <div class="product-card">
+            <div class="product-image-container">
+              <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
+                <span class="wishlist-icon"><box-icon name='heart'></box-icon></span>
+            </div>
+            <div class="product-details">
+                <div class="product-header">
+                    <h3>{{ product.product_name }}</h3>
+                </div>
+                <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+                <div class="rating-container">
+                    <span class="star-rating">
+                        {% if product.rating %}
+                            {% for i in "12345" %}
+                                {% if i|add:"0" <= product.rating %}
+                                <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
+                                {% else %}
+                                <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                                {% endif %}
+                            {% endfor %}
+                            <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
+                        {% else %}
+                        {% for i in "12345" %}
+                        {% if i|add:"0" >= 0 %}
+    <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+{% endif %}
+{% endfor %}
+
+                            <span class="rating">(0/5)</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-  </section>
+</section>
 
   <section class="membership">
-    <h2>Join Our Exclusive Membership</h2>
+    <div class="membership-section">
+      <div class="membership-content">
+          <h2>Join Our Exclusive Membership</h2>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+          <ul class="benefits">
+              <li>15% Discount</li>
+              <li>Free Shipping</li>
+              <li>Early Access to Products</li>
+          </ul>
+          <button class="join-btn" onclick="joinMembership()">Join Now</button>
+      </div>
+      <div class="membership-image">
+          <img src="/media/Rectangle 58.png" alt="Membership">
+      </div>
+  </div>
+
+    {% comment %} <h2>Join Our Exclusive Membership</h2>
     <p>15% Discount, Free Shipping, Early Product Access</p>
-    <button>Join Now</button>
+    <button>Join Now</button> {% endcomment %}
   </section>
 
   <section class="faq">
