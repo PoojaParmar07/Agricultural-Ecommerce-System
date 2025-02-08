@@ -25,13 +25,17 @@
         {% for category in categories %}
         <div class="category-item">
           {% comment %} <form method="POST" action="{% url 'Ecommerce:product_list' id=category.id %}"> {% endcomment %}
-            {% csrf_token %}
+            {% comment %} {% csrf_token %} {% endcomment %}
+            <a href="{% url 'Ecommerce:product_list' category.category_id %}">
+              <h4>{{ category.category_name }}</h4>
                 {% if category.category_image %}
-                    <img src="{{ category.category_image }}" alt="{{ category.category_name }} Seeds" />
+
+                <img src="{{ category.category_image }}" alt="{{ category.category_name }}">
                 {% else %}
                     <img src="/static/images/default-image.jpg" alt="Default Image" />
                 {% endif %}
-                <h4>{{ category.category_name }}</h4>
+            </a>
+                
           {% comment %} </form> {% endcomment %}
         </div>
         {% empty %}

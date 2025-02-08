@@ -56,8 +56,10 @@ h2 {
 
 /* Product Grid */
 .products-container {
-    display: grid;
-    grid-template-columns: repeat(4,1fr); /* Auto adjusts */
+    display: flex;
+    justify-content: center; /* ✅ Centers horizontally */
+    align-items: center; /* ✅ Centers vertically */
+    flex-wrap: wrap; /* ✅ Ensures wrapping for responsiveness */
     gap: 50px;
     padding: 20px;
     max-width: 1300px;
