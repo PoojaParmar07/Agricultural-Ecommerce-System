@@ -23,7 +23,10 @@ def homebody(request):
     category_data = []
 
     for category in categories:
+        print(category.category_image)
+        
         category_data.append({
+            'category_id': category.category_id,
             'category_name': category.category_name.capitalize(),  # capitalize()
             'category_image': category.category_image.url if category.category_image else None,  # Handle missing images
         })
@@ -53,10 +56,10 @@ def homebody(request):
     # return render(request,'Ecommerce/homebody.html')
 
 @login_required
-def product_list(request):
-    # category = get_object_or_404(Category, id=category_id)
-    products = Product.objects.all()
-    # products = Product.objects.filter(category = category)
+def product_list(request,category_id):
+    category = get_object_or_404(Category, category_id=category_id)
+    # products = Product.objects.all()
+    products = Product.objects.filter(category = category)
     
     product_data = []
     for product in products:
@@ -66,16 +69,17 @@ def product_list(request):
             sales_price = inventory.sales_price if inventory else None
         else:
             sales_price = None
-        rating=Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
-
+        rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
         product_data.append({
             'product_name': product.product_name,
-            'product_image': product.product_image.url,
+            'product_image': product.product_image.url if product.product_image else None,  # Optional image check
             'sales_price': sales_price,
-            'rating':rating
+            'rating': rating
         })
-
-    return render(request, 'Ecommerce/product_list_page.html', {'products': product_data})
+    context = {
+        'products': product_data,
+    }
+    return render(request, 'Ecommerce/product_list_page.html', context)
 
 
 
