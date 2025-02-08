@@ -56,11 +56,11 @@ def homebody(request):
     # return render(request,'Ecommerce/homebody.html')
 
 @login_required
-def product_list(request,category_id):
-    category = get_object_or_404(Category, category_id=category_id)
-    # products = Product.objects.all()
-    products = Product.objects.filter(category = category)
-    
+
+def product_list(request, category_id):
+    category = get_object_or_404(Category, category_id=category_id)  # Fetch category
+    products = Product.objects.filter(category=category)
+
     product_data = []
     for product in products:
         variant = ProductVariant.objects.filter(product=product).first()  # Get first variant
@@ -69,20 +69,20 @@ def product_list(request,category_id):
             sales_price = inventory.sales_price if inventory else None
         else:
             sales_price = None
+
         rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
+
         product_data.append({
             'product_name': product.product_name,
-            'product_image': product.product_image.url if product.product_image else None,  # Optional image check
+            'product_image': product.product_image.url if product.product_image else None,  # Check if image exists
             'sales_price': sales_price,
-            'rating': rating
+            'rating': rating if rating else 0,  # Default to 0 if no rating
         })
+
     context = {
-        'products': product_data,
+        'category_name': category.category_name,  # Pass category name
+        'products': product_data,  # Pass product data
     }
     return render(request, 'Ecommerce/product_list_page.html', context)
-
-
-
-
 
     
