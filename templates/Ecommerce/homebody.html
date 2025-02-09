@@ -54,7 +54,10 @@
                 </div>
                 <div class="product-details">
                     <div class="product-header">
+                      <a href="{% url 'Ecommerce:product_view' product.product_id %}">
                         <h3>{{ product.product_name }}</h3>
+                    </a>
+                       
                     </div>
                     <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
                     <div class="rating-container">
