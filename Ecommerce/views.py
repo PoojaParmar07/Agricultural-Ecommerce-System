@@ -57,8 +57,9 @@ def homebody(request):
 
 
 @login_required
-
- 
+def product_list(request, category_id):
+    category = get_object_or_404(Category, category_id=category_id)  # Fetch category
+    products = Product.objects.filter(category=category)    
 
 def product_list(request, category_id):
     category = get_object_or_404(Category, category_id=category_id)
@@ -147,6 +148,13 @@ def product_view(request, product_id):
 
 
 
+    return render(request, 'Ecommerce/product_view.html', {
+        'product': product_data,
+        'reviews': reviews,
+        'variants': variants,
+    })
+
+
 # View Cart
 @login_required
 def cart_view(request):
@@ -195,10 +203,3 @@ def remove_from_cart(request, cart_item_id):
     cart_item.delete()
 
     return redirect('Ecommerce:cart_view')
-
-    # return render(request, 'Ecommerce/product_view.html', {
-    #     'product': product_data,
-    #     'reviews': reviews,
-    #     'variants': variants,
-    # })
-
