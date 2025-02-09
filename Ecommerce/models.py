@@ -242,8 +242,9 @@ class Review(models.Model):
     user = models.ForeignKey("account.CustomUser", on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     rating = models.IntegerField()
-    review = models.CharField(max_length=255)
-    create_at = models.DateTimeField(auto_now_add=True)
+    review = models.CharField(max_length=255,null=True,blank=True)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table = "Review"

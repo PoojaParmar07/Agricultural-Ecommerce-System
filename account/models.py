@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
     address=models.TextField(max_length=255)
     is_staff=models.BooleanField(default=False)
     is_superuser=models.BooleanField(default=False)
-    image=models.ImageField(upload_to='account/',default='account/profile.jpg')
+    image=models.ImageField(upload_to='media/account/',default='http://pluspng.com/img-png/png-user-icon-person-icon-png-people-person-user-icon-2240.png')
     
 
     class Meta:
