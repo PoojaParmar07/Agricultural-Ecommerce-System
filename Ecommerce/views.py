@@ -58,10 +58,7 @@ def homebody(request):
 
 @login_required
 
-
-def product_list(request, category_id):
-    category = get_object_or_404(Category, category_id=category_id)  # Fetch category
-    products = Product.objects.filter(category=category)    
+ 
 
 def product_list(request, category_id):
     category = get_object_or_404(Category, category_id=category_id)
