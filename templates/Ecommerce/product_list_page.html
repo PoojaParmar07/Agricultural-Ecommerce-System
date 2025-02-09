@@ -1,7 +1,8 @@
 {% extends 'Ecommerce/base.html' %}
 {% block content %}
 <section class="product-list">
-    <h2>Seeds</h2>
+    <h2>{{ category_name }}</h2>  <!-- Display category name here -->
+
     <div class="products-container">
         {% for product in products %}
         <div class="product-card">
@@ -10,35 +11,29 @@
                 <span class="wishlist-icon"><box-icon name='heart'></box-icon></span>
             </div>
             <div class="product-details">
-                <div class="product-header">
-                    <h3>{{ product.product_name }}</h3>
-                </div>
+                <h3>{{ product.product_name }}</h3>
                 <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+
+                <!-- Rating Section -->
                 <div class="rating-container">
                     <span class="star-rating">
-                        {% if product.rating %}
-                            {% for i in "12345" %}
-                                {% if i|add:"0" <= product.rating %}
-                                <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
-                                {% else %}
-                                <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
-                        {% else %}
                         {% for i in "12345" %}
-                        {% if i|add:"0" >= 0 %}
-    <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
-{% endif %}
-{% endfor %}
-
-                            <span class="rating">(0/5)</span>
-                        {% endif %}
+                            {% if i|add:"0" <= product.rating %}
+                            <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
+                            {% else %}
+                            <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                            {% endif %}
+                        {% endfor %}
+                        <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
                     </span>
                 </div>
-                <button class="add-to-cart">Add to Cart</button>
+                <p>Product Id :{{product.product_id}}</p>
+
+                <a href="#"><button class="add-to-cart">Add to Cart</button></a>
             </div>
         </div>
+        {% empty %}
+        <p>No products available in this category.</p>
         {% endfor %}
     </div>
 </section>
@@ -189,6 +184,11 @@ h2 {
     cursor: pointer;
     border-radius: 8px;
     transition: background 0.3s ease;
+}
+
+ a{
+    height: 45px;
+    width: 220px;
 }
 
 .add-to-cart:hover {

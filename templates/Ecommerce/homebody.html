@@ -42,139 +42,120 @@
   </section>
 
 
-  <section class="product-list">
+<section class="product-list">
     <h2>Products</h2>
 
     <div class="products-container">
-      {% for product in product_data %}
-
-        <div class="product-card">
-            <div class="product-image-container">
-              <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
-                <span class="wishlist-icon"><box-icon name='heart'></box-icon></span>
-            </div>
-            <div class="product-details">
-                <div class="product-header">
-                    <h3>{{ product.product_name }}</h3>
+        {% for product in product_data %}
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
+                    <span class="wishlist-icon"><box-icon name='heart'></box-icon></span>
                 </div>
-                <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
-                <div class="rating-container">
-                    <span class="star-rating">
-                        {% if product.rating %}
-                            {% for i in "12345" %}
-                                {% if i|add:"0" <= product.rating %}
-                                <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
-                                {% else %}
-                                <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
-                        {% else %}
-                        {% for i in "12345" %}
-                        {% if i|add:"0" >= 0 %}
-    <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
-{% endif %}
-{% endfor %}
+                <div class="product-details">
+                    <div class="product-header">
+                        <h3>{{ product.product_name }}</h3>
+                    </div>
+                    <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+                    <div class="rating-container">
+                        <span class="star-rating">
+                            {% if product.rating %}
+                                {% for i in "12345" %}
+                                    {% if i|add:"0" <= product.rating %}
+                                        <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
+                                    {% else %}
+                                        <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
+                            {% else %}
+                                {% for i in "12345" %}
+                                    <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                                {% endfor %}
+                                <span class="rating">(0/5)</span>
+                            {% endif %}
+                        </span>
+                    </div>
 
-                            <span class="rating">(0/5)</span>
-                        {% endif %}
-                    </span>
+                    <a href="#">
+                      <button class="add-to-cart">Add to Cart</button>
+                  </a>
+                 
+
                 </div>
-                <button class="add-to-cart">Add to Cart</button>
             </div>
-        </div>
         {% endfor %}
     </div>
 </section>
 
-  {% comment %} <section class="membership">
-    <div class="membership-section">
-      <div class="membership-content">
-          <h2>Join Our Exclusive Membership</h2>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-          <ul class="benefits">
-              <li>15% Discount</li>
-              <li>Free Shipping</li>
-              <li>Early Access to Products</li>
-          </ul>
-          <button class="join-btn" onclick="joinMembership()">Join Now</button>
-      </div>
-      <div class="membership-image">
-          <img src="/media/Rectangle 58.png" alt="Membership">
-      </div>
-  </div> {% endcomment %}
-  <section class="membership">
-    <div class="membership-section">
-        <div class="membership-content">
-            <h3>Join Our Exclusive Membership</h3>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.</p>
-            <ul class="benefits">
-                <li>✔ 15% Discount</li>
-                <li>✔ Free Shipping</li>
-                <li>✔ Early Accessary Product Access</li>
-            </ul>
-            <button class="join-btn">Join Now</button>
-        </div>
-        <div class="membership-image">
-            <img src="/media/Rectangle 58.png" alt="Membership">
-        </div>
+
+<section class="membership">
+  <div class="membership-section">
+    <div class="membership-content">
+      <h2>Join Our Exclusive Membership</h2>
+      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+      <ul class="benefits">
+        <li>15% Discount</li>
+        <li>Free Shipping</li>
+        <li>Early Access to Products</li>
+      </ul>
+      <button class="join-btn" onclick="joinMembership()">Join Now</button>
     </div>
+    <div class="membership-image">
+      <img src="/media/Rectangle 58.png" alt="Membership">
+    </div>
+  </div>
 </section>
 
-
-    {% comment %} <h2>Join Our Exclusive Membership</h2>
-    <p>15% Discount, Free Shipping, Early Product Access</p>
-    <button>Join Now</button> {% endcomment %}
-  </section>
-
-
-
+  
+  
   {% comment %} FAQ Section {% endcomment %}
-
+  
   <section class="faq">
     <h2>Frequently Asked Questions</h2>
     <div class="box" onclick="toggleFAQ(this)">
-        <span>What is Netflix?</span>
-        <box-icon name='chevron-down'></box-icon>
+      <span>What is Netflix?</span>
+      <box-icon name='chevron-down'></box-icon>
     </div>
     <div class="answer">Netflix is a streaming service that offers a wide variety of TV shows, movies, anime, documentaries, and more.</div>
-
+    
     <div class="box" onclick="toggleFAQ(this)">
-        <span>How much does Netflix cost?</span>
-        <box-icon name='chevron-down'></box-icon>
+      <span>How much does Netflix cost?</span>
+      <box-icon name='chevron-down'></box-icon>
     </div>
     <div class="answer">Netflix offers different plans starting at a basic monthly fee.</div>
-
+    
     <div class="box" onclick="toggleFAQ(this)">
-        <span>Where can I watch?</span>
-        <box-icon name='chevron-down'></box-icon>
+      <span>Where can I watch?</span>
+      <box-icon name='chevron-down'></box-icon>
     </div>
     <div class="answer">You can watch Netflix on various devices, including smartphones, tablets, smart TVs, and gaming consoles.</div>
-
+    
     <div class="box" onclick="toggleFAQ(this)">
-        <span>How do I cancel?</span>
-        <box-icon name='chevron-down'></box-icon>
+      <span>How do I cancel?</span>
+      <box-icon name='chevron-down'></box-icon>
     </div>
     <div class="answer">You can cancel your subscription at any time from your account settings.</div>
-
+    
     <div class="box" onclick="toggleFAQ(this)">
-        <span>What can I watch on Netflix?</span>
-        <box-icon name='chevron-down'></box-icon>
+      <span>What can I watch on Netflix?</span>
+      <box-icon name='chevron-down'></box-icon>
     </div>
     <div class="answer">Netflix has a vast library of content, including movies, TV series, and exclusive originals.</div>
-
+    
     <div class="box" onclick="toggleFAQ(this)">
         <span>Is Netflix good for kids?</span>
         <box-icon name='chevron-down'></box-icon>
-    </div>
-    <div class="answer">Yes, Netflix provides a Kids section with age-appropriate content and parental controls.</div>
-</section>
-
-
+      </div>
+      <div class="answer">Yes, Netflix provides a Kids section with age-appropriate content and parental controls.</div>
+    </section>
     
+    
+    
+    <script src="{% static 'js/cart.js' %}"></script>
     
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', function () {   
         // Handle FAQ Section
         const faqItems = document.querySelectorAll('.faq-item')
         
@@ -188,12 +169,12 @@
       // Handle Add to Cart Buttons
       const cartButtons = document.querySelectorAll('.add-to-cart')
     
-      cartButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          alert('Product added to cart!')
-        })
-      })
-    })
+     // cartButtons.forEach((button) => {
+     //   button.addEventListener('click', () => {
+     //     alert('Product added to cart!')
+     //   })
+     // })
+    //})
     function toggleFAQ(element) {
       let answer = element.nextElementSibling;
       let icon = element.querySelector('box-icon');

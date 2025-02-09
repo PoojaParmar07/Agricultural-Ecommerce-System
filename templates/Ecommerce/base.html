@@ -53,9 +53,9 @@
             <ul>
                 <li class="icons">
                     <a href="#" class="icon"><box-icon name='heart'></box-icon></a>
-                    <a href="#" class="icon"><box-icon type='cart' name='cart-alt'></box-icon></a>
+                    <a href="{% url 'Ecommerce:cart_view' %}" class="icon"><box-icon type='cart' name='cart-alt'></box-icon><span id="cart-count">{{ cart_count }}</a>
                     <span class="dropdown">
-                        <a href="#" class="icon"><box-icon name='user'></box-icon></a>
+                        <a href="#" class="icon"><box-icon name='user'></box-icon></span></a>
                         <ul class="dropdown-menu">
                             {% if user.is_authenticated %}
                             <li class="dropdown-item">
