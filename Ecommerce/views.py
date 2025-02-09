@@ -69,12 +69,6 @@ def product_list(request, category_id):
 
 
 
-
-
-
-
-
-
 def product_view(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     variants = list(ProductVariant.objects.filter(product=product).select_related('brand'))
