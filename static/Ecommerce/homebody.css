@@ -227,96 +227,118 @@ nav ul li a {
 
 /* Membership Section */
 .membership {
-    /* background: #ffffff; */
-    padding: 50px 20px;
     text-align: center;
-    width: 100%;
+    background-color: white;
+    
 }
 
 .membership-section {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background: #fff;
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    width: 90%;
+    max-width: 1200px;
+    margin: 0px 0px 10px 150px;
+    /* gap: 40px; */
 }
 
 .membership-content {
     flex: 1;
-    padding-right: 30px;
+    text-align: left;
+    
 }
 
-.membership-content h2 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
+.membership-content h3 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 50px;
+}
+
+.membership-content h3::after {
+    content: "";
+    display: block;
+    width: 90%;
+    height: 3px;
+    background-color: black;
+    margin: 10px 0;
 }
 
 .membership-content p {
-    font-size: 14px;
-    color: #666;
-    margin: 10px 0 15px;
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    margin-top: -25px;
 }
 
 .benefits {
     list-style: none;
     padding: 0;
+    font-size: 18px;
+    color: #333;
 }
 
 .benefits li {
-    font-size: 14px;
-    color: #444;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-}
-
-.benefits li::before {
-    content: '✔';
-    color: #4CAF50;
-    margin-right: 10px;
-    font-size: 16px;
+    margin-bottom: 15px;
 }
 
 .join-btn {
-    background: #4CAF50;
+    width: 35%;
+    height: 45px;
+    background: #3B823E;
     color: white;
     border: none;
-    padding: 12px 20px;
     font-size: 16px;
-    border-radius: 6px;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s ease-in-out;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    margin: 10px 0;
 }
 
 .join-btn:hover {
     background: #388E3C;
+    transform: scale(1.05);
 }
 
 .membership-image {
     flex: 1;
+    text-align: right;
 }
 
 .membership-image img {
     max-width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    height: 400px;
+    border-radius: 18px;
+    
+
+    /* box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); */
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
     .membership-section {
         flex-direction: column;
         text-align: center;
+        padding: 20px;
     }
 
     .membership-content {
-        padding-right: 0;
-        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .membership-image {
+        text-align: center;
+    }
+
+    .join-btn {
+        width: 100%;
     }
 }
+
 /* Product Grid */
 .products-container {
     display: grid;
