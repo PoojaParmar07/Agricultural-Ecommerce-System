@@ -10,11 +10,11 @@ from django.db.models import Avg
 import json
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
-from Ecommerce.models import Category, Product, ProductVariant, Inventory, Review
-import json
+# from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib.auth.decorators import login_required
+# from django.db.models import Avg
+# from Ecommerce.models import Category, Product, ProductVariant, Inventory, Review
+# import json
 
 
 
@@ -56,11 +56,7 @@ def homebody(request):
     return render(request, "Ecommerce/homebody.html", {'categories': category_data, 'product_data': product_data})
 
 
-@login_required
-def product_list(request, category_id):
-    category = get_object_or_404(Category, category_id=category_id)  # Fetch category
-    products = Product.objects.filter(category=category)    
-
+@login_required    
 def product_list(request, category_id):
     category = get_object_or_404(Category, category_id=category_id)
     products = Product.objects.filter(category=category)
@@ -115,7 +111,7 @@ def product_list(request, category_id):
 
 
 def product_view(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
+    product = get_object_or_404(Product, product_id=product_id)
     variants = list(ProductVariant.objects.filter(product=product).select_related('brand'))
     inventories = Inventory.objects.filter(batch__variant__in=variants).select_related('batch__variant')
 
@@ -198,8 +194,8 @@ def add_to_cart(request, product_id):
 
 # Remove from Cart
 @login_required
-def remove_from_cart(request, cart_item_id):
-    cart_item = get_object_or_404(CartItem, cart__user=request.user, cart_item_id=cart_item_id)
+def remove_from_cart(request,item_id):
+    cart_item = get_object_or_404(CartItem, cart__user=request.user, cart_item_id=item_id)
     cart_item.delete()
 
     return redirect('Ecommerce:cart_view')
