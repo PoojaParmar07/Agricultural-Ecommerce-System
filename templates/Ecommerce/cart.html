@@ -28,7 +28,7 @@
                     <td>{{ item.quantity }}</td>
                     <td>₹{{ item.product_variant.sales_price|default:"N/A" }}</td>
                     <td>
-                        {% comment %} <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}"><button class="remove-cart" data-item-id="{{ item.cart_item_id }}">Remove</button></a> {% endcomment %}
+                        <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}"><button class="remove-cart" data-item-id="{{ item.cart_item_id }}">Remove</button></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -53,7 +53,7 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow-x: auto;
-    margin: 100px 300px;
+    margin: 100px 350px;
     
 
 }
