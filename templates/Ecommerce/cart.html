@@ -1,0 +1,161 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %} 
+
+{% block content %}
+
+<div class="cart-container">
+    <div class="cart-header">
+    {% if cart_items %}
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>
+                        <img src="{{ item.product_variant.product.product_image.url }}" alt="{{ item.product_variant.product.product_name }}" class="cart-product-image">
+                    </td>
+                    <td>{{ item.product_variant.product.product_name }}</td>
+                    <td>{{ item.product_variant.units }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.product_variant.sales_price|default:"N/A" }}</td>
+                    <td>
+                        <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}"><button class="remove-cart" data-item-id="{{ item.cart_item_id }}">Remove</button></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="cart-footer">
+        <a href="#" class="checkout-btn">Checkout</a>
+    </div>
+    {% else %}
+    <p class="empty-cart-message">Your cart is empty.</p>
+    {% endif %}
+</div>
+
+<style>
+/* General Cart Styling */
+.cart-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 100px 300px;
+    
+
+}
+
+
+
+/* Table Styling */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-table th, 
+.cart-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Table Header */
+.cart-table thead {
+    background:rgb(255, 255, 255);;
+    color: black;
+}
+
+/* Table Rows */
+.cart-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Product Image */
+.cart-product-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Remove Button */
+.remove-cart {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.remove-cart:hover {
+    background: #c82333;
+}
+
+/* Checkout Button */
+.cart-footer {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.checkout-btn {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 12px 18px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.checkout-btn:hover {
+    background: #218838;
+}
+
+/* Empty Cart Message */
+.empty-cart-message {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    padding: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cart-table th,
+    .cart-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .cart-product-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .checkout-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+</style>
+{% comment %} <script src="{% static 'js/cart.js' %}"></script> {% endcomment %}
+
+
+{% endblock %}

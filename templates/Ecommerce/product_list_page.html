@@ -27,8 +27,9 @@
                         <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
                     </span>
                 </div>
+                <p>Product Id :{{product.product_id}}</p>
 
-                <button class="add-to-cart">Add to Cart</button>
+                <a href="#"><button class="add-to-cart">Add to Cart</button></a>
             </div>
         </div>
         {% empty %}
@@ -183,6 +184,11 @@ h2 {
     cursor: pointer;
     border-radius: 8px;
     transition: background 0.3s ease;
+}
+
+ a{
+    height: 45px;
+    width: 220px;
 }
 
 .add-to-cart:hover {

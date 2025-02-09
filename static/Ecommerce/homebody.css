@@ -223,6 +223,13 @@ nav ul li a {
     border: none;
     cursor: pointer;
     margin-top: 10px;
+    
+}
+
+
+a{
+    height: 45px;
+    width: 220px;
 }
 
 /* Membership Section */
