@@ -48,7 +48,9 @@
                 <input type="text" id="quantity" value="1" max="5"readonly>
                 <button class="increase">+</button>
             </div>
-            <button class="add-to-cart">Add to Cart</button>
+            <a href="{% url 'Ecommerce:add_to_cart' product.product_id %}">
+                <button class="add-to-cart">Add to Cart</button>
+            </a>
         </div>
     </div>
 </div>
@@ -60,7 +62,7 @@
 
   
 <div class="review-container">
-    <!-- Review List (Left Side) -->
+    {% comment %} Review List (Left Side)  {% endcomment %}
     <div id="review-list">
         <h3>Customer Reviews</h3>
         {% for review in reviews %}
@@ -235,37 +237,7 @@
         margin-top: 20px;
     }
     
-    /* Quantity Selector */
-    {% comment %} .quantity-selector {
-        display: flex;
-        align-items: center;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    .quantity-selector button {
-        background-color: #ddd;
-        border: none;
-        padding: 10px 15px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-    }
-    
-    .quantity-selector button:hover {
-        background-color: #bbb;
-    }
-    
-    .quantity-selector input {
-        width: 50px;
-        text-align: center;
-        border: none;
-        font-size: 18px;
-        font-weight: bold;
-        background: none;
-    } {% endcomment %}
-    
+
     .quantity-selector {
     display: flex;
     align-items: center;
@@ -300,14 +272,16 @@
 }
     /* Add to Cart Button */
     .add-to-cart {
-        background-color: #28a745;
+        width:200px;
+        height: 40px;
+        background: #3B823E;
         color: white;
-        font-size: 18px;
-        padding: 14px 25px;
-        border-radius: 8px;
         border: none;
+        font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
-        transition: background 0.3s ease, transform 0.2s ease;
+        border-radius: 8px;
+        transition: background 0.3s ease;
     }
     
     .add-to-cart:hover {
@@ -333,6 +307,11 @@
     }
     
     /* Container to align reviews and form side by side */
+
+
+    .review p{
+            padding-bottom:15px;
+    }
     .review-container {
         display: flex;
         justify-content: space-between;
@@ -342,7 +321,7 @@
         padding: 20px;
     }
     
-    /* Review List Styling */
+    {% comment %} Review List Styling  {% endcomment %}
     #review-list {
         flex: 1;
         background: #fff;
@@ -350,8 +329,12 @@
         border-radius: 8px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
+    #review-list h3{
+        padding-bottom: 20px;
+}
+   
     
-    /* Review Header */
+    {% comment %} Review Header  {% endcomment %}
     .review-header {
         display: flex;
         align-items: center;
@@ -387,7 +370,7 @@
         height: 18px;
     }
     
-    /* Review Text */
+     {% comment %} Review Text  {% endcomment %}
     .review-text {
         font-size: 14px;
         padding: 5px 0;
@@ -401,6 +384,7 @@
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        height:fit-content;
     }
     
     .review-form-container h3 {
