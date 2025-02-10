@@ -96,6 +96,7 @@
     </div>
 
     <!-- Add Review Form (Right Side) -->
+{% if user.is_authenticated %}
     <div class="review-form-container">
         <h3>Write a Review</h3>
         <form method="POST" class="review-form">
@@ -109,9 +110,12 @@
                 <span data-value="5">★</span>
             </div>
             <input type="hidden" name="rating" id="rating-input">
-            <textarea name="comment" placeholder="Write your review..." required></textarea>
+            <textarea name="comment" placeholder="Write your review..." ></textarea>
             <button type="submit" class="submit-review">Submit Review</button>
         </form>
+        {% else %}
+            <p><a href="{% url 'login' %}">Login</a> to leave a review.</p>
+        {% endif %}
     </div>
 </div>
 

@@ -132,6 +132,23 @@ def product_view(request, product_id):
 
     # Fetch reviews in descending order
     reviews = Review.objects.filter(product=product).order_by('-created_at')
+    
+    
+    #Give reviewand Rating
+    if request.method == "POST":
+        rating_value = request.POST.get('rating') 
+        review_text = request.POST.get('comment') 
+
+        if rating_value and review_text:  # Ensure both fields are filled
+            Review.objects.create(
+                user=request.user,
+                product=product,
+                rating=int(rating_value),  # Convert to integer
+                review=review_text.strip()  # Trim spaces
+            )
+            return redirect('Ecommerce:product_view', product_id=product.product_id)
+    else:
+        review_form = ReviewForm()
 
     # Prepare product data
     product_data = {
