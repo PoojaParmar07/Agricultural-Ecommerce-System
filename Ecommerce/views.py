@@ -55,53 +55,36 @@ def homebody(request):
 
     return render(request, "Ecommerce/homebody.html", {'categories': category_data, 'product_data': product_data})
 
-
-@login_required    
+@login_required
 def product_list(request, category_id):
     category = get_object_or_404(Category, category_id=category_id)
     products = Product.objects.filter(category=category)
 
-
     product_data = []
     
     for product in products:
-
         variant = ProductVariant.objects.filter(product=product).first()  # Get first variant
-        if variant:
-            inventory = Inventory.objects.filter(batch__variant=variant).first()  # Get price from inventory
-            sales_price = inventory.sales_price if inventory else None
-        else:
-            sales_price = None
-
-
-        variant = ProductVariant.objects.filter(product=product).first()
-        inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None
+        inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None  # Get price from inventory
         sales_price = inventory.sales_price if inventory else None
 
-        rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
+        # Get average rating
+        rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0
 
+        # Add product details to list
         product_data.append({
             'product_id': product.product_id,
             'product_name': product.product_name,
-
             'product_image': product.product_image.url if product.product_image else None,  # Check if image exists
             'sales_price': sales_price,
-            'rating': rating if rating else 0,  # Default to 0 if no rating
+            'rating': rating,  # Default to 0 if no rating
         })
 
     context = {
         'category_name': category.category_name,  # Pass category name
-        'products': product_data,  # Pass product data
+        'products': product_data,  # Pass processed product data
+    }
 
-            'product_image': product.product_image.url if product.product_image else None,
-            'sales_price': sales_price,
-            'rating': rating,
-        }
-
-    return render(request, 'Ecommerce/product_list_page.html', {'products': product_data})
-
-
-
+    return render(request, 'Ecommerce/product_list_page.html', context)
 
 
 @login_required
