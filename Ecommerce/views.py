@@ -141,10 +141,12 @@ def product_view(request, product_id):
         'description': product.description,
         'rating': rating,
         'first_price': first_price,
+        
     }
 
     context = {
         'product': product_data,
+        'stars_range': range(1, 6),
         'reviews': reviews,
         'variants': variants,
         'variant_prices': json.dumps(variant_prices, ensure_ascii=False),  # Pass JSON data safely

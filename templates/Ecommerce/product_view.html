@@ -4,8 +4,8 @@
 {% block content %}
 <div class="product-container">
     <!-- Product Image -->
-    <div class="product-image">
-        <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
+    <div class="product-image-container">
+        <img src="{{ product.product_image }}" alt="{{ product.product_name }}" class="product-image">
     </div>
 
     <!-- Product Details -->
@@ -130,14 +130,34 @@
         background: #fff;
     }
     
-    /* Product Image */
-    .product-image img {
+    /* Product Image Styling */
+.product-image-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    height: 395px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+    .product-image {
         width: 100%;
-        max-width: 450px;
-        border-radius: 12px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        object-fit: cover;
+        height: auto;
+        object-fit: contain;
+        border-radius: 8px;
+        transition: transform 0.3s ease-in-out;
     }
+
+    .product-image:hover {
+        transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+
+
+    
+    
     
     /* Product Details */
     .product-details {
@@ -418,14 +438,6 @@
     
     
 </style>
-<script>
-    let variantPrices = JSON.parse('{{ variant_prices|default:"{}"|escapejs }}');
-
-    console.log("Final Variant Prices:", variantPrices);
-
-</script>
-
-
 <!-- JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -467,9 +479,7 @@
         if (variantDropdown) {
             variantDropdown.addEventListener("change", function () {
                 const selectedVariant = variantDropdown.value;
-                console.log("Selected Variant:", selectedVariant);  // Debugging output
                 selectedPrice = variantPrices[selectedVariant] ? parseFloat(variantPrices[selectedVariant]) : 0;
-                console.log("Selected Price:", selectedPrice);  // Debugging output
                 updatePrice();
             });
     
@@ -488,13 +498,16 @@
             updatePrice();
         }
     
-        decreaseBtn.addEventListener("click", function () {
-            adjustQuantity(-1);
-        });
-    
-        increaseBtn.addEventListener("click", function () {
-            adjustQuantity(1);
-        });
+        if (decreaseBtn && increaseBtn && quantityInput) {
+            decreaseBtn.addEventListener("click", function () {
+                adjustQuantity(-1);
+            });
+        
+            increaseBtn.addEventListener("click", function () {
+                adjustQuantity(1);
+            });
+        }
+        
     
         // Star rating system for review submission
         if (starRatingContainer && ratingInput) {
