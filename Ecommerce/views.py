@@ -147,8 +147,6 @@ def product_view(request, product_id):
                 review=review_text.strip()  # Trim spaces
             )
             return redirect('Ecommerce:product_view', product_id=product.product_id)
-    else:
-        review_form = ReviewForm()
 
     # Prepare product data
     product_data = {
