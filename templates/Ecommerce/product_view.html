@@ -45,7 +45,7 @@
         <div class="cart-section">
             <div class="quantity-selector">
                 <button class="decrease">-</button>
-                <input type="text" id="quantity" value="1" readonly>
+                <input type="text" id="quantity" value="1" max="5"readonly>
                 <button class="increase">+</button>
             </div>
             <button class="add-to-cart">Add to Cart</button>
@@ -212,7 +212,7 @@
     }
     
     /* Quantity Selector */
-    .quantity-selector {
+    {% comment %} .quantity-selector {
         display: flex;
         align-items: center;
         border: 2px solid #ddd;
@@ -240,8 +240,40 @@
         font-size: 18px;
         font-weight: bold;
         background: none;
-    }
+    } {% endcomment %}
     
+    .quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.quantity-selector button {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    background-color: #ddd;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quantity-selector button:hover {
+    background-color: #bbb;
+}
+
+.quantity-selector input {
+    width: 40px;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
     /* Add to Cart Button */
     .add-to-cart {
         background-color: #28a745;

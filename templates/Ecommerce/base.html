@@ -23,12 +23,12 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-left">
-            <a href="#" class="brand"><img src="/media/logo.jpg" alt="" height="70px"></a>
+            <a href="{% url 'Ecommerce:homebody' %}" class="brand"><img src="/media/logo.jpg" alt="" height="70px"></a>
         </div>
         <div class="navbar-toggle" onclick="toggleMenu()">☰</div>
         <div class="nav-menu">
             <ul class="navbar-menu">
-                <li><a href="{% url 'Ecommerce:home' %}">Home</a></li>
+                <li><a href="{% url 'Ecommerce:homebody' %}">Home</a></li>
                 <li class="dropdown">
                     <a href="#">Category</a>
                     <ul class="dropdown-menu">
@@ -53,7 +53,7 @@
             <ul>
                 <li class="icons">
                     <a href="#" class="icon"><box-icon name='heart'></box-icon></a>
-                    {% comment %} <a href="{% url 'Ecommerce:cart_view' %}" class="icon"><box-icon type='cart' name='cart-alt'></box-icon><span id="cart-count">{{ cart_count }}</a> {% endcomment %}
+                    <a href="{% url 'Ecommerce:cart_view' %}" class="icon"><box-icon type='cart' name='cart-alt'></box-icon><span id="cart-count">{{ cart_count }}</a>
                     <span class="dropdown">
                         <a href="#" class="icon"><box-icon name='user'></box-icon></span></a>
                         <ul class="dropdown-menu">

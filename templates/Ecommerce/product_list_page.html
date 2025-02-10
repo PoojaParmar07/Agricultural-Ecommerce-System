@@ -30,7 +30,7 @@
                         <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
                     </span>
                 </div>
-                <p>Product Id :{{product.product_id}}</p>
+                
 
                 <a href="{% url 'Ecommerce:add_to_cart' product.product_id %}">
                     <button class="add-to-cart">Add to Cart</button>
@@ -64,7 +64,8 @@ h2 {
     gap: 50px;
     padding: 20px;
     max-width: 1300px;
-    margin: auto;
+    margin: 80px auto;
+    
 }
 
 /* Product Card */
@@ -88,15 +89,15 @@ h2 {
 .product-image-container {
     position: relative;
     width: 100%;
-    height: 220px;
+    height: 130px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .product-image-container img {
-    width: 250px;
-    height: 198px;
+    width: 100%;
+    height: 100px;
     object-fit: contain;
     border-radius: 10px;
 }
