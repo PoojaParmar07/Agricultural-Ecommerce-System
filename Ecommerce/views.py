@@ -104,31 +104,34 @@ def product_list(request, category_id):
 
 
 
-
-
-
-
-
-
+@login_required
 def product_view(request, product_id):
     product = get_object_or_404(Product, product_id=product_id)
+
+    # Fetch variants and related brands
     variants = list(ProductVariant.objects.filter(product=product).select_related('brand'))
+
+    # Fetch inventory related to those variants
     inventories = Inventory.objects.filter(batch__variant__in=variants).select_related('batch__variant')
 
-    # Build a dictionary with string keys for correct JSON mapping
-    variant_prices = {str(variant.variant_id): None for variant in variants}
-    for inventory in inventories:
-        variant_prices[str(inventory.batch.variant.variant_id)] = float(inventory.sales_price)
+    # Build variant prices dictionary
+    variant_prices = {
+        str(inventory.batch.variant.variant_id): float(inventory.sales_price) 
+        for inventory in inventories
+    }
 
-    # Get the first available price
-    first_price = next((price for price in variant_prices.values() if price is not None), None)
+    print("Variants:", variants)
+    print("Variant Prices in View:", variant_prices)
+
+    # Get the first available price, else "N/A"
+    first_price = next((price for price in variant_prices.values() if price is not None), "N/A")
 
     # Calculate average rating
     rating_data = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))
-    rating = rating_data['avg_rating'] if rating_data['avg_rating'] is not None else 0
+    rating = round(rating_data['avg_rating'], 1) if rating_data['avg_rating'] is not None else 0
 
-    # Fetch reviews in descending order of creation time
-    reviews = Review.objects.filter(product=product).order_by('-created_at') 
+    # Fetch reviews in descending order
+    reviews = Review.objects.filter(product=product).order_by('-created_at')
 
     # Prepare product data
     product_data = {
@@ -136,19 +139,19 @@ def product_view(request, product_id):
         'product_name': product.product_name,
         'product_image': product.product_image.url if product.product_image else "/static/images/no_image.jpg",
         'description': product.description,
-        'rating': round(rating, 1),
-        "variant_prices": json.dumps(variant_prices),  # ✅ Ensure valid JSON
-        'first_price': first_price if first_price is not None else "N/A",
-
+        'rating': rating,
+        'first_price': first_price,
     }
 
-
-
-    return render(request, 'Ecommerce/product_view.html', {
+    context = {
         'product': product_data,
         'reviews': reviews,
         'variants': variants,
-    })
+        'variant_prices': json.dumps(variant_prices, ensure_ascii=False),  # Pass JSON data safely
+    }
+
+    return render(request, 'Ecommerce/product_view.html', context)
+
 
 
 # View Cart

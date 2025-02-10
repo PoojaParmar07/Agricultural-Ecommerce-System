@@ -15,7 +15,7 @@
         <!-- Rating and Reviews -->
         <div class="rating-container">
             <span class="star-rating">
-                {% for i in "12345" %}
+                {% for i in stars_range %}
                     {% if i|add:"0" <= product.rating %}
                         <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
                     {% else %}
@@ -418,32 +418,102 @@
     
     
 </style>
+<script>
+    let variantPrices = JSON.parse('{{ variant_prices|default:"{}"|escapejs }}');
+
+    console.log("Final Variant Prices:", variantPrices);
+
+</script>
+
 
 <!-- JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        let variantDropdown = document.getElementById("variant");
-        let priceDisplay = document.getElementById("price-display");
-        let variantPrices = JSON.parse(document.getElementById("variant-prices").textContent || '{}');
-
-        variantDropdown.addEventListener("change", function () {
-            let selectedVariant = variantDropdown.value;
-            priceDisplay.textContent = variantPrices[selectedVariant] ? `${variantPrices[selectedVariant]}` : "N/A";
+        const variantDropdown = document.getElementById("variant");
+        const priceDisplay = document.getElementById("price-display");
+        const quantityInput = document.getElementById("quantity");
+        const decreaseBtn = document.querySelector(".decrease");
+        const increaseBtn = document.querySelector(".increase");
+        const starRatingContainer = document.getElementById("star-rating");
+        const ratingInput = document.getElementById("rating-input");
+    
+        // Parse variant prices safely
+        let variantPrices = {};
+    try {
+        let rawData = `{{ variant_prices|default_if_none:"{}"|safe }}`;
+        
+        if (rawData.trim() !== "") {  // Ensure it's not an empty string
+            variantPrices = JSON.parse(rawData);
+        }
+        
+        console.log("Variant Prices:", variantPrices);  // Debugging output
+    } catch (error) {
+        console.error("Error parsing variant prices:", error);
+    }
+    
+        let selectedPrice = 0;
+    
+        // Function to update price display
+        function updatePrice() {
+            const quantity = parseInt(quantityInput.value) || 1;
+            if (selectedPrice) {
+                priceDisplay.textContent = (selectedPrice * quantity).toFixed(2);
+            } else {
+                priceDisplay.textContent = "Select a variant";
+            }
+        }
+    
+        // Handle variant selection
+        if (variantDropdown) {
+            variantDropdown.addEventListener("change", function () {
+                const selectedVariant = variantDropdown.value;
+                console.log("Selected Variant:", selectedVariant);  // Debugging output
+                selectedPrice = variantPrices[selectedVariant] ? parseFloat(variantPrices[selectedVariant]) : 0;
+                console.log("Selected Price:", selectedPrice);  // Debugging output
+                updatePrice();
+            });
+    
+            // Set initial price if there's a preselected variant
+            if (variantDropdown.value) {
+                selectedPrice = variantPrices[variantDropdown.value] || 0;
+                updatePrice();
+            }
+        }
+    
+        // Handle quantity changes
+        function adjustQuantity(amount) {
+            let quantity = parseInt(quantityInput.value) || 1;
+            quantity = Math.max(1, quantity + amount); // Ensure quantity doesn't go below 1
+            quantityInput.value = quantity;
+            updatePrice();
+        }
+    
+        decreaseBtn.addEventListener("click", function () {
+            adjustQuantity(-1);
         });
-
-        let stars = document.querySelectorAll(".star-rating span");
-        let ratingInput = document.getElementById("rating-input");
-
-        stars.forEach(star => {
-            star.addEventListener("click", function () {
-                let value = this.getAttribute("data-value");
-                ratingInput.value = value;
-                stars.forEach(s => s.classList.remove("selected"));
-                for (let i = 1; i <= value; i++) {
-                    stars[i].classList.add("selected");
+    
+        increaseBtn.addEventListener("click", function () {
+            adjustQuantity(1);
+        });
+    
+        // Star rating system for review submission
+        if (starRatingContainer && ratingInput) {
+            starRatingContainer.addEventListener("click", function (event) {
+                if (event.target.tagName === "SPAN") {
+                    const stars = Array.from(starRatingContainer.children);
+                    const selectedValue = parseInt(event.target.dataset.value);
+    
+                    stars.forEach((star, index) => {
+                        star.classList.toggle("selected", index < selectedValue);
+                    });
+    
+                    ratingInput.value = selectedValue;
                 }
             });
-        });
+        }
     });
+    
+    
+    
 </script>
 {% endblock %}
