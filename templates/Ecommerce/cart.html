@@ -24,8 +24,16 @@
                         <img src="{{ item.product_variant.product.product_image.url }}" alt="{{ item.product_variant.product.product_name }}" class="cart-product-image">
                     </td>
                     <td>{{ item.product_variant.product.product_name }}</td>
-                    <td>{{ item.product_variant.units }}</td>
-                    {% comment %} <td>{{ item.quantity }}</td> {% endcomment %}
+                    <td>
+                        <select name="variant_{{ item.product_variant.product.id }}">
+                            {% for item in item.product_variants %}
+                                <option value="{{ item.id }}" data-price="{{ item.sales_price|default:"0" }}" {% if variant.id == item.product_variant.id %}selected{% endif %}>
+                                    {{ item.units }} 
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+
                     <td>
                         <div class="quantity-selector">
                             <button class="decrease">-</button>
@@ -248,6 +256,24 @@
             increaseBtn.addEventListener("click", function () {
                 adjustQuantity(1);
             });
+
+
+            // Handle Variant Change
+        document.querySelectorAll(".variant-selector").forEach((select) => {
+            select.addEventListener("change", function () {
+                const selectedOption = select.selectedOptions[0];
+                const itemId = select.getAttribute('data-item-id');
+                const selectedPrice = selectedOption.getAttribute("data-price");
+                updatePriceForVariant(itemId, selectedPrice);
+            });
+        });
+
+
+
+
+
+
+
         });
     
         function updatePrice(selector, quantity) {
@@ -255,6 +281,19 @@
             const basePrice = parseFloat(priceElement.getAttribute("data-base-price")) || 0;
             priceElement.textContent = (basePrice * quantity).toFixed(2);
         }
+
+
+         // Update price based on the selected variant
+         function updatePriceForVariant(itemId, price) {
+            const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
+            const quantity = parseInt(row.querySelector(".quantity-input").value) || 1;
+            const priceElement = row.querySelector(".price-display");
+            priceElement.textContent = (price * quantity).toFixed(2);
+        }
+
+
+
+
     });
     
 

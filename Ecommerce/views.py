@@ -159,10 +159,11 @@ def product_view(request, product_id):
 def cart_view(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
-   
     # Fetch inventory details for each cart item
     for item in cart_items:
             inventory = Inventory.objects.filter(batch=item.product_batch).first()
+            # Fetch variants for the product in this cart item
+            item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
             item.sales_price = inventory.sales_price if inventory else "N/A"   # print(f"❌ Inventory not found for batch {item.product_batch.batch_code}")
    
     return render(request, 'Ecommerce/cart.html', {'cart_items': cart_items})
