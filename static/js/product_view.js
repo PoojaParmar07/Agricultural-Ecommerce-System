@@ -7,85 +7,56 @@ document.addEventListener("DOMContentLoaded", function () {
     const starRatingContainer = document.getElementById("star-rating");
     const ratingInput = document.getElementById("rating-input");
 
-    // ✅ Parse variant prices safely
     let variantPrices = {};
 
     try {
-        let rawData = '{{ variant_prices|safe }}';  // Safe JSON output
-        console.log("Raw Data from Django:", rawData);
-
-        if (rawData && rawData.trim() !== "" && rawData.trim() !== "null" && rawData !== "{}") {
-            variantPrices = JSON.parse(rawData);
-        } else {
-            console.warn("No variant prices found.");
+        let rawData = document.getElementById("variant-data")?.textContent || "{}";
+        variantPrices = JSON.parse(rawData.trim());
+        if (typeof variantPrices === "string") {
+            variantPrices = JSON.parse(variantPrices);
         }
     } catch (error) {
-        console.error("Error parsing variant prices:", error);
-        variantPrices = {};
+        console.error("Error parsing variant prices:", error.message);
     }
 
-    let selectedPrice = 0;
-
-    // ✅ Function to update price display
     function updatePrice() {
-        const quantity = parseInt(quantityInput.value) || 1;
-        if (!isNaN(selectedPrice) && selectedPrice > 0) {
-            priceDisplay.textContent = (selectedPrice * quantity).toFixed(2);
-        } else {
+        if (!variantDropdown) return;
+
+        const selectedVariant = (variantDropdown.value.trim()).toString();
+        const quantity = parseInt(quantityInput?.value || 1, 10);
+
+        if (!Object.prototype.hasOwnProperty.call(variantPrices, selectedVariant)) {
             priceDisplay.textContent = "Select a variant";
+            return;
         }
+
+        const selectedPrice = parseFloat(variantPrices[selectedVariant]);
+        priceDisplay.textContent = (selectedPrice * quantity).toFixed(2);
     }
 
-    // ✅ Handle variant selection
-    if (variantDropdown) {
-        variantDropdown.addEventListener("change", function () {
-            const selectedVariant = variantDropdown.value;
-            console.log("Selected Variant:", selectedVariant);
-
-            selectedPrice = variantPrices[selectedVariant.toString()] 
-                ? parseFloat(variantPrices[selectedVariant.toString()]) 
-                : 0;
-
-            console.log("Selected Price:", selectedPrice);
-            updatePrice();
-        });
-
-        // ✅ Set initial price if there's a preselected variant
-        if (variantDropdown.value) {
-            selectedPrice = variantPrices[variantDropdown.value.toString()] || 0;
-            updatePrice();
-        }
-    }
-
-    // ✅ Handle quantity changes
     function adjustQuantity(amount) {
-        let quantity = parseInt(quantityInput.value) || 1;
+        if (!quantityInput) return;
+        let quantity = parseInt(quantityInput.value, 10) || 1;
         quantity = Math.max(1, quantity + amount);
         quantityInput.value = quantity;
         updatePrice();
     }
 
-    if (decreaseBtn && increaseBtn && quantityInput) {
-        decreaseBtn.addEventListener("click", function () {
-            adjustQuantity(-1);
-        });
+    variantDropdown?.addEventListener("change", updatePrice);
+    decreaseBtn?.addEventListener("click", () => adjustQuantity(-1));
+    increaseBtn?.addEventListener("click", () => adjustQuantity(1));
 
-        increaseBtn.addEventListener("click", function () {
-            adjustQuantity(1);
-        });
+    if (variantDropdown?.value) {
+        updatePrice();
     }
 
-    // ✅ Star rating system for review submission
     if (starRatingContainer && ratingInput) {
         starRatingContainer.addEventListener("click", function (event) {
             if (event.target.tagName === "SPAN" && event.target.dataset.value) {
-                const stars = Array.from(starRatingContainer.children);
-                const selectedValue = parseInt(event.target.dataset.value);
-
-                stars.forEach((star, index) => {
+                const selectedValue = parseInt(event.target.dataset.value, 10);
+                [...starRatingContainer.children].forEach((star, index) => {
                     star.classList.toggle("selected", index < selectedValue);
                 });
-
                 ratingInput.value = selectedValue;
             }
         });

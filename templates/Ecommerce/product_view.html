@@ -5,6 +5,9 @@
 
 
 <div class="product-container">
+    <div id="variant-data" style="display: none;">{{ variant_prices|json_script:"variant-data" }}
+    </div>
+
     <!-- Product Image -->
     <div class="product-image-container">
         <img src="{{ product.product_image }}" alt="{{ product.product_name }}" class="product-image">
