@@ -25,6 +25,9 @@ def home(request):
     return render(request, 'Ecommerce/base.html')
 
 
+from django.db.models import Avg
+from django.contrib.auth.decorators import login_required
+
 def homepage(request):
     categories = Category.objects.all()  # Get all categories
     category_data = [
@@ -38,6 +41,14 @@ def homepage(request):
 
     products = Product.objects.all()
     product_data = []
+
+    # Default empty cart_product_ids (for non-logged-in users)
+    cart_product_ids = []
+
+    if request.user.is_authenticated:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
 
     for product in products:
         variant = ProductVariant.objects.filter(product=product).first()
@@ -53,7 +64,12 @@ def homepage(request):
             'rating': rating if rating is not None else 0
         })
 
-    return render(request, "Ecommerce/homepage.html", {'categories': category_data, 'product_data': product_data})
+    return render(request, "Ecommerce/homepage.html", {
+        'categories': category_data,
+        'product_data': product_data,
+        'cart_product_ids': cart_product_ids,  # ✅ Pass this to the template
+    })
+
 
 @login_required
 def product_list(request, category_id):
@@ -61,30 +77,38 @@ def product_list(request, category_id):
     products = Product.objects.filter(category=category)
 
     product_data = []
-    
+    cart_product_ids = []  # Default empty cart for unauthenticated users
+
+    # Check if the user is logged in, then get cart details
+    if request.user.is_authenticated:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
+
     for product in products:
-        variant = ProductVariant.objects.filter(product=product).first()  # Get first variant
-        inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None  # Get price from inventory
+        variant = ProductVariant.objects.filter(product=product).first()
+        inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
 
         # Get average rating
         rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0
 
-        # Add product details to list
         product_data.append({
             'product_id': product.product_id,
             'product_name': product.product_name,
-            'product_image': product.product_image.url if product.product_image else None,  # Check if image exists
+            'product_image': product.product_image.url if product.product_image else None,
             'sales_price': sales_price,
-            'rating': rating,  # Default to 0 if no rating
+            'rating': rating,
         })
 
     context = {
-        'category_name': category.category_name,  # Pass category name
-        'products': product_data,  # Pass processed product data
+        'category_name': category.category_name,
+        'products': product_data,
+        'cart_product_ids': cart_product_ids,  # ✅ Add this for the cart check in the template
     }
 
     return render(request, 'Ecommerce/product_list_page.html', context)
+
 
 
 @login_required
@@ -103,9 +127,6 @@ def product_view(request, product_id):
         for inventory in inventories
     }
 
-    print("Variants:", variants)
-    print("Variant Prices in View:", variant_prices)
-
     # Get the first available price, else "N/A"
     first_price = next((price for price in variant_prices.values() if price is not None), "N/A")
 
@@ -115,9 +136,15 @@ def product_view(request, product_id):
 
     # Fetch reviews in descending order
     reviews = Review.objects.filter(product=product).order_by('-created_at')
-    
-    
-    #Give reviewand Rating
+
+    # ✅ Get cart product IDs
+    cart_product_ids = []
+    if request.user.is_authenticated:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
+
+    # ✅ Handle review submission
     if request.method == "POST":
         rating_value = request.POST.get('rating') 
         review_text = request.POST.get('comment') 
@@ -139,7 +166,6 @@ def product_view(request, product_id):
         'description': product.description,
         'rating': rating,
         'first_price': first_price,
-        
     }
 
     context = {
@@ -147,10 +173,12 @@ def product_view(request, product_id):
         'stars_range': range(1, 6),
         'reviews': reviews,
         'variants': variants,
-        'variant_prices': json.dumps(variant_prices, ensure_ascii=False),  # Pass JSON data safely
+        'variant_prices': json.dumps(variant_prices, ensure_ascii=False),
+        'cart_product_ids': cart_product_ids,  # ✅ Add cart products for button logic
     }
 
     return render(request, 'Ecommerce/product_view.html', context)
+
 
 
 
@@ -161,6 +189,7 @@ def cart_view(request):
     cart_items = CartItem.objects.filter(cart=cart)
     products = Product.objects.all()
     
+    cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
     # Fetch inventory details for each cart item
     for item in cart_items:
             inventory = Inventory.objects.filter(batch=item.product_batch).first()
@@ -168,7 +197,7 @@ def cart_view(request):
             item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
             item.sales_price = inventory.sales_price if inventory else "N/A"   # print(f"❌ Inventory not found for batch {item.product_batch.batch_code}")
    
-    return render(request, 'Ecommerce/cart.html', {'products':products,'cart_items': cart_items})
+    return render(request, 'Ecommerce/cart.html', {'products':products, "cart_items": cart_items, "cart_product_ids": cart_product_ids})
 
 
 @login_required
