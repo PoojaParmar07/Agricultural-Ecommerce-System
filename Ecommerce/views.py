@@ -25,7 +25,7 @@ def home(request):
     return render(request, 'Ecommerce/base.html')
 
 
-def homebody(request):
+def homepage(request):
     categories = Category.objects.all()  # Get all categories
     category_data = [
         {
@@ -53,7 +53,7 @@ def homebody(request):
             'rating': rating if rating is not None else 0
         })
 
-    return render(request, "Ecommerce/homebody.html", {'categories': category_data, 'product_data': product_data})
+    return render(request, "Ecommerce/homepage.html", {'categories': category_data, 'product_data': product_data})
 
 @login_required
 def product_list(request, category_id):
@@ -159,6 +159,8 @@ def product_view(request, product_id):
 def cart_view(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
+    products = Product.objects.all()
+    
     # Fetch inventory details for each cart item
     for item in cart_items:
             inventory = Inventory.objects.filter(batch=item.product_batch).first()
@@ -166,7 +168,7 @@ def cart_view(request):
             item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
             item.sales_price = inventory.sales_price if inventory else "N/A"   # print(f"❌ Inventory not found for batch {item.product_batch.batch_code}")
    
-    return render(request, 'Ecommerce/cart.html', {'cart_items': cart_items})
+    return render(request, 'Ecommerce/cart.html', {'products':products,'cart_items': cart_items})
 
 
 @login_required

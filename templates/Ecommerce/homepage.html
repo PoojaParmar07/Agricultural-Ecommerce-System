@@ -80,9 +80,16 @@
                         </span>
                     </div>
 
-                    <a href="{% url 'Ecommerce:add_to_cart' product.product_id %}">
-                      <button class="add-to-cart">Add to Cart</button>
-                  </a>
+                    {% if product.product_id in cart_items %}
+                      <a href="{% url 'Ecommerce:cart_view' %}">
+                          <button class="go-to-cart">Go to Cart</button>
+                      </a>
+                    {% else %}
+                      <a href="{% url 'Ecommerce:add_to_cart' product.product_id %}">
+                          <button class="add-to-cart">Add to Cart</button>
+                      </a>
+                      <p>Product : {{ product.product_id }}</p>
+                    {% endif %}
                  
 
                 </div>
