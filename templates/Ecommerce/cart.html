@@ -30,7 +30,7 @@
                         {{ item.product_variant.product.product_name }}</td>
                         </a>
                     <td>
-                        <select name="variant_{{ item.product_variant.product.id }}" >
+                        <select name="variant_{{ item.product_variant.product.id }}" data-item-id="{{ item.cart_item_id }}" >
                             {% for item in item.product_variants %}
                                 <option id="units" value="{{ item.id }}" data-price="{{ item.sales_price|default:"0" }}" {% if variant.id == item.product_variant.id %}selected{% endif %} >
                                     {{ item.units }} 
@@ -60,6 +60,7 @@
         </table>
     </div>
     <div class="cart-footer">
+        <p class="grand-total">Grand Total: ₹<span id="grand-total">0.00</span></p>
         <a href="#" class="checkout-btn">Checkout</a>
     </div>
     {% else %}
@@ -250,13 +251,13 @@
             const quantityInput = selector.querySelector("input");
             const decreaseBtn = selector.querySelector(".decrease");
             const increaseBtn = selector.querySelector(".increase");
-            const units = selector.querySelector("units");
+            
 
             function adjustQuantity(amount) {
                 let quantity = parseInt(quantityInput.value) || 1;
                 quantity = Math.min(5, Math.max(1, quantity + amount)); // Limit between 1 and 5
                 quantityInput.value = quantity;
-                updatePrice(selector, quantity);
+                updatePrice(selector, quantity, units);
             }
     
             decreaseBtn.addEventListener("click", function () {
@@ -267,19 +268,25 @@
                 adjustQuantity(1);
             });
 
+        });
 
-            // Handle Variant Change
         document.querySelectorAll(".variant-selector").forEach((select) => {
-            select.addEventListener("change", function () {
-                const selectedOption = select.selectedOptions[0];
-                const itemId = select.getAttribute('data-item-id');
-                const selectedPrice = selectedOption.getAttribute("data-price");
-                updatePriceForVariant(selector, itemId, selectedPrice);
+        select.addEventListener("change", function () {
+            const selectedOption = select.selectedOptions[0];
+            const newPrice = selectedOption.getAttribute("data-price");
+            const row = select.closest("tr");
+            const quantity = parseInt(row.querySelector(".quantity-input").value) || 1;
+            updatePrice(row, quantity, newPrice);
+        });
+    });
+
+        function updateGrandTotal() {
+            let total = 0;
+            document.querySelectorAll(".price-display").forEach(priceElem => {
+                total += parseFloat(priceElem.textContent) || 0;
             });
-        });
-
-
-        });
+            document.getElementById("grand-total").textContent = total.toFixed(2);
+        }
     
         function updatePrice(selector, quantity) {
             const priceElement = selector.closest("tr").querySelector("#price-display");
@@ -295,10 +302,6 @@
             const priceElement = row.querySelector(".price-display");
             priceElement.textContent = (price * quantity).toFixed(2);
         }
-
-
-
-
     });
     
 
