@@ -8,6 +8,7 @@ from .forms import *
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Avg
 import json
+from django.db.models import Avg
 
 
 # from django.shortcuts import render, redirect, get_object_or_404
@@ -25,8 +26,7 @@ def home(request):
     return render(request, 'Ecommerce/base.html')
 
 
-from django.db.models import Avg
-from django.contrib.auth.decorators import login_required
+
 
 def homepage(request):
     categories = Category.objects.all()  # Get all categories

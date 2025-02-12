@@ -21,13 +21,18 @@
                 {% for item in cart_items %}
                 <tr>
                     <td>
+                        <a href="{% url 'Ecommerce:product_view' item.product_variant.product.product_id %}" >
                         <img src="{{ item.product_variant.product.product_image.url }}" alt="{{ item.product_variant.product.product_name }}" class="cart-product-image">
+                    </a>
                     </td>
-                    <td>{{ item.product_variant.product.product_name }}</td>
                     <td>
-                        <select name="variant_{{ item.product_variant.product.id }}">
+                        <a href="{% url 'Ecommerce:product_view' item.product_variant.product.product_id %}" >
+                        {{ item.product_variant.product.product_name }}</td>
+                        </a>
+                    <td>
+                        <select name="variant_{{ item.product_variant.product.id }}" >
                             {% for item in item.product_variants %}
-                                <option value="{{ item.id }}" data-price="{{ item.sales_price|default:"0" }}" {% if variant.id == item.product_variant.id %}selected{% endif %}>
+                                <option id="units" value="{{ item.id }}" data-price="{{ item.sales_price|default:"0" }}" {% if variant.id == item.product_variant.id %}selected{% endif %} >
                                     {{ item.units }} 
                                 </option>
                             {% endfor %}
@@ -104,6 +109,10 @@
 /* Table Rows */
 .cart-table tbody tr:hover {
     background: #f8f9fa;
+}
+
+.cart-table tbody a{
+    color: black;
 }
 
 /* Product Image */
@@ -241,7 +250,8 @@
             const quantityInput = selector.querySelector("input");
             const decreaseBtn = selector.querySelector(".decrease");
             const increaseBtn = selector.querySelector(".increase");
-    
+            const units = selector.querySelector("units");
+
             function adjustQuantity(amount) {
                 let quantity = parseInt(quantityInput.value) || 1;
                 quantity = Math.min(5, Math.max(1, quantity + amount)); // Limit between 1 and 5
@@ -264,14 +274,9 @@
                 const selectedOption = select.selectedOptions[0];
                 const itemId = select.getAttribute('data-item-id');
                 const selectedPrice = selectedOption.getAttribute("data-price");
-                updatePriceForVariant(itemId, selectedPrice);
+                updatePriceForVariant(selector, itemId, selectedPrice);
             });
         });
-
-
-
-
-
 
 
         });
