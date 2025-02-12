@@ -12,14 +12,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
         let rawData = '{{ variant_prices|safe }}';  // Safe JSON output
-        console.log("Raw Data from Django:", rawData); // Debugging
+        console.log("Raw Data from Django:", rawData);
 
-        if (rawData.trim() !== "" && rawData.trim() !== "null") {
+        if (rawData && rawData.trim() !== "" && rawData.trim() !== "null" && rawData !== "{}") {
             variantPrices = JSON.parse(rawData);
+        } else {
+            console.warn("No variant prices found.");
         }
-        console.log("Parsed Variant Prices:", variantPrices); // Debugging output
     } catch (error) {
         console.error("Error parsing variant prices:", error);
+        variantPrices = {};
     }
 
     let selectedPrice = 0;
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ Function to update price display
     function updatePrice() {
         const quantity = parseInt(quantityInput.value) || 1;
-        if (selectedPrice) {
+        if (!isNaN(selectedPrice) && selectedPrice > 0) {
             priceDisplay.textContent = (selectedPrice * quantity).toFixed(2);
         } else {
             priceDisplay.textContent = "Select a variant";
@@ -38,12 +40,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (variantDropdown) {
         variantDropdown.addEventListener("change", function () {
             const selectedVariant = variantDropdown.value;
-            console.log("Selected Variant:", selectedVariant); // Debugging
+            console.log("Selected Variant:", selectedVariant);
 
-            // ✅ Convert selectedVariant to a string before accessing variantPrices
-            selectedPrice = variantPrices[selectedVariant.toString()] ? parseFloat(variantPrices[selectedVariant.toString()]) : 0;
+            selectedPrice = variantPrices[selectedVariant.toString()] 
+                ? parseFloat(variantPrices[selectedVariant.toString()]) 
+                : 0;
 
-            console.log("Selected Price:", selectedPrice); // Debugging
+            console.log("Selected Price:", selectedPrice);
             updatePrice();
         });
 
@@ -75,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ Star rating system for review submission
     if (starRatingContainer && ratingInput) {
         starRatingContainer.addEventListener("click", function (event) {
-            if (event.target.tagName === "SPAN") {
+            if (event.target.tagName === "SPAN" && event.target.dataset.value) {
                 const stars = Array.from(starRatingContainer.children);
                 const selectedValue = parseInt(event.target.dataset.value);
 
