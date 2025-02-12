@@ -8,6 +8,7 @@ from .forms import *
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Avg
 import json
+from django.db.models import Avg
 
 
 # from django.shortcuts import render, redirect, get_object_or_404

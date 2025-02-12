@@ -59,7 +59,7 @@ class CustomLoginView(LoginView):
         """Redirect users based on their role."""
         if self.request.user.is_staff:
             return reverse_lazy('admin_dashboard:admin_dashboard')  # Redirect admin users
-        return reverse_lazy('Ecommerce:home')  # Redirect normal users
+        return reverse_lazy('Ecommerce:homepage')  # Redirect normal users
 
     
 
