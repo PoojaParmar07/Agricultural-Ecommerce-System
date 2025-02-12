@@ -54,24 +54,24 @@
                 <li class="icons">
                     <a href="#" class="icon"><box-icon name='heart'></box-icon></a>
                     <a href="{% url 'Ecommerce:cart_view' %}" class="icon"><box-icon type='cart' name='cart-alt'></box-icon><span id="cart-count">{{ cart_count }}</a>
-                    <span class="dropdown">
-                        <a href="#" class="icon"><box-icon name='user'></box-icon></span></a>
-                        <ul class="dropdown-menu">
-                            {% if user.is_authenticated %}
-                            <li class="dropdown-item">
-                                <form method="POST" action="{% url 'account:logout' %}" >
-                                    {% csrf_token %}
-                                    <button type="submit">Profile</button>
-                                    <button type="submit">Logout</button>
-                                </form>
-                            </li>
-                        {% else %}
-                            <li><a href="/account/register">Registration</a></li>
-                            <li><a href="/account/login">Login</a></li>
-                        {% endif %}
+                        <span class="dropdown">
+                            <a href="#" class="icon"><box-icon name='user'></box-icon></a>
+                            <ul class="dropdown-menu">
+                                {% if user.is_authenticated %}
+                                    <li class="dropdown-item"><a href="#">Profile</a></li>
+                                    <li class="dropdown-item">
+                                        <form method="POST" action="{% url 'account:logout' %}">
+                                            {% csrf_token %}
+                                            <button type="submit">Logout</button>
+                                        </form> 
+                                    </li>
+                                {% else %}
+                                    <li><a href="/account/register">Registration</a></li>
+                                    <li><a href="/account/login">Login</a></li>
+                                {% endif %}
+                            </ul>
+                        </span>
                         
-                        </ul>
-                    </span>
                 </li>
             </ul>
         </div>
