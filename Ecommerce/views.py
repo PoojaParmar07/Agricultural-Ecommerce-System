@@ -25,8 +25,7 @@ def home(request):
     return render(request, 'Ecommerce/base.html')
 
 
-from django.db.models import Avg
-from django.contrib.auth.decorators import login_required
+
 
 def homepage(request):
     categories = Category.objects.all()  # Get all categories
