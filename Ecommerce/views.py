@@ -113,7 +113,7 @@ def product_list(request, category_id):
 @login_required
 def product_view(request, product_id):
     product = get_object_or_404(Product, product_id=product_id)
-
+    print(f"Product ID: {product.product_id}")  # Debugging
     # Fetch variants and related brands
     variants = list(ProductVariant.objects.filter(product=product).select_related('brand'))
 
@@ -166,17 +166,16 @@ def product_view(request, product_id):
         'rating': rating,
         'first_price': first_price,
     }
-
+    print("✅ Variant Prices JSON:", json.dumps(variant_prices, ensure_ascii=False)) 
     context = {
         'product': product_data,
         'stars_range': range(1, 6),
         'reviews': reviews,
         'variants': variants,
-        'variant_prices': json.dumps(variant_prices, ensure_ascii=False),
         'cart_product_ids': cart_product_ids,  # ✅ Add cart products for button logic
     }
 
-    return render(request, 'Ecommerce/product_view.html', context)
+    return render(request, 'Ecommerce/product_view.html', {**context,'variant_prices': json.dumps(variant_prices)})
 
 
 
