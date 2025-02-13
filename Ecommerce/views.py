@@ -204,7 +204,6 @@ def cart_view(request):
 }
 
     print(variant_prices)
-
     return render(request, 'Ecommerce/cart.html', {
     "cart_items": cart_items,
     "cart_product_ids": cart_product_ids,
