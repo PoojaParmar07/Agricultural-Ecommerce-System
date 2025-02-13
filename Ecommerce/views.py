@@ -249,6 +249,7 @@ def remove_from_cart(request,item_id):
 
     return redirect('Ecommerce:cart_view')
 
+<<<<<<< Updated upstream
 
 
 def update_variant_price(request):
@@ -264,6 +265,8 @@ def update_variant_price(request):
     else:
         return JsonResponse({"error": "Price not found"}, status=404)
 
+=======
+>>>>>>> Stashed changes
 def get_variant_price(request):
     variant_id = request.GET.get("variant_id")
     inventory = Inventory.objects.filter(product_variant_id=variant_id).first()
@@ -287,5 +290,9 @@ def update_variant_price(request):
 
     if inventory:
         return JsonResponse({"price": inventory.sales_price})
+<<<<<<< Updated upstream
     return JsonResponse({"price": None}, status=400)
 
+=======
+    return JsonResponse({"price": None}, status=400)
+>>>>>>> Stashed changes
