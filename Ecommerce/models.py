@@ -93,7 +93,7 @@ class Inventory(models.Model):
         db_table = 'Inventory'
         
     def __str__(self):
-        return f"{self.quantity}"
+        return f"{self.quantity}-{self.product_variant.name} - {self.sales_price}"
 
         
 class City(models.Model):
@@ -279,6 +279,10 @@ class CartItem(models.Model):
         db_table = 'CartItem'
         unique_together = (('cart', 'product_batch', 'product_variant'),)
         
+    def total_price(self):
+        inventory = Inventory.objects.filter(batch=self.product_batch).first()
+        return (inventory.sales_price if inventory else 0) * self.quantity    
+    
     def __str__(self):
         return f"CartItem: {self.product_variant} (Qty: {self.quantity})"
 
@@ -308,8 +312,4 @@ class WishlistItem(models.Model):
         return f"WishlistItem: {str(self.product_variant)}"
     
     
-    
-    
-    
-    
-
+      

@@ -196,7 +196,16 @@ def cart_view(request):
             item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
             item.sales_price = inventory.sales_price if inventory else "N/A"   # print(f"❌ Inventory not found for batch {item.product_batch.batch_code}")
    
-    return render(request, 'Ecommerce/cart.html', {'products':products, "cart_items": cart_items, "cart_product_ids": cart_product_ids})
+    # Pass available variants for each product
+    variant_prices = {
+        item.product_variant.variant_id: Inventory.objects.filter(batch=item.product_batch, batch__variant=item.product_variant).first().sales_price
+        for item in cart_items if item.product_variant
+    }
+
+    # return render(request, "cart.html", {"cart_items": cart_items,})
+
+
+    return render(request, 'Ecommerce/cart.html', {'products':products, "cart_items": cart_items, "cart_product_ids": cart_product_ids, "variant_prices": variant_prices})
 
 
 @login_required
@@ -238,3 +247,17 @@ def remove_from_cart(request,item_id):
     cart_item.delete()
 
     return redirect('Ecommerce:cart_view')
+
+
+def update_variant_price(request):
+    variant_id = request.GET.get("variant_id")
+    
+    if not variant_id:
+        return JsonResponse({"error": "Variant ID not provided"}, status=400)
+
+    inventory = Inventory.objects.filter(batch__variant_id=variant_id).first()
+    
+    if inventory:
+        return JsonResponse({"price": float(inventory.sales_price)})
+    else:
+        return JsonResponse({"error": "Price not found"}, status=404)

@@ -2,8 +2,11 @@
 {% load static %} 
 
 {% block content %}
-
+<link rel="stylesheet" href="{% static 'Ecommerce/cart.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="cart-container">
+    <div id="variant-data" style="display: none;">{{ variant_prices|json_script:"variant-data" }}
+    </div>
     <div class="cart-header">
     {% if cart_items %}
         <table class="cart-table">
@@ -30,13 +33,15 @@
                         {{ item.product_variant.product.product_name }}</td>
                         </a>
                     <td>
-                        <select name="variant_{{ item.product_variant.product.id }}" data-item-id="{{ item.cart_item_id }}" >
+                        <select id="variant" class="variant-dropdown" name="variant_{{ item.product_variant.product.id }}">
                             {% for item in item.product_variants %}
-                                <option id="units" value="{{ item.id }}" data-price="{{ item.sales_price|default:"0" }}" {% if variant.id == item.product_variant.id %}selected{% endif %} >
-                                    {{ item.units }} 
-                                </option>
-                            {% endfor %}
-                        </select>
+                            <option id="units" value="{{ item.variant_id }}" {% if variant.id == item.product_variant.id %}selected{% endif %} >
+                                {{ item.units }} 
+                            </option>
+                        {% endfor %}
+                    </select>  
+            </select>
+
                     </td>
 
                     <td>
@@ -47,9 +52,9 @@
                         </div>
                     </td>
                     <td>
-                        <p class="price">₹<span id="price-display" data-base-price="{{ item.sales_price|default:"0" }}">
+                        <p class="price" id="price-{{ cart_item.id }}">₹<span id="price-display" data-base-price="{{ item.sales_price|default:"0" }}">
                             {{ item.sales_price|default:"0" }}
-                        </span></p>
+                        </span></p> 
                     </td>
                     <td>
                         <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}"><button class="remove-cart" data-item-id="{{ item.cart_item_id }}">Remove</button></a>
@@ -60,7 +65,8 @@
         </table>
     </div>
     <div class="cart-footer">
-        <p class="grand-total">Grand Total: ₹<span id="grand-total">0.00</span></p>
+        <p class="grand-total">Total:
+        <span id="grand-total">₹0.00</span> </p>
         <a href="#" class="checkout-btn">Checkout</a>
     </div>
     {% else %}
@@ -71,240 +77,8 @@
     {% endif %}
 </div>
 
-<style>
-/* General Cart Styling */
-.cart-container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 100px 350px;
-    
 
-}
+<script src="{% static 'js/cart.js' %}"></script>
 
-
-
-/* Table Styling */
-.cart-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.cart-table th, 
-.cart-table td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Table Header */
-.cart-table thead {
-    background:rgb(255, 255, 255);;
-    color: black;
-}
-
-/* Table Rows */
-.cart-table tbody tr:hover {
-    background: #f8f9fa;
-}
-
-.cart-table tbody a{
-    color: black;
-}
-
-/* Product Image */
-.cart-product-image {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-/* Quatity increase decrease */
-.quantity-selector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
-.quantity-selector button {
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    background-color: #ddd;
-    color: black;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.quantity-selector button:hover {
-    background-color: #bbb;
-}
-
-.quantity-selector input {
-    width: 40px;
-    height: 30px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* Remove Button */
-.remove-cart {
-    background:rgb(2, 2, 2);
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.remove-cart:hover {
-    background:rgb(47, 46, 46);
-}
-
-/* Checkout Button */
-.cart-footer {
-    text-align: right;
-    margin-top: 20px;
-}
-
-.checkout-btn {
-    display: inline-block;
-    background: #28a745;
-    color: white;
-    padding: 12px 18px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.checkout-btn:hover {
-    background: #218838;
-}
-
-/* Empty Cart Message */
-.empty-cart-message {
-    text-align: center;
-    font-size: 18px;
-    color: #666;
-    padding: 20px;
-}
-
-.back-btn{
-    display: flex;
-    justify-content: center;
-    font-weight: 500;
-}
-
-.back-btn box-icon{
-    fill: white;
-
-}
-
-.back-btn .back{
-    display: inline-block;
-    background: #28a745;
-    color: white;
-    padding: 10px 18px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .cart-table th,
-    .cart-table td {
-        padding: 10px;
-        font-size: 14px;
-    }
-
-    .cart-product-image {
-        width: 50px;
-        height: 50px;
-    }
-
-    .checkout-btn {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-
-</style>
-{% comment %} <script src="{% static 'js/cart.js' %}"></script> {% endcomment %}
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".quantity-selector").forEach((selector) => {
-            const quantityInput = selector.querySelector("input");
-            const decreaseBtn = selector.querySelector(".decrease");
-            const increaseBtn = selector.querySelector(".increase");
-            
-
-            function adjustQuantity(amount) {
-                let quantity = parseInt(quantityInput.value) || 1;
-                quantity = Math.min(5, Math.max(1, quantity + amount)); // Limit between 1 and 5
-                quantityInput.value = quantity;
-                updatePrice(selector, quantity, units);
-            }
-    
-            decreaseBtn.addEventListener("click", function () {
-                adjustQuantity(-1);
-            });
-    
-            increaseBtn.addEventListener("click", function () {
-                adjustQuantity(1);
-            });
-
-        });
-
-        document.querySelectorAll(".variant-selector").forEach((select) => {
-        select.addEventListener("change", function () {
-            const selectedOption = select.selectedOptions[0];
-            const newPrice = selectedOption.getAttribute("data-price");
-            const row = select.closest("tr");
-            const quantity = parseInt(row.querySelector(".quantity-input").value) || 1;
-            updatePrice(row, quantity, newPrice);
-        });
-    });
-
-        function updateGrandTotal() {
-            let total = 0;
-            document.querySelectorAll(".price-display").forEach(priceElem => {
-                total += parseFloat(priceElem.textContent) || 0;
-            });
-            document.getElementById("grand-total").textContent = total.toFixed(2);
-        }
-    
-        function updatePrice(selector, quantity) {
-            const priceElement = selector.closest("tr").querySelector("#price-display");
-            const basePrice = parseFloat(priceElement.getAttribute("data-base-price")) || 0;
-            priceElement.textContent = (basePrice * quantity).toFixed(2);
-        }
-
-
-         // Update price based on the selected variant
-         function updatePriceForVariant(itemId, price) {
-            const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
-            const quantity = parseInt(row.querySelector(".quantity-input").value) || 1;
-            const priceElement = row.querySelector(".price-display");
-            priceElement.textContent = (price * quantity).toFixed(2);
-        }
-    });
-    
-
-</script>
 
 {% endblock %}

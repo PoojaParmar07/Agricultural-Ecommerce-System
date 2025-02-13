@@ -11,3 +11,12 @@ class ReviewForm(forms.ModelForm):
             'review': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }
 
+    
+# class CartItemUpdateForm(forms.Form):
+
+#     variant_id = forms.ModelChoiceField(queryset=ProductVariant.objects.all(), required=True, empty_label=None)
+#     quantity = forms.IntegerField(min_value=1, max_value=10)
+
+#     class Meta:
+#         model = CartItem
+#         fields = ['variant_id', 'quantity']
