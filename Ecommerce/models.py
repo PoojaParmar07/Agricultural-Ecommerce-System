@@ -81,6 +81,7 @@ class ProductBatch(models.Model):
     def __str__(self):
         return self.batch_code
         
+        
 class Inventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     batch = models.ForeignKey("ProductBatch", on_delete=models.CASCADE)
@@ -95,7 +96,12 @@ class Inventory(models.Model):
     def __str__(self):
         return f"{self.quantity}-{self.product_variant.name} - {self.sales_price}"
 
-        
+    def get_price(self):
+        """Get the latest sales price from the Inventory table for this variant"""
+        inventory = Inventory.objects.filter(batch__variant=self).order_by('-create_at').first()
+        return inventory.sales_price if inventory else 0
+    
+      
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
     city_name = models.CharField(max_length=100)
@@ -280,8 +286,9 @@ class CartItem(models.Model):
         unique_together = (('cart', 'product_batch', 'product_variant'),)
         
     def total_price(self):
-        inventory = Inventory.objects.filter(batch=self.product_batch).first()
-        return (inventory.sales_price if inventory else 0) * self.quantity    
+        """Calculate total price based on variant and quantity"""
+        price = self.product_variant.get_price()  # Correctly fetch price
+        return price * self.quantity
     
     def __str__(self):
         return f"CartItem: {self.product_variant} (Qty: {self.quantity})"

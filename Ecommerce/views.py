@@ -25,7 +25,8 @@ def is_admin_user(user):
 def home(request):
     return render(request, 'Ecommerce/base.html')
 
-
+def checkout(request):
+    return render(request, 'Ecommerce/checkout_page.html')
 
 
 def homepage(request):
@@ -248,7 +249,7 @@ def remove_from_cart(request,item_id):
 
     return redirect('Ecommerce:cart_view')
 
-<<<<<<< Updated upstream
+
 
 def update_variant_price(request):
     variant_id = request.GET.get("variant_id")
@@ -262,7 +263,7 @@ def update_variant_price(request):
         return JsonResponse({"price": float(inventory.sales_price)})
     else:
         return JsonResponse({"error": "Price not found"}, status=404)
-=======
+
 def get_variant_price(request):
     variant_id = request.GET.get("variant_id")
     inventory = Inventory.objects.filter(product_variant_id=variant_id).first()
@@ -287,4 +288,4 @@ def update_variant_price(request):
     if inventory:
         return JsonResponse({"price": inventory.sales_price})
     return JsonResponse({"price": None}, status=400)
->>>>>>> Stashed changes
+

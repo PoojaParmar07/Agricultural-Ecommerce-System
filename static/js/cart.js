@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
             let quantity = parseInt(quantityInput.value) || 1;
             quantity = Math.min(5, Math.max(1, quantity + amount)); // Limit between 1 and 5
             quantityInput.value = quantity;
-            updatePrice(selector, quantity, units);
+            updatePrice(selector, quantity);
+            
         }
 
         decreaseBtn.addEventListener("click", function () {
@@ -31,38 +32,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-     // Handle Variant Change
-    // document.querySelectorAll("select").forEach((select) => {
-    //     select.addEventListener("change", function () {
-    //         const row = select.closest("tr");
-    //         const quantity = parseInt(row.querySelector("#variant").value) || 1;
-    //         updatePrice(row.querySelector(".quantity-selector"), quantity);
-    //     });
-    // });
+    //  Handle Variant Change
+    document.querySelectorAll("select").forEach((select) => {
+        select.addEventListener("change", function () {
+            const row = select.closest("tr");
+            const quantity = parseInt(row.querySelector("#variant").value) || 1;
+            updatePrice(row.querySelector(".quantity-selector"), quantity);
+        });
+    });
 
     document.querySelector(".variant").foreach((selector)=>{
         const variantDropdown = document.getElementById("variant");
         const priceDisplay = document.getElementById("price-display");
  
-<<<<<<< Updated upstream
+
         // variantDropdown.addEventListener("change", function () {
         //     const selectedVariant = variantDropdown.value;
         //     const variantPrice = parseFloat(variantDropdown.getAttribute("data-price")) || 0;
         //     priceDisplay.textContent = (variantPrice).toFixed(2);
         //     });
-        
-    });
-
-
     
-
-=======
-        variantDropdown.addEventListener("change", function () {
+    variantDropdown.addEventListener("change", function () {
             const selectedVariant = variantDropdown.value;
             const variantPrice = parseFloat(variantDropdown.getAttribute("data-price")) || 0;
             priceDisplay.textContent = (variantPrice).toFixed(2);
             });
         
     });
->>>>>>> Stashed changes
+
 });
