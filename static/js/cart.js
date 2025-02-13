@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const variantDropdown = document.getElementById("variant");
         const priceDisplay = document.getElementById("price-display");
  
+<<<<<<< Updated upstream
         // variantDropdown.addEventListener("change", function () {
         //     const selectedVariant = variantDropdown.value;
         //     const variantPrice = parseFloat(variantDropdown.getAttribute("data-price")) || 0;
@@ -55,4 +56,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     
 
+=======
+        variantDropdown.addEventListener("change", function () {
+            const selectedVariant = variantDropdown.value;
+            const variantPrice = parseFloat(variantDropdown.getAttribute("data-price")) || 0;
+            priceDisplay.textContent = (variantPrice).toFixed(2);
+            });
+        
+    });
+>>>>>>> Stashed changes
 });

@@ -248,6 +248,7 @@ def remove_from_cart(request,item_id):
 
     return redirect('Ecommerce:cart_view')
 
+<<<<<<< Updated upstream
 
 def update_variant_price(request):
     variant_id = request.GET.get("variant_id")
@@ -261,3 +262,29 @@ def update_variant_price(request):
         return JsonResponse({"price": float(inventory.sales_price)})
     else:
         return JsonResponse({"error": "Price not found"}, status=404)
+=======
+def get_variant_price(request):
+    variant_id = request.GET.get("variant_id")
+    inventory = Inventory.objects.filter(product_variant_id=variant_id).first()
+    
+    if inventory:
+        return JsonResponse({"price": inventory.sales_price})
+    return JsonResponse({"price": None}, status=400)
+
+
+def update_variant_price(request):
+    cart_item_id = request.GET.get("cart_item_id")
+    variant_id = request.GET.get("variant_id")
+
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    variant = get_object_or_404(ProductVariant, id=variant_id)
+
+    cart_item.variant = variant
+    cart_item.save()
+
+    inventory = Inventory.objects.filter(product_variant=variant).first()
+
+    if inventory:
+        return JsonResponse({"price": inventory.sales_price})
+    return JsonResponse({"price": None}, status=400)
+>>>>>>> Stashed changes

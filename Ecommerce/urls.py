@@ -15,6 +15,10 @@ urlpatterns = [
     path('add_to_cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
     path('remove-from-cart/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
     
+<<<<<<< Updated upstream
+=======
+    path('get-variant-price/<int:variant_id>/', get_variant_price, name='get_variant_price'),
+>>>>>>> Stashed changes
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
