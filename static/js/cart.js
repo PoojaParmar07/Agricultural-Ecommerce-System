@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-     // Handle Variant Change
+    // Handle Variant Change
     // document.querySelectorAll("select").forEach((select) => {
     //     select.addEventListener("change", function () {
     //         const row = select.closest("tr");

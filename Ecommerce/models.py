@@ -286,14 +286,13 @@ class CartItem(models.Model):
         unique_together = (('cart', 'product_batch', 'product_variant'),)
         
     def total_price(self):
-<<<<<<< Updated upstream
+
         """Calculate total price based on variant and quantity"""
         price = self.product_variant.get_price()  # Correctly fetch price
         return price * self.quantity
-=======
+
         inventory = Inventory.objects.filter(batch=self.product_batch).first()
-        return (inventory.sales_price if inventory else 0) * self.quantity    
->>>>>>> Stashed changes
+
     
     def __str__(self):
         return f"CartItem: {self.product_variant} (Qty: {self.quantity})"
