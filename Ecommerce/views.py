@@ -183,30 +183,36 @@ def product_view(request, product_id):
 
 
 # View Cart
+
+
 @login_required
 def cart_view(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
-    products = Product.objects.all()
-    
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart).select_related('product_variant__product')
+
     cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
-    # Fetch inventory details for each cart item
+
     for item in cart_items:
-            inventory = Inventory.objects.filter(batch=item.product_batch).first()
-            # Fetch variants for the product in this cart item
-            item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
-            item.sales_price = inventory.sales_price if inventory else "N/A"   # print(f"❌ Inventory not found for batch {item.product_batch.batch_code}")
-   
-    # Pass available variants for each product
+        inventory = Inventory.objects.filter(batch=item.product_batch).first()
+        item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
+        item.sales_price = float(inventory.sales_price) if inventory else 0  # Convert Decimal to float
+
     variant_prices = {
-        item.product_variant.variant_id: Inventory.objects.filter(batch=item.product_batch, batch__variant=item.product_variant).first().sales_price
-        for item in cart_items if item.product_variant
-    }
+    str(variant.variant_id): float(Inventory.objects.filter(batch__variant=variant).first().sales_price)  
+    if Inventory.objects.filter(batch__variant=variant).exists() else 0
+    for item in cart_items for variant in item.product_variants
+}
 
-    # return render(request, "cart.html", {"cart_items": cart_items,})
+    print(variant_prices)
+
+    return render(request, 'Ecommerce/cart.html', {
+    "cart_items": cart_items,
+    "cart_product_ids": cart_product_ids,
+    "variant_prices": json.dumps(variant_prices) if variant_prices else "{}"  # Ensure it's always valid JSON
+})
 
 
-    return render(request, 'Ecommerce/cart.html', {'products':products, "cart_items": cart_items, "cart_product_ids": cart_product_ids, "variant_prices": variant_prices})
+
 
 
 @login_required

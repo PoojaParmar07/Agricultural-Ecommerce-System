@@ -1,14 +1,17 @@
 {% extends "Ecommerce/base.html" %}
-{% load static %} 
+{% load static %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'Ecommerce/cart.css' %}">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <div class="cart-container">
-    <div id="variant-data" style="display: none;">{{ variant_prices|json_script:"variant-data" }}
-    </div>
+    <!-- Store variant prices in JSON format for JavaScript -->
+    <script id="variant-data" type="application/json">
+        {{ variant_prices|safe }}
+    </script>
+
     <div class="cart-header">
-    {% if cart_items %}
+        {% if cart_items %}
         <table class="cart-table">
             <thead>
                 <tr>
@@ -22,53 +25,59 @@
             </thead>
             <tbody>
                 {% for item in cart_items %}
-                <tr>
+                <tr data-cart-item="{{ item.cart_item_id }}">
                     <td>
-                        <a href="{% url 'Ecommerce:product_view' item.product_variant.product.product_id %}" >
-                        <img src="{{ item.product_variant.product.product_image.url }}" alt="{{ item.product_variant.product.product_name }}" class="cart-product-image">
-                    </a>
-                    </td>
-                    <td>
-                        <a href="{% url 'Ecommerce:product_view' item.product_variant.product.product_id %}" >
-                        {{ item.product_variant.product.product_name }}</td>
+                        <a href="{% url 'Ecommerce:product_view' item.product_variant.product.product_id %}">
+                            <img src="{{ item.product_variant.product.product_image.url }}" 
+                                alt="{{ item.product_variant.product.product_name }}" 
+                                class="cart-product-image">
                         </a>
-                    <td>
-                        <select id="variant" class="variant-dropdown" name="variant_{{ item.product_variant.product.id }}">
-                            {% for item in item.product_variants %}
-                            <option id="units" value="{{ item.variant_id }}" {% if variant.id == item.product_variant.id %}selected{% endif %} >
-                                {{ item.units }} 
-                            </option>
-                        {% endfor %}
-                    </select>  
-            </select>
-
                     </td>
-
+                    <td>
+                        <a href="{% url 'Ecommerce:product_view' item.product_variant.product.product_id %}">
+                            {{ item.product_variant.product.product_name }}
+                        </a>
+                    </td>
+                    <td>
+                        <!-- Dropdown to select variant -->
+                        <select class="variant-dropdown" name="variant_{{ item.cart_item_id }}" 
+                                data-cart-item="{{ item.cart_item_id }}">
+                            {% for variant in item.product_variants %}
+                            <option value="{{ variant.variant_id }}" 
+                                    data-price="{{ variant.inventory.sales_price }}"
+                                    {% if variant.variant_id == item.product_variant.variant_id %}selected{% endif %}>
+                                {{ variant.units }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
                     <td>
                         <div class="quantity-selector">
-                            <button class="decrease">-</button>
-                            <input type="text" id="quantity" value="1" readonly>
-                            <button class="increase">+</button>
+                            <button class="decrease" data-cart-item="{{ item.cart_item_id }}">-</button>
+                            <input type="text" class="quantity" value="1" readonly>
+                            <button class="increase" data-cart-item="{{ item.cart_item_id }}">+</button>
                         </div>
                     </td>
                     <td>
-                        <p class="price" id="price-{{ cart_item.id }}">₹<span id="price-display" data-base-price="{{ item.sales_price|default:"0" }}">
-                            {{ item.sales_price|default:"0" }}
-                        </span></p> 
+                        <p class="price">₹<span class="price-display" 
+                            data-base-price="{{ item.sales_price }}">{{ item.sales_price }}</span></p>
                     </td>
                     <td>
-                        <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}"><button class="remove-cart" data-item-id="{{ item.cart_item_id }}">Remove</button></a>
+                        <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}">
+                            <button class="remove-cart" data-item-id="{{ item.cart_item_id }}">Remove</button>
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
     <div class="cart-footer">
-        <p class="grand-total">Total:
-        <span id="grand-total">₹0.00</span> </p>
+        <p class="grand-total">Total: ₹<span id="grand-total">0.00</span></p>
         <a href="#" class="checkout-btn">Checkout</a>
     </div>
+
     {% else %}
     <p class="empty-cart-message">Your cart is empty.</p>
     <div class="cart-footer back-btn">
@@ -77,8 +86,5 @@
     {% endif %}
 </div>
 
-
 <script src="{% static 'js/cart.js' %}"></script>
-{% endblock %} 
-
-
+{% endblock %}
