@@ -238,3 +238,8 @@ def remove_from_cart(request,item_id):
     cart_item.delete()
 
     return redirect('Ecommerce:cart_view')
+
+
+#Checkout Page View
+def checkout(request):
+    return render(request,'Ecommerce/checkout_page.html')
