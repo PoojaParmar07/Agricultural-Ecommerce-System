@@ -11,12 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
             let quantity = parseInt(quantityInput.value) || 1;
             quantity = Math.min(5, Math.max(1, quantity + amount)); // Limit between 1 and 5
             quantityInput.value = quantity;
-<<<<<<< Updated upstream
+
             updatePrice(selector, quantity);
             
-=======
+
             updatePrice(selector, quantity, units);
->>>>>>> Stashed changes
+
         }
 
         decreaseBtn.addEventListener("click", function () {
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-<<<<<<< Updated upstream
+
     //  Handle Variant Change
     document.querySelectorAll("select").forEach((select) => {
         select.addEventListener("change", function () {
@@ -45,22 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
             updatePrice(row.querySelector(".quantity-selector"), quantity);
         });
     });
-=======
-     // Handle Variant Change
-    // document.querySelectorAll("select").forEach((select) => {
-    //     select.addEventListener("change", function () {
-    //         const row = select.closest("tr");
-    //         const quantity = parseInt(row.querySelector("#variant").value) || 1;
-    //         updatePrice(row.querySelector(".quantity-selector"), quantity);
-    //     });
-    // });
->>>>>>> Stashed changes
+
 
     document.querySelector(".variant").foreach((selector)=>{
         const variantDropdown = document.getElementById("variant");
         const priceDisplay = document.getElementById("price-display");
  
-<<<<<<< Updated upstream
+
 
         // variantDropdown.addEventListener("change", function () {
         //     const selectedVariant = variantDropdown.value;
@@ -69,17 +60,12 @@ document.addEventListener("DOMContentLoaded", function () {
         //     });
     
     variantDropdown.addEventListener("change", function () {
-=======
-        variantDropdown.addEventListener("change", function () {
->>>>>>> Stashed changes
+
             const selectedVariant = variantDropdown.value;
             const variantPrice = parseFloat(variantDropdown.getAttribute("data-price")) || 0;
             priceDisplay.textContent = (variantPrice).toFixed(2);
             });
         
     });
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 });
