@@ -292,7 +292,6 @@ class CartItem(models.Model):
         return price * self.quantity
 
         inventory = Inventory.objects.filter(batch=self.product_batch).first()
-        return (inventory.sales_price if inventory else 0) * self.quantity    
 
     
     def __str__(self):
