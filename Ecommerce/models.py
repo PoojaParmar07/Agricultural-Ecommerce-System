@@ -287,11 +287,10 @@ class CartItem(models.Model):
         
     def total_price(self):
 
-        """Calculate total price based on variant and quantity"""
-        price = self.product_variant.get_price()  # Correctly fetch price
+        """Calculate total price based on batch price and quantity"""
+        inventory = Inventory.objects.filter(batch=self.product_batch).order_by('-create_at').first()
+        price = inventory.sales_price if inventory else 0
         return price * self.quantity
-
-        inventory = Inventory.objects.filter(batch=self.product_batch).first()
 
     
     def __str__(self):
