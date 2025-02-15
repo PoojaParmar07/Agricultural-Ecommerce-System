@@ -5,10 +5,10 @@
 <link rel="stylesheet" href="{% static 'Ecommerce/cart.css' %}">
 
 <div class="cart-container">
-    <!-- Store variant prices in JSON format for JavaScript -->
+    {% comment %} <!-- Store variant prices in JSON format for JavaScript -->
     <script id="variant-data" type="application/json">
         {{ variant_prices|safe }}
-    </script>
+    </script> {% endcomment %}
 
     <div class="cart-header">
         {% if cart_items %}
