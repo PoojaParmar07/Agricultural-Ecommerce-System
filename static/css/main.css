@@ -1,44 +1,55 @@
+/* Dashboard Container */
 .dashboard-container {
     display: flex;
-    justify-content: space-between;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 20px;
     padding: 20px;
+    justify-content: center;
 }
 
+/* Card Styling */
 .card {
     background: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 220px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    transition: all 0.3s ease-in-out;
 }
 
+/* Card Hover Effect */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Icons */
 .icon {
-    font-size: 24px;
+    font-size: 28px;
 }
 
+/* Info Text */
 .info p {
     margin: 0;
     font-size: 14px;
-    color: gray;
+    color: #555;
 }
 
 .info h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
 }
 
 /* Color Variations */
-.users { border-left: 5px solid #28a745; }       
-.orders { border-left: 5px solid #dc3545; }      
-.products { border-left: 5px solid #007bff; }    
-.batches { border-left: 5px solid #ffc107; }     
-.inventory { border-left: 5px solid #17a2b8; }   
-.membership { border-left: 5px solid #6f42c1; }  
-.posts { border-left: 5px solid #fd7e14; }       
-.payments { border-left: 5px solid #20c997; }    
-
+.users { border-left: 5px solid #28a745; }       /* Green */
+.orders { border-left: 5px solid #dc3545; }      /* Red */
+.products { border-left: 5px solid #007bff; }    /* Blue */
+.batches { border-left: 5px solid #ffc107; }     /* Yellow */
+.inventory { border-left: 5px solid #17a2b8; }   /* Teal */
+.membership { border-left: 5px solid #6f42c1; }  /* Purple */
+.posts { border-left: 5px solid #fd7e14; }       /* Orange */
+.payments { border-left: 5px solid #20c997; }    /* Light Green */
