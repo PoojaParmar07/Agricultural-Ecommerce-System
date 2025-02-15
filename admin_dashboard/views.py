@@ -17,6 +17,9 @@ def admin_dashboard(request):
     return render(request, 'admin_dashboard/index.html')  # Your custom template
 
 
+def demo(request):
+    return render(request,'admin_dashboard/main.html')
+
 
 
 

@@ -23,7 +23,7 @@ from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView
 
 urlpatterns = [
     path('built-in_admin/', admin.site.urls),
-    path('admin/dashboard',include('admin_dashboard.urls')),
+    path('admin/dashboard/',include('admin_dashboard.urls')),
     path('',include('Ecommerce.urls')),
     path('account/',include('account.urls')),
     path('membership/',include('membership.urls')),
