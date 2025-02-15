@@ -285,13 +285,19 @@ class CartItem(models.Model):
         db_table = 'CartItem'
         unique_together = (('cart', 'product_batch', 'product_variant'),)
         
+    # @property
+    # def total_price(self):
+    #     """Dynamically calculates total price based on quantity and sales price."""
+    #     inventory = Inventory.objects.filter(batch=self.product_batch).first()
+    #     if inventory:
+    #         return self.quantity * inventory.sales_price
+    #     return 0  # If no inventory record found, return 0 to prevent errors
+
     @property
     def total_price(self):
-        """Dynamically calculates total price based on quantity and sales price."""
-        inventory = Inventory.objects.filter(batch=self.product_batch).first()
-        if inventory:
-            return self.quantity * inventory.sales_price
-        return 0  # If no inventory record found, return 0 to prevent errors
+        """Calculates total price based on quantity and selected variant's sales price."""
+        inventory = Inventory.objects.filter(batch=self.product_batch, batch__variant=self.product_variant).first()
+        return self.quantity * inventory.sales_price if inventory else 0
 
     def save(self, *args, **kwargs):
         """Override save method to recalculate and ensure price updates."""
