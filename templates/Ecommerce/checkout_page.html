@@ -63,33 +63,16 @@
                         <p>{{ item.product_variant.product.product_name }}</p>
                         <p>{{ item.product_variant.units }}</p>
                         <p>Q : {{ item.quantity }}</p>
-                        <span>{{ item.sales_price }}</span>
+                        <span>{{ item.total_price }}</span>
                     </div>
                 </div>
                 {% endfor %}
             </div> 
-            {% comment %} <div class="order-summary">
-                <h2>Order Summary</h2>
-                <div class="items">
-                    {% for item in cart_items %}
-                    <div class="item">
-                        <img src="{{ item.product_variant.product.product_image.url }}" 
-                             alt="{{ item.product_variant.product.product_name }}" 
-                             class="cart-product-image">
-                        <div class="details">
-                            <p>{{ item.product_variant.product.product_name }}</p>
-                            <p>Variant: {{ item.product_variant.units }}</p>
-                            <p>Quantity: {{ item.quantity }}</p>
-                            <span>₹{{ item.sales_price }}</span>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div> {% endcomment %}
                 <hr>
                 <div class="summary-details">
-                    <p>Subtotal: ₹<span id="grand-total">0.00</span></p>
+                    <p>Subtotal: ₹<span id="grand-total">{{ grand_total }}</span></p>
                     <p>Shipping: <span class="free">Free</span></p>
-                    <p class="total">Total: <span><b>₹{{ cart_total }}</b></span></p>
+                    <p class="total">Total: <span><b>₹{{ grand_total }}</b></span></p>
                 </div>
                 
                 <h3>Payment Method</h3>
@@ -104,7 +87,7 @@
                     </label>
                 </div>
                 
-                <button id="placeOrder">Place Order</button>
+                <button id="placeOrder" name="placeOrder">Place Order</button>
             </div>
            
     

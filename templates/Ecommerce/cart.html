@@ -39,33 +39,17 @@
                         </a>
                     </td>
                     <td>
-                        {% comment %} <form method="post" action="{% url 'Ecommerce:update_variant' item.cart_item_id %}">
-                            {% csrf_token %}
-                        <!-- Dropdown to select variant -->
-                        <select class="variant-dropdown" onchange="this.form.submit()">
-
-                            {% for variant in item.product_variants %}
-                            <option value="{{ variant.variant_id }}" 
-                                    
-                                    {% if variant.variant_id == item.product_variant.variant_id %}selected{% endif %}>
-                                {{ variant.units }} - ₹{{ variant.total_price }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                        </form> {% endcomment %}
                         <form method="post" action="{% url 'Ecommerce:update_variant' item.cart_item_id %}">
                             {% csrf_token %}
                             <select name="variant_id" onchange="this.form.submit()">
                                 {% for variant in item.product_variant.product.productvariant_set.all %}
                                 <option value="{{ variant.variant_id }}" 
                                         {% if variant.variant_id == item.product_variant.variant_id %}selected{% endif %}>
-                                    {{ variant.units }} - ₹{{ variant.inventory.sales_price }}
+                                    {{ variant.units }} - ₹{{ item.variant_price }}
                                 </option>
                                 {% endfor %}
                             </select>
-                        </form>
-                        <!-- Display price based on selected variant -->
-<p class="price">₹<span class="price-display">{{ item.product_variant.inventory.sales_price }}</span></p>
+                        </form> 
                     </td>
                     <td>
                         <!-- Quantity increase decrease -->
