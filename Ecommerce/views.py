@@ -290,49 +290,6 @@ def checkout(request):
 
 
 @login_required
-def UpdateCart(request):
-    pass
-
-
-# @login_required
-# def increase_quantity(request):
-#     """Increases the quantity of a cart item and updates the total price."""
-    
-#     if not request.POST:
-#         return redirect("Ecommerce:homebody")
-    
-#     item_id = request.POST.get('item_id')
-    
-#     item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
-    
-#     # inventory = get_object_or_404(Inventory, product_variant=item.product_variant)
-    
-#     if item.quantity < 5:
-#         item.quantity += 1
-#         item.save()
-
-
-#     return redirect('Ecommerce:cart_view')
-
-# @login_required
-# def decrease_quantity(request):
-#     """Decreases the quantity of a cart item and updates the total price."""
-    
-#     item_id = request.POST.get('item_id')
-    
-#     item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
-    
-#     # inventory = get_object_or_404(Inventory, product_variant=item.product_variant)
-    
-#     if item.quantity > 1:
-#         item.quantity -= 1
-#         item.save()
-        
-#     return redirect('Ecommerce:cart_view')
-
-
-
-@login_required
 def increase_quantity(request):
     """Increases the quantity of a cart item, updates the price, and stores in DB."""
 
@@ -380,41 +337,29 @@ def decrease_quantity(request):
 
 
 
-
-
-
-def update_variant(request):
-    """Updates the price dynamically when a variant is selected."""
+def update_variant(request, cart_item_id):
+    """Handles variant selection and updates the cart item."""
+    
     if request.method == "POST":
-        cart_item_id = request.POST.get('cart_item_id')
-        new_variant_id = request.POST.get('variant_id')
-
-        # Validate input
-        if not cart_item_id or not new_variant_id:
-            return JsonResponse({"success": False, "error": "Invalid request"})
-
+        variant_id = request.POST.get("variant_id")
+        
+        if not variant_id:
+            return redirect("Ecommerce:cart_view")  # Redirect if no variant selected
+        
         # Get the cart item
         cart_item = get_object_or_404(CartItem, cart_item_id=cart_item_id, cart__user=request.user)
-        
+
         # Get the selected variant
-        new_variant = get_object_or_404(ProductVariant, variant_id=new_variant_id)
+        new_variant = get_object_or_404(ProductVariant, variant_id=variant_id)
 
-        # Fetch the correct inventory entry for the new variant
-        inventory = Inventory.objects.filter(batch=cart_item.product_batch, variant=new_variant).first()
+        # Fetch the inventory record for the selected variant
+        inventory = Inventory.objects.filter(batch=cart_item.product_batch, product_variant=new_variant).first()
+        
+        if inventory:
+            # Update the cart item with the new variant and price
+            cart_item.product_variant = new_variant
+            cart_item.save()
+        else:
+            print("No inventory found for this variant")  # Debugging
 
-        if not inventory:
-            return JsonResponse({"success": False, "error": "Price not found for this variant."})
-
-        # Update cart item with new variant
-        cart_item.product_variant = new_variant
-        cart_item.save()
-
-        # Calculate new price
-        new_price = cart_item.quantity * inventory.sales_price
-
-        return JsonResponse({
-            "success": True,
-            "new_price": new_price
-        })
-
-    return JsonResponse({"success": False, "error": "Invalid request method."})
+    return redirect("Ecommerce:cart_view")  # Reload the cart page to reflect changes
