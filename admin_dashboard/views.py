@@ -14,7 +14,7 @@ def is_admin_user(user):
 @login_required
 @user_passes_test(is_admin_user)  # Ensure only admin users can access
 def admin_dashboard(request):
-    return render(request, 'admin_dashboard/index.html')  # Your custom template
+    return render(request, 'admin_dashboard/main.html')  # Your custom template
 
 
 def demo(request):
