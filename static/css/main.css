@@ -45,11 +45,4 @@
 }
 
 /* Color Variations */
-.users { border-left: 5px solid #28a745; }       /* Green */
-.orders { border-left: 5px solid #dc3545; }      /* Red */
-.products { border-left: 5px solid #007bff; }    /* Blue */
-.batches { border-left: 5px solid #ffc107; }     /* Yellow */
-.inventory { border-left: 5px solid #17a2b8; }   /* Teal */
-.membership { border-left: 5px solid #6f42c1; }  /* Purple */
-.posts { border-left: 5px solid #fd7e14; }       /* Orange */
-.payments { border-left: 5px solid #20c997; }    /* Light Green */
+.border { border-left: 5px solid #3b823b; }       /* Green */
