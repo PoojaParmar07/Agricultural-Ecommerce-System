@@ -1,0 +1,54 @@
+{% extends 'admin_dashboard/index.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<div class="dashboard-container">
+    <div class="card users">
+        <div class="info">
+            <p>Users</p>
+        </div>
+    </div>
+
+    <div class="card orders">
+        <div class="info">
+            <p>Orders</p>
+        </div>
+    </div>
+
+    <div class="card products">
+        <div class="info">
+            <p>Products</p>
+        </div>
+    </div>
+
+    <div class="card batches">
+        <div class="info">
+            <p>Batches</p>
+        </div>
+    </div>
+   
+</div>
+<div class='dashboard-container'>
+    <div class="card inventory">
+        <div class="info">
+            <p>Inventory</p>
+        </div>
+    </div>
+    <div class="card membership">
+        <div class="info">
+            <p>Membership</p>
+        </div>
+    </div>
+    <div class="card posts">
+        <div class="info">
+            <p>Post</p>
+        </div>
+    </div>
+    <div class="card payments">
+        <div class="info">
+            <p>Payment</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
