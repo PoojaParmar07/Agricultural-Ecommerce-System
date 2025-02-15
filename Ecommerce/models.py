@@ -85,7 +85,7 @@ class ProductBatch(models.Model):
 class Inventory(models.Model):
     inventory_id = models.AutoField(primary_key=True)
     batch = models.ForeignKey("ProductBatch", on_delete=models.CASCADE)
-    quatity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=0)
     purchase_price = models.DecimalField(max_digits=5, decimal_places=2)
     sales_price = models.DecimalField(max_digits=5, decimal_places=2)
     create_at = models.DateTimeField(auto_now=True)
@@ -285,14 +285,17 @@ class CartItem(models.Model):
         db_table = 'CartItem'
         unique_together = (('cart', 'product_batch', 'product_variant'),)
         
+    @property
     def total_price(self):
-
-        """Calculate total price based on variant and quantity"""
-        price = self.product_variant.get_price()  # Correctly fetch price
-        return price * self.quantity
-
+        """Dynamically calculates total price based on quantity and sales price."""
         inventory = Inventory.objects.filter(batch=self.product_batch).first()
+        if inventory:
+            return self.quantity * inventory.sales_price
+        return 0  # If no inventory record found, return 0 to prevent errors
 
+    def save(self, *args, **kwargs):
+        """Override save method to recalculate and ensure price updates."""
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"CartItem: {self.product_variant} (Qty: {self.quantity})"

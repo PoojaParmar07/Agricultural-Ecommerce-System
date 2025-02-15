@@ -192,6 +192,8 @@ def cart_view(request):
 
     cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
 
+    grand_total = sum(item.total_price for item in cart_items)  # Calculate grand total
+
     for item in cart_items:
         inventory = Inventory.objects.filter(batch=item.product_batch).first()
         item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
@@ -202,13 +204,17 @@ def cart_view(request):
     if Inventory.objects.filter(batch__variant=variant).exists() else 0
     for item in cart_items for variant in item.product_variants
 }
-
+    
     print(variant_prices)
-    return render(request, 'Ecommerce/cart.html', {
-    "cart_items": cart_items,
-    "cart_product_ids": cart_product_ids,
-    "variant_prices": json.dumps(variant_prices) if variant_prices else "{}"  # Ensure it's always valid JSON
-})
+    
+    context = {
+        "cart_items": cart_items,
+        "cart_product_ids": cart_product_ids,
+        "variant_prices": json.dumps(variant_prices) if variant_prices else "{}",  # Ensure it's always valid JSON
+        'grand_total': grand_total,
+    }
+    
+    return render(request, 'Ecommerce/cart.html', context)
 
 
 
@@ -246,6 +252,9 @@ def add_to_cart(request, product_id):
 
 
 
+
+
+
 # Remove from Cart
 @login_required
 def remove_from_cart(request,item_id):
@@ -256,3 +265,150 @@ def remove_from_cart(request,item_id):
 
 
 
+def checkout(request):
+    cart = Cart.objects.get(user=request.user)  # Get the user's cart
+    cart_items = cart.cartitem_set.all()  # Fetch all items in the cart
+    cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
+
+    for item in cart_items:
+        inventory = Inventory.objects.filter(batch=item.product_batch).first()
+        item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
+        item.sales_price = float(inventory.sales_price) if inventory else 0  # Convert Decimal to float
+
+    variant_prices = {
+    str(variant.variant_id): float(Inventory.objects.filter(batch__variant=variant).first().sales_price)  
+    if Inventory.objects.filter(batch__variant=variant).exists() else 0
+    for item in cart_items for variant in item.product_variants
+}
+    return render(request, "Ecommerce/checkout_page.html", {
+        "cart_items": cart_items,
+        "cart_product_ids": cart_product_ids,
+        "variant_prices": json.dumps(variant_prices) if variant_prices else "{}"  # Ensure it's always valid JSON
+
+    })
+
+
+
+@login_required
+def UpdateCart(request):
+    pass
+
+
+# @login_required
+# def increase_quantity(request):
+#     """Increases the quantity of a cart item and updates the total price."""
+    
+#     if not request.POST:
+#         return redirect("Ecommerce:homebody")
+    
+#     item_id = request.POST.get('item_id')
+    
+#     item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
+    
+#     # inventory = get_object_or_404(Inventory, product_variant=item.product_variant)
+    
+#     if item.quantity < 5:
+#         item.quantity += 1
+#         item.save()
+
+
+#     return redirect('Ecommerce:cart_view')
+
+# @login_required
+# def decrease_quantity(request):
+#     """Decreases the quantity of a cart item and updates the total price."""
+    
+#     item_id = request.POST.get('item_id')
+    
+#     item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
+    
+#     # inventory = get_object_or_404(Inventory, product_variant=item.product_variant)
+    
+#     if item.quantity > 1:
+#         item.quantity -= 1
+#         item.save()
+        
+#     return redirect('Ecommerce:cart_view')
+
+
+
+@login_required
+def increase_quantity(request):
+    """Increases the quantity of a cart item, updates the price, and stores in DB."""
+
+    if request.method == "POST":
+        item_id = request.POST.get('item_id')
+
+        if not item_id:
+            return redirect("Ecommerce:cart_view")
+
+        cart_item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
+        
+        if cart_item.quantity < 5:
+            cart_item.quantity += 1
+            # cart_item.total_price = cart_item.quantity * inventory.sales_price  # Update price
+            cart_item.save()   # This will now use @property to dynamically reflect price
+
+    return redirect('Ecommerce:cart_view')
+
+
+
+@login_required
+def decrease_quantity(request):
+    """Decreases the quantity of a cart item, updates the price, and stores in DB."""
+
+    if request.method == "POST":
+        item_id = request.POST.get('item_id')
+
+        if not item_id:
+            return redirect("Ecommerce:cart_view")
+
+        cart_item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
+
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+        
+
+    return redirect('Ecommerce:cart_view')
+
+
+
+
+
+
+def update_variant(request):
+    """Updates the price dynamically when a variant is selected."""
+    if request.method == "POST":
+        cart_item_id = request.POST.get('cart_item_id')
+        new_variant_id = request.POST.get('variant_id')
+
+        # Validate input
+        if not cart_item_id or not new_variant_id:
+            return JsonResponse({"success": False, "error": "Invalid request"})
+
+        # Get the cart item
+        cart_item = get_object_or_404(CartItem, cart_item_id=cart_item_id, cart__user=request.user)
+        
+        # Get the selected variant
+        new_variant = get_object_or_404(ProductVariant, variant_id=new_variant_id)
+
+        # Fetch the correct inventory entry for the new variant
+        inventory = Inventory.objects.filter(batch=cart_item.product_batch, variant=new_variant).first()
+
+        if not inventory:
+            return JsonResponse({"success": False, "error": "Price not found for this variant."})
+
+        # Update cart item with new variant
+        cart_item.product_variant = new_variant
+        cart_item.save()
+
+        # Calculate new price
+        new_price = cart_item.quantity * inventory.sales_price
+
+        return JsonResponse({
+            "success": True,
+            "new_price": new_price
+        })
+
+    return JsonResponse({"success": False, "error": "Invalid request method."})

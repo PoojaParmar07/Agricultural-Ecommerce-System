@@ -12,11 +12,12 @@ class ReviewForm(forms.ModelForm):
         }
 
     
-# class CartItemUpdateForm(forms.Form):
+class CartItemForm(forms.Form):
 
-#     variant_id = forms.ModelChoiceField(queryset=ProductVariant.objects.all(), required=True, empty_label=None)
-#     quantity = forms.IntegerField(min_value=1, max_value=10)
+    variant_id = forms.ModelChoiceField(queryset=ProductVariant.objects.all(), required=True, empty_label=None)
+    quantity = forms.IntegerField(min_value=1, max_value=10)
+    sales_price = forms.DecimalField(max_digits=5,decimal_places=2)
 
-#     class Meta:
-#         model = CartItem
-#         fields = ['variant_id', 'quantity']
+    class Meta:
+        model = CartItem
+        fields = ['variant_id', 'quantity','sales_price']

@@ -100,11 +100,11 @@ class ProductBatchForm(forms.ModelForm):
 class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
-        fields = ['batch', 'quatity', 'purchase_price', 'sales_price']
+        fields = ['batch', 'quantity', 'purchase_price', 'sales_price']
         
         widgets = {
             'batch': forms.Select(attrs={'class': 'form-control'}),
-            'quatity': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
             'purchase_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'sales_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }

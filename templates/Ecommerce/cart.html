@@ -40,11 +40,16 @@
                     </td>
                     <td>
                         <!-- Dropdown to select variant -->
-                        <select class="variant-dropdown" name="variant_{{ item.cart_item_id }}" 
-                                data-cart-item="{{ item.cart_item_id }}">
+                        <select class="variant-dropdown"
+                            name="variant_{{ item.cart_item_id }}"
+                            hx-post="{% url 'Ecommerce:update_variant' %}"
+                            hx-trigger="change"
+                            hx-target="#price-{{ item.cart_item_id }}"
+                            hx-swap="outerHTML">
+
                             {% for variant in item.product_variants %}
                             <option value="{{ variant.variant_id }}" 
-                                    data-price="{{ variant.inventory.sales_price }}"
+                                    
                                     {% if variant.variant_id == item.product_variant.variant_id %}selected{% endif %}>
                                 {{ variant.units }}
                             </option>
@@ -52,15 +57,30 @@
                         </select>
                     </td>
                     <td>
+                        <!-- Quantity increase decrease -->
                         <div class="quantity-selector">
-                            <button class="decrease" data-cart-item="{{ item.cart_item_id }}">-</button>
-                            <input type="text" class="quantity" value="1" readonly>
-                            <button class="increase" data-cart-item="{{ item.cart_item_id }}">+</button>
+                            <!-- Decrease Button -->
+                            <form method="post" action="{% url 'Ecommerce:decrease_quantity' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="item_id" value="{{ item.cart_item_id }}">
+                                <button type="submit" class="decrease">-</button>
+                            </form>
+                    
+                            <input type="text" class="quantity" value="{{ item.quantity }}" readonly>
+                    
+                            <!-- Increase Button -->
+                            <form method="post" action="{% url 'Ecommerce:increase_quantity' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="item_id" value="{{ item.cart_item_id }}">
+                                <button type="submit" class="increase">+</button>
+                               
+                            </form>
                         </div>
                     </td>
                     <td>
-                        <p class="price">₹<span class="price-display" 
-                            data-base-price="{{ item.sales_price }}">{{ item.sales_price }}</span></p>
+                        {% comment %} <p class="price">₹<span class="price-display" 
+                            data-base-price="{{ item.sales_price }}">{{ item.sales_price }}</span></p> {% endcomment %}
+                            <p class="price">₹<span class="price-display" id="price-{{ item.cart_item_id }}">{{ item.total_price }}</span></p>
                     </td>
                     <td>
                         <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}">
@@ -74,7 +94,7 @@
     </div>
 
     <div class="cart-footer">
-        <p class="grand-total">Total: ₹<span id="grand-total">0.00</span></p>
+        <p class="grand-total">Total: ₹<span id="grand-total">{{ grand_total }}</span></p>
         <a href="{% url 'Ecommerce:checkout' %}" class="checkout-btn">Checkout</a>
     </div>
 
@@ -87,4 +107,5 @@
 </div>
 
 <script src="{% static 'js/cart.js' %}"></script>
+
 {% endblock %}

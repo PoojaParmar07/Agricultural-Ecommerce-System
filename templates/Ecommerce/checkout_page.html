@@ -53,45 +53,60 @@
         <div class="order-summary">
             <h2>Order Summary</h2>
             <div class="items">
+                {% for item in cart_items %}
+                
                 <div class="item">
-                    <img src="/media/tomato-seeds.jpg" alt="Jade Terrarium">
+                    <img src="{{ item.product_variant.product.product_image.url }}" 
+                    alt="{{ item.product_variant.product.product_name }}" 
+                    class="cart-product-image">
                     <div class="details">
-                        <p>Jade Terrarium</p>
-                        <span>$350.00</span>
+                        <p>{{ item.product_variant.product.product_name }}</p>
+                        <p>{{ item.product_variant.units }}</p>
+                        <p>Q : {{ item.quantity }}</p>
+                        <span>{{ item.sales_price }}</span>
                     </div>
                 </div>
-                <div class="item">
-                    <img src="/media/tomato-seeds.jpg" alt="Jade Terrarium">
-                    <div class="details">
-                        <p>Jade Terrarium</p>
-                        <span>$350.00</span>
+                {% endfor %}
+            </div> 
+            {% comment %} <div class="order-summary">
+                <h2>Order Summary</h2>
+                <div class="items">
+                    {% for item in cart_items %}
+                    <div class="item">
+                        <img src="{{ item.product_variant.product.product_image.url }}" 
+                             alt="{{ item.product_variant.product.product_name }}" 
+                             class="cart-product-image">
+                        <div class="details">
+                            <p>{{ item.product_variant.product.product_name }}</p>
+                            <p>Variant: {{ item.product_variant.units }}</p>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <span>₹{{ item.sales_price }}</span>
+                        </div>
                     </div>
+                    {% endfor %}
+                </div> {% endcomment %}
+                <hr>
+                <div class="summary-details">
+                    <p>Subtotal: ₹<span id="grand-total">0.00</span></p>
+                    <p>Shipping: <span class="free">Free</span></p>
+                    <p class="total">Total: <span><b>₹{{ cart_total }}</b></span></p>
                 </div>
+                
+                <h3>Payment Method</h3>
+                <div class="payment-options">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="COD" checked>
+                        <span class="custom-radio"></span> Cash on Delivery
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="Online">
+                        <span class="custom-radio"></span> Online Payment
+                    </label>
+                </div>
+                
+                <button id="placeOrder">Place Order</button>
             </div>
-            <hr>
-            <div class="summary-details">
-                <p>Subtotal: <span>$650.00</span></p>
-                <p>Discount: <span>- $97.05</span></p>
-                <p>Shipping: <span class="free">Free</span></p>
-                <p class="total">Total: <span><b>$552.05</b></span></p>
-            </div>
-            
-            <h3>Payment Method</h3>
-            <div class="payment-options">
-               
-                <label class="payment-option">
-                    <input type="radio" name="payment" value="COD" checked>
-                    <span class="custom-radio"></span> Cash on Delivery
-                </label>
-                <label class="payment-option">
-                    <input type="radio" name="payment" value="Online">
-                    <span class="custom-radio"></span> Online Payment
-                </label>
-            </div>
-            
-            <button id="placeOrder">Place Order</button>
-        </div>
-    </div>
+           
     
     <script src="{% static 'js/script.js' %}"></script>
 </body>
