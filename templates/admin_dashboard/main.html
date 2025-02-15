@@ -7,7 +7,7 @@
     <div class="card border">
         <div class="icon">👤</div>
         <div class="info">
-            <p>Users</p>
+            <a href="{% url 'account:user_list' %}">Users</a>
             
         </div>
     </div>
@@ -15,7 +15,7 @@
     <div class="card border">
         <div class="icon">📦</div>
         <div class="info">
-            <p>Orders</p>
+            <a href="{% url 'admin_dashboard:order_list' %}">Orders</a>
            
         </div>
     </div>
@@ -23,7 +23,7 @@
     <div class="card border">
         <div class="icon">🛒</div>
         <div class="info">
-            <p>Products</p>
+            <a href="{% url 'admin_dashboard:product_list' %}">Products</a>
            
         </div>
     </div>
@@ -31,7 +31,7 @@
     <div class="card border">
         <div class="icon">📜</div>
         <div class="info">
-            <p>Batches</p>
+            <a href="{% url 'admin_dashboard:productbatch_list' %}">Batches</a>
            
         </div>
     </div>
@@ -41,7 +41,7 @@
     <div class="card border">
         <div class="icon">📊</div>
         <div class="info">
-            <p>Inventory</p>
+            <a href="{% url 'admin_dashboard:inventory_list' %}">Inventory</a>
            
         </div>
     </div>
@@ -49,7 +49,7 @@
     <div class="card border">
         <div class="icon">🎫</div>
         <div class="info">
-            <p>Membership</p>
+            <a href="{% url 'membership:user_membership' %}">Membership</a>
            
         </div>
     </div>
@@ -57,7 +57,7 @@
     <div class="card border">
         <div class="icon">📝</div>
         <div class="info">
-            <p>Posts</p>
+            <a href="{% url 'socialmedia:post' %}">Posts</a>
             
         </div>
     </div>
@@ -65,7 +65,7 @@
     <div class="card border">
         <div class="icon">💰</div>
         <div class="info">
-            <p>Payments</p>
+            <a href="{% url 'admin_dashboard:payment_list' %}">Payments</a>
           
         </div>
     </div>
