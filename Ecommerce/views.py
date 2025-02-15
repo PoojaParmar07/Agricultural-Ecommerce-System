@@ -344,10 +344,13 @@ def increase_quantity(request):
 
         cart_item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
         
-        if cart_item.quantity < 5:
+        
+        product = cart_item.product_variant.product  
+
+        if cart_item.quantity < product.max_qty:
             cart_item.quantity += 1
-            # cart_item.total_price = cart_item.quantity * inventory.sales_price  # Update price
-            cart_item.save()   # This will now use @property to dynamically reflect price
+            cart_item.save()
+
 
     return redirect('Ecommerce:cart_view')
 
@@ -365,9 +368,12 @@ def decrease_quantity(request):
 
         cart_item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
 
-        if cart_item.quantity > 1:
+        product = cart_item.product_variant.product  
+
+        if cart_item.quantity > product.min_qty:
             cart_item.quantity -= 1
             cart_item.save()
+
         
 
     return redirect('Ecommerce:cart_view')
