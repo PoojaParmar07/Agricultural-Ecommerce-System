@@ -247,12 +247,7 @@ def add_to_cart(request, product_id):
         cart_item.save()
 
     return redirect("Ecommerce:cart_view")
-    # return JsonResponse({"success": True, "message": "Product added to cart successfully!"})
-
-
-
-
-
+    
 
 
 # Remove from Cart
@@ -287,51 +282,6 @@ def checkout(request):
 
     })
 
-
-
-@login_required
-def UpdateCart(request):
-    pass
-
-
-# @login_required
-# def increase_quantity(request):
-#     """Increases the quantity of a cart item and updates the total price."""
-    
-#     if not request.POST:
-#         return redirect("Ecommerce:homebody")
-    
-#     item_id = request.POST.get('item_id')
-    
-#     item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
-    
-#     # inventory = get_object_or_404(Inventory, product_variant=item.product_variant)
-    
-#     if item.quantity < 5:
-#         item.quantity += 1
-#         item.save()
-
-
-#     return redirect('Ecommerce:cart_view')
-
-# @login_required
-# def decrease_quantity(request):
-#     """Decreases the quantity of a cart item and updates the total price."""
-    
-#     item_id = request.POST.get('item_id')
-    
-#     item = get_object_or_404(CartItem, cart_item_id=item_id, cart__user=request.user)
-    
-#     # inventory = get_object_or_404(Inventory, product_variant=item.product_variant)
-    
-#     if item.quantity > 1:
-#         item.quantity -= 1
-#         item.save()
-        
-#     return redirect('Ecommerce:cart_view')
-
-
-
 @login_required
 def increase_quantity(request):
     """Increases the quantity of a cart item, updates the price, and stores in DB."""
@@ -346,7 +296,6 @@ def increase_quantity(request):
         
         if cart_item.quantity < 5:
             cart_item.quantity += 1
-            # cart_item.total_price = cart_item.quantity * inventory.sales_price  # Update price
             cart_item.save()   # This will now use @property to dynamically reflect price
 
     return redirect('Ecommerce:cart_view')
