@@ -45,7 +45,7 @@
                                 {% for variant in item.product_variant.product.productvariant_set.all %}
                                 <option value="{{ variant.variant_id }}" 
                                         {% if variant.variant_id == item.product_variant.variant_id %}selected{% endif %}>
-                                    {{ variant.units }} - ₹{{ item.variant_price }}
+                                    {{ variant.units }} 
                                 </option>
                                 {% endfor %}
                             </select>
