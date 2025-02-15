@@ -32,7 +32,7 @@
         </div>
         
         <!-- Price -->
-        <pre>{{ variant_prices }}</pre>
+        {% comment %} <pre>{{ variant_prices }}</pre> {% endcomment %}
 
         <p class="price">₹<span id="price-display">{{ product.first_price|default:"N/A" }}</span></p>
         
