@@ -27,9 +27,6 @@ def checkout(request):
 
 def homepage(request):
     categories = Category.objects.all()  # Get all categories
-    
-    # cart_count = CartItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0
-    
     category_data = [
         {
             'category_id': category.category_id,
@@ -68,7 +65,6 @@ def homepage(request):
         'categories': category_data,
         'product_data': product_data,
         'cart_product_ids': cart_product_ids,  # ✅ Pass this to the template
-        # 'cart_count': cart_count
     })
 
 
@@ -356,76 +352,159 @@ def update_variant(request, cart_item_id):
 # checkout
 
 
+# @login_required
+# def checkout(request):
+#     cart = Cart.objects.get(user=request.user)  # Get the user's cart
+#     cart_items = cart.cartitem_set.all()  # Fetch all items in the cart
+#     cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
+
+#     # Check if the user has an active membership
+#     user_membership = User_membership.objects.filter(
+#         user=request.user, 
+#         status=True, 
+#         membership_end_date__gte=date.today()  # Ensure the membership is active
+#     ).select_related('plan').first()
+
+#     membership_discount = Decimal(0)  # Ensure it's Decimal
+#     membership_plan_name = None
+#     is_member = False
+
+#     if user_membership:
+#         membership_discount = Decimal(user_membership.plan.discount_rate)  # Convert to Decimal
+#         membership_plan_name = user_membership.plan.plan_name
+#         is_member = True
+
+#     for item in cart_items:
+#         inventory = Inventory.objects.filter(batch=item.product_batch).first()
+#         item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
+#         item.sales_price = Decimal(inventory.sales_price) if inventory else Decimal(0)  # ✅ Convert to Decimal
+
+#     # Calculate grand total using Decimal
+#     grand_total = sum(Decimal(item.total_price) for item in cart_items)  # ✅ Keep as Decimal
+
+#     # Apply membership discount
+#     discount_amount = (grand_total * membership_discount / Decimal(100)) if user_membership else Decimal(0)
+
+#     total_after_discount = grand_total - discount_amount  # ✅ Decimal subtraction
+
+#     # Get Delivery Charge from Database
+#     registered_pincode = str(request.user.pincode)  # Assuming pincode is stored in User model
+#     delivery_charge = Decimal(0) if is_member else Decimal(get_delivery_charge(registered_pincode))
+
+#     # Final Total with Delivery Charge
+#     final_total = total_after_discount + delivery_charge  # ✅ Ensure both are Decimal
+
+#     # Store variant prices as Decimal
+#     variant_prices = {
+#         str(variant.variant_id): Decimal(Inventory.objects.filter(batch__variant=variant).first().sales_price)  
+#         if Inventory.objects.filter(batch__variant=variant).exists() else Decimal(0)
+#         for item in cart_items for variant in item.product_variants
+#     }
+
+#     return render(request, "Ecommerce/checkout_page.html", {
+#         "cart_items": cart_items,
+#         "cart_product_ids": cart_product_ids,
+#         "variant_prices": json.dumps({k: str(v) for k, v in variant_prices.items()}),  # Convert Decimal to string for JSON
+#         "grand_total": grand_total,
+#         "discount_amount": discount_amount,  
+#         "total_after_discount": total_after_discount,  
+#         "is_member": is_member,  
+#         "membership_plan_name": membership_plan_name,  
+#         "delivery_charge": delivery_charge,  # Pass delivery charge to template
+#         "final_total": final_total,  # Final amount after discount and delivery charge
+#     })
+
+
+
+# def get_delivery_charge(pincode):
+#     """Fetches delivery charge from the database using the Pincode model."""
+#     try:
+#         pincode_instance = Pincode.objects.get(area_pincode=pincode)
+#         return float(pincode_instance.delivery_charges)  # Convert Decimal to float
+#     except Pincode.DoesNotExist:
+#         return 60  # Default charge if pincode not found
+
+
+
+
 @login_required
 def checkout(request):
-    cart = Cart.objects.get(user=request.user)  # Get the user's cart
-    cart_items = cart.cartitem_set.all()  # Fetch all items in the cart
+    cart = Cart.objects.get(user=request.user)  
+    cart_items = cart.cartitem_set.all()  
     cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
 
-    # Check if the user has an active membership
+    # Fetch cities
+    cities = City.objects.all()
+
+    selected_city_id = request.POST.get("city")  # Get selected city from the form
+    selected_pincode_id = request.POST.get("pincode")  # Get selected pincode from the form
+    pincodes = Pincode.objects.filter(city_id=selected_city_id) if selected_city_id else []
+
+    # Check for active membership
     user_membership = User_membership.objects.filter(
         user=request.user, 
         status=True, 
-        membership_end_date__gte=date.today()  # Ensure the membership is active
+        membership_end_date__gte=date.today()
     ).select_related('plan').first()
 
-    membership_discount = Decimal(0)  # Ensure it's Decimal
+    membership_discount = Decimal(0)
     membership_plan_name = None
     is_member = False
 
     if user_membership:
-        membership_discount = Decimal(user_membership.plan.discount_rate)  # Convert to Decimal
+        membership_discount = Decimal(user_membership.plan.discount_rate)
         membership_plan_name = user_membership.plan.plan_name
         is_member = True
 
     for item in cart_items:
         inventory = Inventory.objects.filter(batch=item.product_batch).first()
         item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
-        item.sales_price = Decimal(inventory.sales_price) if inventory else Decimal(0)  # ✅ Convert to Decimal
+        item.sales_price = Decimal(inventory.sales_price) if inventory else Decimal(0)
 
-    # Calculate grand total using Decimal
-    grand_total = sum(Decimal(item.total_price) for item in cart_items)  # ✅ Keep as Decimal
-
-    # Apply membership discount
+    # Calculate grand total
+    grand_total = sum(Decimal(item.total_price) for item in cart_items)
     discount_amount = (grand_total * membership_discount / Decimal(100)) if user_membership else Decimal(0)
+    total_after_discount = grand_total - discount_amount
 
-    total_after_discount = grand_total - discount_amount  # ✅ Decimal subtraction
+    # Get delivery charge
+    delivery_charge = Decimal(0)
+    if selected_pincode_id:
+        delivery_charge = Decimal(get_delivery_charge(selected_pincode_id))
 
-    # Get Delivery Charge from Database
-    registered_pincode = str(request.user.pincode)  # Assuming pincode is stored in User model
-    delivery_charge = Decimal(0) if is_member else Decimal(get_delivery_charge(registered_pincode))
+    final_total = total_after_discount + delivery_charge
 
-    # Final Total with Delivery Charge
-    final_total = total_after_discount + delivery_charge  # ✅ Ensure both are Decimal
-
-    # Store variant prices as Decimal
+    # Store variant prices
     variant_prices = {
         str(variant.variant_id): Decimal(Inventory.objects.filter(batch__variant=variant).first().sales_price)  
         if Inventory.objects.filter(batch__variant=variant).exists() else Decimal(0)
         for item in cart_items for variant in item.product_variants
     }
 
-    return render(request, "Ecommerce/checkout_page.html", {
+    context = {
         "cart_items": cart_items,
         "cart_product_ids": cart_product_ids,
-        "variant_prices": json.dumps({k: str(v) for k, v in variant_prices.items()}),  # Convert Decimal to string for JSON
+        "variant_prices": json.dumps({k: str(v) for k, v in variant_prices.items()}),
         "grand_total": grand_total,
-        "discount_amount": discount_amount,  
-        "total_after_discount": total_after_discount,  
-        "is_member": is_member,  
-        "membership_plan_name": membership_plan_name,  
-        "delivery_charge": delivery_charge,  # Pass delivery charge to template
-        "final_total": final_total,  # Final amount after discount and delivery charge
-    })
+        "discount_amount": discount_amount,
+        "total_after_discount": total_after_discount,
+        "is_member": is_member,
+        "membership_plan_name": membership_plan_name,
+        "delivery_charge": delivery_charge,
+        "final_total": final_total,
+        "cities": cities,
+        "pincodes": pincodes,
+        "selected_city_id": selected_city_id,
+        "selected_pincode_id": selected_pincode_id,
+    }
 
+    return render(request, "Ecommerce/checkout_page.html", context)
 
-
-def get_delivery_charge(pincode):
+def get_delivery_charge(pincode_id):
     """Fetches delivery charge from the database using the Pincode model."""
     try:
-        pincode_instance = Pincode.objects.get(area_pincode=pincode)
-        return float(pincode_instance.delivery_charges)  # Convert Decimal to float
+        pincode_instance = Pincode.objects.get(pincode_id=pincode_id)
+        return float(pincode_instance.delivery_charges)  
     except Pincode.DoesNotExist:
-        return 60  # Default charge if pincode not found
+        return 0
 
 
