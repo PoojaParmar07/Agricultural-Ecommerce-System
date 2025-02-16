@@ -27,6 +27,9 @@ def checkout(request):
 
 def homepage(request):
     categories = Category.objects.all()  # Get all categories
+    
+    # cart_count = CartItem.objects.filter(user=request.user).count() if request.user.is_authenticated else 0
+    
     category_data = [
         {
             'category_id': category.category_id,
@@ -65,6 +68,7 @@ def homepage(request):
         'categories': category_data,
         'product_data': product_data,
         'cart_product_ids': cart_product_ids,  # ✅ Pass this to the template
+        # 'cart_count': cart_count
     })
 
 

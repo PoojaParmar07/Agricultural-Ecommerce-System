@@ -150,14 +150,12 @@ LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS=True
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 # Looking to send emails in production? Check out our Email API/SMTP product!
+
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = '4c372aeca9eaf4'
-EMAIL_HOST_PASSWORD = 'fa4357b01739ea'
+EMAIL_HOST_USER = '721fb43a29876f'
+EMAIL_HOST_PASSWORD = 'c5f4adeb917d43'
 EMAIL_PORT = '2525'
 
 AUTHENTICATION_BACKENDS = [

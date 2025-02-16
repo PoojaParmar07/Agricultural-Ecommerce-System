@@ -11,7 +11,7 @@
     {% block head %}
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     {% endblock %}
-    <link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
@@ -21,11 +21,57 @@
 
 <body>
     <!-- Navbar -->
+   
+
     <nav class="navbar">
-        <div class="navbar-left">
-            <a href="{% url 'Ecommerce:homepage' %}" class="brand"><img src="/media/logo.jpg" alt="" height="70px"></a>
+        <div class="nav">
+        <!-- Logo -->
+            <div class="logo">
+                <a href="{% url 'Ecommerce:homepage' %}" class="green"><img src="/media/logo.jpg" alt="" height="70px"></a>
+                {% comment %} <span>FOOD<span class="green">FARM</span></span> {% endcomment %}
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <select>
+                    <option>All</option>
+                    <option>Seeds</option>
+                    <option>Fertilizer</option>
+                    <option>Insecticites</option>
+                </select>
+                <input type="text" placeholder="Search anything">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
         </div>
-        <div class="navbar-toggle" onclick="toggleMenu()">☰</div>
+        <!-- Icons -->
+        <div class="nav-icons">
+             <!-- User Dropdown -->
+    <div class="user-dropdown">
+        <a href="#" id="user-icon"><i class='bx bx-user-circle user'></i></a>
+        <div class="dropdown-menu" id="dropdown-menu">
+            <a href="#">Sign In</a>
+            <a href="#">Sign Up</a>
+        </div>
+    </div>
+            <a href="#"><i class='bx bx-heart' ></i></a>
+            <a href="#" class="cart-icon"><i class='bx bx-cart-alt' ></i>
+                <span class="cart-counter">1</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Secondary Navbar -->
+    <nav class="sub-navbar">
+        <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">CATEGORY <i class="fa-solid fa-caret-down"></i></a></li>
+            <li><a href="#">CROF-INFO.</a></li>
+            <li><a href="#">ABOUT US</a></li>
+            <li><a href="#">KISHAN CHARCHA</a></li>
+            
+        </ul>
+    </nav>
+    {% comment %} <div class="sub-navbar">
         <div class="nav-menu">
             <ul class="navbar-menu">
                 <li><a href="{% url 'Ecommerce:homepage' %}">Home</a></li>
@@ -47,36 +93,9 @@
                 <li><a href="#">Crop-Info.</a></li>
                 <li><a href="#">Kishan Charcha</a></li>
             </ul>
-        </div>
+        </div> {% endcomment %}
         
-        <div class="nav-icons">
-            <ul>
-                <li class="icons">
-                    <a href="#" class="icon"><box-icon name='heart'></box-icon></a>
-                    <a href="{% url 'Ecommerce:cart_view' %}" class="icon"><box-icon type='cart' name='cart-alt'></box-icon><span id="cart-count">{{ cart_count }}</a>
-                        <span class="dropdown">
-                            <a href="#" class="icon"><box-icon name='user'></box-icon></a>
-                            <ul class="dropdown-menu">
-                                {% if user.is_authenticated %}
-                                    <li class="dropdown-item"><a href="#">Profile</a></li>
-                                    <li class="dropdown-item">
-                                        <form method="POST" action="{% url 'account:logout' %}">
-                                            {% csrf_token %}
-                                            <button type="submit">Logout</button>
-                                        </form> 
-                                    </li>
-                                {% else %}
-                                    <li><a href="/account/register">Registration</a></li>
-                                    <li><a href="/account/login">Login</a></li>
-                                {% endif %}
-                            </ul>
-                        </span>
-                        
-                </li>
-            </ul>
-        </div>
-                
-    </nav>
+    </div>
 
       <!-- Messages Section -->
   {% if messages %}
@@ -146,6 +165,28 @@
             const navbarMenu = document.querySelector('.navbar-menu');
             navbarMenu.classList.toggle('active');
         }
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let userIcon = document.getElementById("user-icon");
+            let dropdownMenu = document.getElementById("dropdown-menu");
+        
+            userIcon.addEventListener("click", function (event) {
+                event.preventDefault();
+                dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+            });
+        
+            // Close dropdown if clicked outside
+            document.addEventListener("click", function (event) {
+                if (!userIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.style.display = "none";
+                }
+            });
+        });
+
+
+
     </script>
 </body>
 
