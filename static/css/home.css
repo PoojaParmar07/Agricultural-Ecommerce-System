@@ -97,44 +97,71 @@ body, ul, li, a {
     font-size: 25px;
 
 }
+
+/* User Dropdown Container */
 .user-dropdown {
     position: relative;
     display: inline-block;
 }
 
-.user-dropdown a {
-    text-decoration: none;
-    color: black;
-    font-size: 15px;
+.user-dropdown .user{
+    display: inline-block;
+    margin-left: 93%;
+    margin-top: 2px;
+    color: #333;
 }
 
+/* User Icon Styling */
+#user-icon {
+    text-decoration: none;
+    font-size: 30px;  /* Adjust icon size */
+    color: black;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* Dropdown Menu Styling */
 .dropdown-menu {
     display: none;
     position: absolute;
-    top: 40px;
+    top: 40px; /* Adjust dropdown position */
     right: 0;
     background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     overflow: hidden;
     z-index: 1000;
     width: 150px;
+    transition: all 0.3s ease-in-out;
 }
 
+/* Dropdown Menu Links */
 .dropdown-menu a {
     display: block;
     padding: 10px;
     text-decoration: none;
     color: black;
-    transition: 0.3s;
+    font-size: 14px;
+    transition: background 0.3s;
 }
 
 .dropdown-menu a:hover {
     background-color: #f4f4f4;
 }
 
+/* Show dropdown on hover */
 .user-dropdown:hover .dropdown-menu {
     display: block;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dropdown-menu {
+        width: 100%;
+        left: 0;
+    }
 }
 
 .nav-icons a:hover {
@@ -227,6 +254,52 @@ body, ul, li, a {
 .sub-navbar ul li a:hover {
     color: #000000;
 }
+/* CATEGORY Dropdown */
+.category-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.category-dropdown a {
+    text-decoration: none;
+    padding: 8px 12px;
+    display: block;
+}
+
+/* CATEGORY Dropdown */
+.Category-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+#category {
+    text-decoration: none;
+    color:#444;
+    font-size: 14px;
+    padding: 0px 0px 20px 30px;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* Show dropdown on hover */
+.Category-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Responsive - Mobile Friendly */
+@media (max-width: 768px) {
+    .Category-dropdown-menu {
+        position: static;
+        display: none;
+        width: 100%;
+    }
+
+    .Category-dropdown:hover .Category-dropdown-menu {
+        display: block;
+    }
+}
+
 
 /* Pro Button */
 .pro-btn {
