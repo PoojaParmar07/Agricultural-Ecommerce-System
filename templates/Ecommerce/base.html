@@ -48,7 +48,7 @@
                         <form id="logout-form" action="{% url 'account:logout' %}" method="post">
                             {% csrf_token %}
                             <button type="submit" style="border: none; background: none; color: black; cursor: pointer;">
-                                <a >Logout</a>
+                                <a>Logout</a>
                             </button>
                         </form>
                         <a href="#">Profile</a>
@@ -61,7 +61,7 @@
             </div>
             <a href="#"><i class='bx bx-heart' ></i></a>
             <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"><i class='bx bx-cart-alt' ></i>
-                <span class="cart-counter"></span>
+                <span class="cart-counter">{{ cart_count }}</span>
             </a>
         </div>
     </nav>
