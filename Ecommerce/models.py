@@ -269,6 +269,10 @@ class Cart(models.Model):
     class Meta:
         db_table = 'Cart'
         
+    def total_cart_items(self):
+        """Returns the total quantity of all products in the cart."""
+        return sum(item.quantity for item in self.cartitem_set.all())
+        
     def __str__(self):
         return f"Cart of {self.user}"    
         
@@ -298,6 +302,8 @@ class CartItem(models.Model):
         """Calculates total price based on quantity and selected variant's sales price."""
         inventory = Inventory.objects.filter(batch=self.product_batch, batch__variant=self.product_variant).first()
         return self.quantity * inventory.sales_price if inventory else 0
+    
+   
 
     def save(self, *args, **kwargs):
         """Override save method to recalculate and ensure price updates."""

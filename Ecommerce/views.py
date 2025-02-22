@@ -180,7 +180,6 @@ def product_view(request, product_id):
 
 # View Cart
 
-
 @login_required
 def cart_view(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)  # Get the user's cart
@@ -433,5 +432,8 @@ def get_delivery_charge(pincode_id):
     
 def order_details(request):
     return render(request,"Ecommerce/order_detail.html")
+
+def confirm_Order(request):
+    return render(request,'Ecommerce/confirm.html')
 
 
