@@ -33,12 +33,7 @@
 
             <!-- Search Bar -->
             <div class="search-bar">
-                <select>
-                    <option>All</option>
-                    <option>Seeds</option>
-                    <option>Fertilizer</option>
-                    <option>Insecticites</option>
-                </select>
+                <div class="search-icon"><box-icon name='search'></box-icon></div>
                 <input type="text" placeholder="Search anything">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
@@ -49,9 +44,20 @@
             <div class="user-dropdown">
                 <a href="#" id="user-icon"><i class='bx bx-user-circle user'></i></a>
                 <div class="dropdown-menu" id="dropdown-menu">
-                    <a href="#">Sign In</a>
-                    <a href="#">Sign Up</a>
+                    {% if user.is_authenticated %}
+                        <form id="logout-form" action="{% url 'account:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" style="border: none; background: none; color: black; cursor: pointer;">
+                                <a >Logout</a>
+                            </button>
+                        </form>
+                        <a href="#">Profile</a>
+                    {% else %}
+                        <a href="{% url 'account:login' %}">Login</a>
+                        <a href="{% url 'account:registration' %}">Register</a>
+                    {% endif %}
                 </div>
+                
             </div>
             <a href="#"><i class='bx bx-heart' ></i></a>
             <a href="#" class="cart-icon"><i class='bx bx-cart-alt' ></i>
@@ -64,16 +70,24 @@
     <nav class="sub-navbar">
         <ul>
             <li><a href="#" class="active">Home</a></li>
-            <div class="Category-dropdown">
-                <a href="#" id="category">CATEGORY</a>
-                <div class="dropdown-menu" id="dropdown-menu">
-                    <a href="#">Sign In</a>
-                    <a href="#">Sign Up</a>
-                </div>
-            </div>
-
+            <li class="category-dropdown">
+                <a href="#">CATEGORY</a>
+                <ul class="category-dropdown-menu">
+                    <li><a href="#">Seeds</a></li>
+                    <li><a href="#">Fertilizers</a></li>
+                    <li><a href="#">Pesticides</a></li>
+                </ul>
+            </li>
             <li><a href="#">CROF-INFO.</a></li>
-            <li><a href="#">ABOUT US</a></li>
+
+            <!-- ABOUT US Dropdown -->
+            <li class="about-dropdown">
+                <a href="#">ABOUT US</a>
+                <ul class="about-dropdown-menu">
+                    <li><a href="#">Enquiry</a></li>
+                    <li><a href="#">Membership</a></li>
+                </ul>
+            </li>
             <li><a href="#">KISHAN CHARCHA</a></li>
             
         </ul>
