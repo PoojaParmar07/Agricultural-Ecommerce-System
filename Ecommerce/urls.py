@@ -25,6 +25,7 @@ urlpatterns = [
     path('checkout/',checkout,name='checkout'),
     
     path('order_details/',order_details,name="order_details"),
+    path('confirm_Order/',confirm_Order,name='confirm_Order'),
 
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
