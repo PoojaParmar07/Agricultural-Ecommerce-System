@@ -19,6 +19,7 @@ urlpatterns = [
     path('Ecommerce/update_variant/<int:cart_item_id>/', update_variant, name='update_variant'),
 
     
+    
     path('remove-from-cart/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
    
     path('checkout/',checkout,name='checkout'),

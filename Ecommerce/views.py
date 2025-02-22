@@ -19,7 +19,51 @@ def is_admin_user(user):
     return user.is_authenticated and user.is_staff  # Example function
 
 def home(request):
-    return render(request, 'Ecommerce/base.html')
+    categories = Category.objects.all()  # Get all categories
+    category_data = [
+        {
+            'category_id': category.category_id,
+            'category_name': category.category_name.capitalize(),
+            'category_image': category.category_image.url if category.category_image else None,
+        }
+        for category in categories
+    ]
+
+    cart_count = cart_items.values("product_variant__product").distinct().count()
+    
+    products = Product.objects.all()
+    product_data = []
+
+    # Default empty cart_product_ids (for non-logged-in users)
+    cart_product_ids = []
+
+    if request.user.is_authenticated:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
+
+    for product in products:
+        variant = ProductVariant.objects.filter(product=product).first()
+        inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None
+        sales_price = inventory.sales_price if inventory else None
+        rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
+
+        product_data.append({
+            'product_id': product.product_id,
+            'product_name': product.product_name,
+            'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
+            'sales_price': sales_price if sales_price is not None else "N/A",
+            'rating': rating if rating is not None else 0
+        })
+
+    return render(request, "Ecommerce/base.html", {
+        'categories': category_data,
+        'product_data': product_data,
+        'cart_product_ids': cart_product_ids, 
+        'cart_count': cart_count,
+    })
+    # return render(request, 'Ecommerce/base.html')
+
 
 def checkout(request):
     return render(request, 'Ecommerce/checkout_page.html')
@@ -195,6 +239,10 @@ def cart_view(request):
 
     grand_total = sum(item.total_price for item in cart_items)  # Calculate grand total
 
+    # ✅ Count unique products in cart
+    cart_count = cart_items.values("product_variant__product").distinct().count()
+
+
     for item in cart_items:
         inventory = Inventory.objects.filter(batch=item.product_batch).first()
         item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
@@ -214,11 +262,10 @@ def cart_view(request):
         "cart_product_ids": cart_product_ids,
         "variant_prices": variant_prices,
         "grand_total": grand_total,
+        "cart_count": cart_count,
     }
 
     return render(request, "Ecommerce/cart.html", context)
-
-
 
 
 
@@ -250,7 +297,7 @@ def add_to_cart(request, product_id):
         cart_item.save()
 
     return redirect("Ecommerce:homepage")
-    # return JsonResponse({"success": True, "message": "Product added to cart successfully!"})
+    
 
 
 

@@ -61,7 +61,7 @@
             </div>
             <a href="#"><i class='bx bx-heart' ></i></a>
             <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"><i class='bx bx-cart-alt' ></i>
-                <span class="cart-counter">{{ cart_count }}</span>
+                <span class="cart-counter"></span>
             </a>
         </div>
     </nav>
@@ -69,15 +69,16 @@
     <!-- Secondary Navbar -->
     <nav class="sub-navbar">
         <ul>
-            <li><a href="#" class="active">Home</a></li>
+            <li><a href="{% url 'Ecommerce:homepage' %}" class="active">Home</a></li>
             <li class="category-dropdown">
                 <a href="#">CATEGORY</a>
-                <ul class="category-dropdown-menu">
-                    <li><a href="#">Seeds</a></li>
-                    <li><a href="#">Fertilizers</a></li>
-                    <li><a href="#">Pesticides</a></li>
+                <ul class="category-dropdown-menu">  
+                    {% for category in categories %}
+                    <li><a href="{% url 'Ecommerce:product_list' category.category_id %}">{{ category.category_name }}</a></li>
+                    {% endfor %}
                 </ul>
             </li>
+            
             <li><a href="#">CROF-INFO.</a></li>
 
             <!-- ABOUT US Dropdown -->
@@ -92,31 +93,7 @@
             
         </ul>
     </nav>
-    {% comment %} <div class="sub-navbar">
-        <div class="nav-menu">
-            <ul class="navbar-menu">
-                <li><a href="{% url 'Ecommerce:homepage' %}">Home</a></li>
-                <li class="dropdown">
-                    <a href="#">Category</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Seeds</a></li>
-                        <li><a href="#">Furtilizer</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#">About</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Our story</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Membership</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Crop-Info.</a></li>
-                <li><a href="#">Kishan Charcha</a></li>
-            </ul>
-        </div> {% endcomment %}
-        
-    </div>
+
 
       <!-- Messages Section -->
   {% if messages %}
@@ -205,8 +182,6 @@
                 }
             });
         });
-
-
 
     </script>
 </body>
