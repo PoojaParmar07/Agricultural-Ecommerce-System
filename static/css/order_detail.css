@@ -1,0 +1,278 @@
+.order-container {
+    max-width: 900px;
+    background: rgb(255, 255, 255);
+    margin: 5% 20%;
+    /* padding: 15px; */
+    padding: 0px 0px 10px 0px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #c2c2c2;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0);
+    padding:10px 10px;
+    margin-top:0px;
+    margin-left: 1px;
+    margin-right: 1px;
+    border-radius: 8px;
+    background-color: rgb(255, 255, 255);
+}
+
+header h5 {
+    font-size: 20px;
+    font-weight: 400;
+    color: #333;
+}
+header h5 span{
+    font-size: 15px;
+    font-weight: 400;
+    color: #A5A5A5; 
+}
+
+.back {
+    color: green;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.back:hover {
+    text-decoration: underline;
+}
+
+/* Main Shipping Address Box */
+.shipping-address {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.08);
+    max-width: 350px;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid #E6E6E6;
+    margin: 40px 0px;
+    height:350px;
+}
+
+/* Shipping Address Header */
+.shipping-address h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #A0A0A0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+   
+}
+
+/* Customer Name */
+.customer-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 4px;
+    border-top: 1px solid #E5E5E5;
+    padding: 20px 0 10px 0;
+}
+
+/* Address */
+.address {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+/* Contact Info */
+.contact-info {
+    
+    padding-top: 12px;
+}
+
+
+/* Labels (EMAIL, PHONE) */
+.label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #A0A0A0;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    padding-top: 10px;
+}
+
+/* Email & Phone */
+.email, .phone {
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 14px;
+}
+
+/* Box Alignment */
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .shipping-address {
+        max-width: 100%;
+    }
+    .box {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* Order Summary Box */
+.order-summary {
+    background: #ffffff; /* Matches dark background */
+    color: #a0a0a0; /* Text color */
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 10px rgba(42, 42, 42, 0.2);
+    border: 1px solid #E6E6E6;
+    height:350px;
+}
+
+/* Order ID and Payment Method */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #a3a3a3;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #c2c2c2;
+}
+.order-header p span{
+    color: black;
+}
+
+.order-header .order-id{
+    border-right: 1px solid #c2c2c2;
+
+}
+
+.order-header .payment-method{
+    margin-left: 10px;
+}
+
+/* Order Status */
+.order-status {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color:#666666;
+}
+
+.price-details p{
+    border-bottom: 1px solid #c2c2c2;
+    padding: 8px 0 10px 0;
+}
+
+
+
+/* Price Details */
+.price-details p {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color:#666666;
+    font-weight: 500;
+}
+
+.order-status,.price-details p span{
+    color:black;
+}
+/* Total Section */
+.total {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    color: #3B823E; /* Green total color */
+}
+
+/* Horizontal Line */
+hr {
+    border: none;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 12px 0; /* Adjusted to match spacing */
+}
+
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    margin-top: 55px;
+}
+
+.order-table thead {
+    background: #F2F2F2;
+    color: #4C4C4C;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.order-table th, 
+.order-table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.order-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.order-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.product-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .order-info {
+        flex-direction: column;
+    }
+    
+    .shipping-address, .order-summary {
+        width: 100%;
+    }
+    
+    th, td {
+        font-size: 13px;
+    }
+}

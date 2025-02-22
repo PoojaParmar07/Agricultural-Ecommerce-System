@@ -55,7 +55,7 @@
     </div>
             <a href="#"><i class='bx bx-heart' ></i></a>
             <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"><i class='bx bx-cart-alt' ></i>
-                <span class="cart-counter">1</span>
+                <span class="cart-counter">{{ cart_count }}</span>
             </a>
         </div>
     </nav>
