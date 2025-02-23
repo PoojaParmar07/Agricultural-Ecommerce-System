@@ -11,14 +11,15 @@ body, ul, li, a {
     box-sizing: border-box;
     /* font-family: Arial, sans-serif;
      */
-     font-family: "Open Sans", serif;
+    font-family: "Open Sans", serif;
+    
 }
 
 /* Navbar Styles */
 
 .navbar {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     background-color: #fff;
     padding: 12px 30px;
@@ -158,13 +159,7 @@ body, ul, li, a {
     display: block;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .dropdown-menu {
-        width: 100%;
-        left: 0;
-    }
-}
+
 
 .nav-icons a:hover{
     color: #3B823E;
@@ -191,34 +186,7 @@ body, ul, li, a {
     align-items: center;
 }
 
-/* Responsive Design */
-@media screen and (max-width: 1024px) {
-    .search-bar input {
-        width: 180px;
-    }
-}
 
-@media screen and (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        align-items: center;
-        padding: 10px;
-    }
-
-    .nav {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .search-bar input {
-        width: 100%;
-    }
-
-    .nav-icons {
-        margin-top: 10px;
-    }
-}
 
 /* Sub Navbar */
 .sub-navbar {
@@ -229,16 +197,16 @@ body, ul, li, a {
     padding: 17px 15%;
 }
 
-.sub-navbar ul {
+.sub-navbar .sub-nav {
     display: flex;
     list-style: none;
 }
 
-.sub-navbar ul li {
+.sub-navbar .sub-nav li {
     margin: 0 5px;
 }
 
-.sub-navbar ul li a {
+.sub-navbar .sub-nav li a {
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
@@ -247,13 +215,13 @@ body, ul, li, a {
     transition: 0.3s;
 }
 
-.sub-navbar ul li a.active {
+.sub-navbar .sub-nav li a.active {
     background-color: #4caf50;
     color: white;
     border-radius: 5px;
 }
 
-.sub-navbar ul li a:hover {
+.sub-navbar .sub-nav li a:hover {
     color: #000000;
 }
 
@@ -309,51 +277,7 @@ body, ul, li, a {
 .category-dropdown > a:hover, .about-dropdown > a:hover {
     color: #4caf50;
 }
-/* Responsive - Mobile Friendly */
-@media (max-width: 768px) {
-    .category-dropdown-menu {
-        width: 100%;
-        left: 0;
-    }
 
-    .category-dropdown:hover .Category-dropdown-menu {
-        display: block;
-    }
-}
-
-
-/* Pro Button */
-.pro-btn {
-    color: #ff5722 !important;
-    font-weight: bold;
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
-    .search-bar input {
-        width: 150px;
-    }
-
-    .sub-navbar ul {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .sub-navbar ul li {
-        margin-bottom: 5px;
-    }
-}
-
-/* General Reset */
-body, h3, p, a {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-}
 
 /* Body */
 .container {
@@ -456,55 +380,3 @@ body {
     position: relative;
     z-index: 10;
 }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .footer-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .footer-section {
-        margin-bottom: 20px;
-    }
-}
-
-/* Message CSS  */
-.messages {
-    margin: 10px 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.message {
-    border: 1px solid transparent;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-
-.message.error {
-    background-color: #ff0015;
-    color: #ffffff;
-    border-color: #ff0019;
-}
-
-.message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #c3e6cb;
-}
-
-.message.warning {
-    background-color: #fffef9;
-    color: #856404;
-    border-color: #ffeeba;
-}
-
-
-
-
-
