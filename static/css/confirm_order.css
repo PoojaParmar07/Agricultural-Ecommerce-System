@@ -61,3 +61,38 @@ p {
 .continue-button:hover {
     background: #3B823E;
 }
+.messages {
+    margin: 10px 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.message {
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+
+.message.error {
+    background-color: #ff0015;
+    color: #ffffff;
+    border-color: #ff0019;
+    margin:0px 20px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+    margin:0px 20px;
+}
+
+.message.warning {
+    background-color: #fffef9;
+    color: #856404;
+    border-color: #ffeeba;
+    margin:0px 20px;
+}

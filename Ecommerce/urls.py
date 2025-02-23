@@ -22,8 +22,9 @@ urlpatterns = [
     
     path('remove-from-cart/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
    
+    path('get-delivery-charge/<int:pincode_id>/', get_delivery_charge_ajax, name='get_delivery_charge'),
     path('checkout/',checkout,name='checkout'),
-     path('get_pincode/<int:city_id>/', get_pincode, name='get_pincode'),
+    path('get_pincode/<int:city_id>/', get_pincode, name='get_pincode'),
     path('cod_checkout/',cod_checkout,name='cod_checkout'),
     path('order_details/<int:order_id>/',order_details,name="order_details"),
     path('confirm_Order/',confirm_Order,name='confirm_Order'),

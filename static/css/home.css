@@ -187,18 +187,14 @@
     padding: 17px 15%;
 }
 
-.sub-navbar {
+.sub-navbar .sub-nav {
     display: flex;
-    align-items: center;
-    height: 60px; /* Adjust as needed */
+    list-style: none;
 }
 
-.sub-navbar .sub-nav li a {
-    line-height: 1.5;
-    padding: 8px 12px;
+.sub-navbar .sub-nav li {
+    margin: 0 5px;
 }
-
-
 
 .sub-navbar .sub-nav li a {
     text-decoration: none;
@@ -274,47 +270,29 @@
 .category-dropdown, .about-dropdown {
     position: relative;
     display: inline-block;
-    padding-bottom: 10px; /* Prevents accidental loss of hover */
-}
-
-
-.category-dropdown-menu, .about-dropdown-menu {
-    visibility: hidden;
-    opacity: 0;
+  }
+  
+  .category-dropdown-menu , .about-dropdown-menu{
+    display: none;
     position: absolute;
-    top:85%;  /* Push dropdown slightly down */
-    left: 0;
+    top: 85%;
     background-color: #ffffff;
     min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 100;
-    pointer-events: none;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;  /* Ensures vertical stacking */
-}
-
-.category-dropdown-menu a, .about-dropdown-menu a {
+  }
+  
+  .category-dropdown-menu li a , .about-dropdown-menu li a{
     color: black;
     padding: 12px 16px;
     text-decoration: none;
-    display: block; /* Ensures each item takes up full width */
-    width: 100%;
-}
-
-.category-dropdown-menu a:hover, .about-dropdown-menu a:hover {
-    background-color: #ebebeb;
-}
-
-/* Show the dropdown on hover */
-.category-dropdown:hover .category-dropdown-menu, 
-.about-dropdown:hover .about-dropdown-menu {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto; /* Enables interaction */
-    display: flex; /* Keep it flex so items remain stacked */
-}
-
+    display: block;
+  }
+  
+  .category-dropdown-menu li a:hover , .about-dropdown-menu li a:hover{background-color: #ebebeb;}
+  
+  .category-dropdown:hover .category-dropdown-menu, .about-dropdown:hover .about-dropdown-menu {display: block;}
+  
 
 
 /* Body */
@@ -417,4 +395,42 @@
     color: #000000;
     position: relative;
     z-index: 10;
+}
+
+
+
+.messages {
+    margin: 10px 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.message {
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+
+.message.error {
+    background-color: #ff0015;
+    color: #ffffff;
+    border-color: #ff0019;
+    margin:0px 20px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+    margin:0px 20px;
+}
+
+.message.warning {
+    background-color: #fffef9;
+    color: #856404;
+    border-color: #ffeeba;
+    margin:0px 20px;
 }

@@ -98,13 +98,15 @@ def homepage(request):
         inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
         rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating']
+        inventory_quantity = inventory.quantity if inventory else 0
 
         product_data.append({
             'product_id': product.product_id,
             'product_name': product.product_name,
             'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
             'sales_price': sales_price if sales_price is not None else "N/A",
-            'rating': rating if rating is not None else 0
+            'rating': rating if rating is not None else 0,
+            'inventory_quantity': inventory_quantity,
         })
 
     return render(request, "Ecommerce/homepage.html", {
@@ -167,6 +169,7 @@ def product_view(request, product_id):
 
     # Fetch inventory related to those variants
     inventories = Inventory.objects.filter(batch__variant__in=variants).select_related('batch__variant')
+    inventory_quantity = sum(inventory.quantity for inventory in inventories) if inventories else 0
 
     # Build variant prices dictionary
     variant_prices = {
@@ -213,15 +216,18 @@ def product_view(request, product_id):
         'description': product.description,
         'rating': rating,
         'first_price': first_price,
+       
     }
     print("✅ Variant Prices JSON:", json.dumps(variant_prices, ensure_ascii=False)) 
     context = {
         'product': product_data,
+        'inventory_quantity': inventory_quantity,
         'stars_range': range(1, 6),
         'reviews': reviews,
         'variants': variants,
         'cart_product_ids': cart_product_ids,  # ✅ Add cart products for button logic
     }
+    print(f"Inventory{inventory_quantity}")
 
     return render(request, 'Ecommerce/product_view.html', {**context,'variant_prices': json.dumps(variant_prices)})
 
@@ -236,6 +242,9 @@ def cart_view(request):
     cart_items = CartItem.objects.filter(cart=cart).select_related(  # ✅ Filter by user's cart
         "product_variant", "product_variant__product", "product_batch"
     ).prefetch_related("product_batch__inventory_set")
+    
+    categories = Category.objects.all()  # Fetch all categories
+
 
     # Store variant prices
     variant_prices = {}
@@ -268,6 +277,7 @@ def cart_view(request):
         "variant_prices": variant_prices,
         "grand_total": grand_total,
         "cart_count": cart_count,
+        'categories': categories,
     }
 
     return render(request, "Ecommerce/cart.html", context)
@@ -416,6 +426,8 @@ def update_variant(request, cart_item_id):
     return redirect("Ecommerce:cart_view")  # Reload the cart page to reflect changes
 
 
+
+
 @login_required
 def checkout(request):
     cart = Cart.objects.get(user=request.user)  
@@ -424,7 +436,7 @@ def checkout(request):
     # Fetch cities
     cities = City.objects.all()
 
-    # Use GET to get the selected city and pincode
+    # Get selected city and pincode from GET request
     selected_city_id = request.GET.get("city")
     selected_pincode_id = request.GET.get("pincode")
 
@@ -450,11 +462,16 @@ def checkout(request):
     discount_amount = (grand_total * membership_discount / Decimal(100)) if user_membership else Decimal(0)
     total_after_discount = grand_total - discount_amount
 
-    # Get delivery charge
+    # ✅ Fetch delivery charge for selected pincode (default to 0 if not found)
     delivery_charge = Decimal(0)
     if selected_pincode_id:
-        delivery_charge = Decimal(get_delivery_charge(selected_pincode_id))
+        try:
+            pincode_instance = Pincode.objects.get(area_pincode=selected_pincode_id)
+            delivery_charge = Decimal(pincode_instance.delivery_charges)
+        except Pincode.DoesNotExist:
+            delivery_charge = Decimal(0)  # Default to free shipping if pincode not found
 
+    # ✅ Update total after adding delivery charge
     final_total = total_after_discount + delivery_charge
 
     context = {
@@ -462,25 +479,32 @@ def checkout(request):
         "grand_total": grand_total,
         "discount_amount": discount_amount,
         "total_after_discount": total_after_discount,
-        "is_member": is_member,
-        "delivery_charge": delivery_charge,
         "final_total": final_total,
+        "is_member": is_member,
         "cities": cities,
         "pincodes": pincodes,
         "selected_city_id": selected_city_id,
         "selected_pincode_id": selected_pincode_id,
+        "delivery_charge": delivery_charge,  # Pass to template
     }
 
     return render(request, "Ecommerce/checkout_page.html", context)
 
 
-def get_delivery_charge(pincode_id):
-    """Fetches delivery charge from the database using the Pincode model."""
+def get_delivery_charge_ajax(request, pincode_id):
+    """AJAX view to fetch delivery charge based on pincode selection."""
     try:
-        pincode_instance = Pincode.objects.get(pincode_id=pincode_id)
-        return float(pincode_instance.delivery_charges)  
+        # Ensure lookup is done correctly
+        pincode_instance = Pincode.objects.get(area_pincode=str(pincode_id))
+        delivery_charge = float(pincode_instance.delivery_charges)
+        print(f"Pincode: {pincode_id}, Delivery Charge: {delivery_charge}")  # Debugging
     except Pincode.DoesNotExist:
-        return 0
+        delivery_charge = 0  # Default to 0 if pincode not found
+        print(f"Pincode: {pincode_id} not found!")  # Debugging
+
+    return JsonResponse({"delivery_charge": delivery_charge})
+
+
     
 @login_required  
 def order_details(request, order_id):
