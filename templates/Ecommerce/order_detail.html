@@ -1,53 +1,54 @@
 {% extends 'Ecommerce/base.html' %}
 {% load static %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/order_detail.css' %}" />
+
 <div class="order-container">
     <header>
-        <h5>Order Details &bull; <span>April 24, 2021 </span>&bull; <span>3 Products</span></h5>
-        <a href="#" class="back">Back to List</a>
+        <h5>Order Details &bull; <span>{{ order.create_at|date:"F d, Y" }}</span> &bull; <span>{{ total_products }} Product/s</span></h5>
+
+        {% comment %} <a href="{% url 'order_list' %}" class="back">Back to List</a> {% endcomment %}
     </header>
-    
-<div class="box">
-    <div class="order-info">
-        <div class="shipping-address">
-            <h4>SHIPPING ADDRESS</h4>
-            
-            <p class="customer-name">Dainne Russell</p>
-            <p class="address">4140 Parker Rd. Allentown, New Mexico 31134</p>
-            
-            <div class="contact-info">
-                <p class="label">EMAIL</p>
-                <p class="email">dainne.russell@gmail.com</p>
+
+    <div class="box">
+        <div class="order-info">
+            <div class="shipping-address">
+                <h4>SHIPPING ADDRESS</h4>
+                <p class="customer-name">{{ order.user.username|capfirst }}</p>
+                <p class="address">{{ order.address }}, {{ order.city }}, {{ order.state }}</p>
                 
-                <p class="label">PHONE</p>
-                <p class="phone">(671) 555-0110</p>
+                <div class="contact-info">
+                    <p class="label">EMAIL</p>
+                    <p class="email">{{ order.user.email }}</p>
+
+                    <p class="label">PHONE</p>
+                    <p class="phone">{{ order.user.mobile_number }}</p>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="order-summary">
-        <div class="order-header">
-            <p class="order-id"><strong>ORDER ID:</strong> <span>#4152</span></p>
-            <p class="payment-method"><strong>PAYMENT METHOD:</strong> <span>Online</span></p>
+
+        <div class="order-summary">
+            <div class="order-header">
+                <p class="order-id"><strong>ORDER ID:</strong> <span>#{{ order.order_id }}</span></p>
+                <p class="payment-method"><strong>PAYMENT METHOD:</strong> <span>{{ order.payment.payment_mode|title }}</span></p>
+            </div>
+
+            <hr>
+
+            <p class="order-status"><strong>Order Status :</strong> <span>{{ order.order_status|title }}</span></p>
+            <div class="price-details">
+                <p><strong>Subtotal:</strong> <span>₹{{ order.total_price }}</span></p>
+                <p><strong>Discount:</strong> <span>{{ order.discounted_price|floatformat:2 }}</span></p>
+                <p><strong>Shipping:</strong> <span>{% if order.delivery_charges == 0 %} Free {% else %} ₹{{ order.delivery_charges }} {% endif %}</span></p>
+            </div>
+
+            <hr>
+
+            <p class="total"><strong>Total:</strong> <span>₹{{ order.total_price|floatformat:2 }}</span></p>
         </div>
-    
-        <hr>
-    
-        {% comment %} <p class="order-status"><strong>Order Status :</strong> <span>Completed</span></p> {% endcomment %}
-        <div class="price-details">
-            <p class="order-status"><strong>Order Status :</strong> <span>Completed</span></p>
-            <p><strong>Subtotal:</strong> <span>$650.00</span></p>
-            <p><strong>Discount:</strong> <span>15%</span></p>
-            <p><strong>Shipping:</strong> <span>Free</span></p>
-        </div>
-    
-        <hr>
-    
-        <p class="total"><strong>Total:</strong> <span>$84.00</span></p>
     </div>
-    
-</div>   
+
     <table class="order-table">
         <thead>
             <tr>
@@ -58,32 +59,21 @@
             </tr>
         </thead>
         <tbody>
+            {% for item in order_items %}
             <tr>
                 <td>
                     <div class="product-info">
-                        <img src="jade-terrarium.png" alt="Jade Terrarium">
-                        <span>Jade Terrarium</span>
+                        <img src="{{ item.variant.product.product_image.url }}" alt="{{ item.variant.product.product_name }}">
+                        <span>{{ item.variant.name }}</span>
                     </div>
                 </td>
-                <td>$350.00</td>
-                <td>x1</td>
-                <td>$350.00</td>
+                <td>₹{{ item.price }}</td>
+                <td>x{{ item.quantity }}</td>
+                <td>₹{{ item.quantity|floatformat:2 }}</td>
             </tr>
-            <tr>
-                <td>
-                    <div class="product-info">
-                        <img src="ficus-benjamina.png" alt="Ficus Benjamina">
-                        <span>Ficus Benjamina</span>
-                    </div>
-                </td>
-                <td>$350.00</td>
-                <td>x1</td>
-                <td>$350.00</td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
-    
+
 </div>
 {% endblock content %}
-   
-

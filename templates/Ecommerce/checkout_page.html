@@ -15,7 +15,8 @@
         <!-- Billing Information -->
         <div class="billing-info">
             <h2>Billing Information</h2>
-            <form action="{% url 'Ecommerce:checkout' %}" method="POST">
+            <form id="checkout-form" action="{% url 'Ecommerce:checkout' %}" method="GET">
+
                 {% csrf_token %}
 
                 <label for="first-name">User Name</label>
@@ -27,26 +28,26 @@
                 <div class="row">
                     <div>
                         <label for="city">City</label>
-<select id="city" name="city" required>
-    <option value="">Select City</option>
-    {% for city in cities %}
-        <option value="{{ city.city_id }}" {% if city.city_id|stringformat:"s" == selected_city_id %}selected{% endif %}>
-            {{ city.city_name }}
-        </option>
-    {% endfor %}
-</select>
+                        <select id="city" name="city" required onchange="this.form.submit();">
+                            <option value="">Select City</option>
+                            {% for city in cities %}
+                                <option value="{{ city.city_id }}" {% if city.city_id|stringformat:"s" == selected_city_id %}selected{% endif %}>
+                                    {{ city.city_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <div>
-                        <label for="pincode">PinCode</label> 
-<select id="pincode" name="pincode" required>
-    <option value="">Select Pincode</option>
-    {% for pincode in pincodes %}
-        <option value="{{ pincode.pincode_id }}" {% if pincode.pincode_id|stringformat:"s" == selected_pincode_id %}selected{% endif %}>
-            {{ pincode.area_pincode }}
-        </option>
-    {% endfor %}
-</select>
+                        <label for="pincode">PinCode</label>
+    <select id="pincode" name="pincode" required>
+        <option value="">Select Pincode</option>
+        {% for pincode in pincodes %}
+            <option value="{{ pincode.area_pincode }}" {% if pincode.pincode_id|stringformat:"s" == selected_pincode_id %}selected{% endif %}>
+                {{ pincode.area_pincode }}
+            </option>
+        {% endfor %}
+    </select>
                     </div>
                 </div>
 
@@ -116,11 +117,32 @@
     <script>
         document.getElementById('city').addEventListener('change', function() {
             document.getElementById('pincode').innerHTML = '<option value="">Loading...</option>';
-            this.form.submit();
+            //this.form.submit();
         });
 
         document.getElementById('pincode').addEventListener('change', function() {
-            this.form.submit();
+            //this.form.submit();
+        });
+
+
+        //View call based on checkbox selected
+        document.addEventListener("DOMContentLoaded", function () {
+            let form = document.getElementById("checkout-form");
+            let placeOrderBtn = document.getElementById("placeOrder");
+    
+            placeOrderBtn.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent default submission
+    
+                let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;
+    
+                if (selectedPaymentMethod === "COD") {
+                    form.action = "{% url 'Ecommerce:cod_checkout' %}"; // COD view
+                } else {
+                    form.action = "{% url 'Ecommerce:homepage' %}"; // Online Payment view
+                }
+    
+                form.submit(); // Submit form to the updated action URL
+            });
         });
     </script>
 </body>

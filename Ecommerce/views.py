@@ -8,6 +8,7 @@ from membership.models import *
 from .forms import *
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Avg
+from django.db import transaction
 from datetime import date
 from decimal import Decimal
 import json
@@ -112,7 +113,8 @@ def homepage(request):
     })
 
 
-@login_required
+
+
 def product_list(request, category_id):
     category = get_object_or_404(Category, category_id=category_id)
     products = Product.objects.filter(category=category)
@@ -130,6 +132,7 @@ def product_list(request, category_id):
         variant = ProductVariant.objects.filter(product=product).first()
         inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
+        inventory_quantity = inventory.quantity if inventory else 0  # ✅ Get stock quantity
 
         # Get average rating
         rating = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0
@@ -140,6 +143,7 @@ def product_list(request, category_id):
             'product_image': product.product_image.url if product.product_image else None,
             'sales_price': sales_price,
             'rating': rating,
+            'inventory_quantity': inventory_quantity,  # ✅ Include quantity for stock check
         })
 
     context = {
@@ -152,7 +156,8 @@ def product_list(request, category_id):
 
 
 
-@login_required
+
+
 def product_view(request, product_id):
     product = get_object_or_404(Product, product_id=product_id)
     print(f"Product ID: {product.product_id}")  # Debugging
@@ -395,18 +400,19 @@ def update_variant(request, cart_item_id):
     return redirect("Ecommerce:cart_view")  # Reload the cart page to reflect changes
 
 
-# Checkout Page
 @login_required
 def checkout(request):
     cart = Cart.objects.get(user=request.user)  
-    cart_items = cart.cartitem_set.all()  
-    cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
+    cart_items = cart.cartitem_set.all()
 
     # Fetch cities
     cities = City.objects.all()
 
-    selected_city_id = request.POST.get("city")  # Get selected city from the form
-    selected_pincode_id = request.POST.get("pincode")  # Get selected pincode from the form
+    # Use GET to get the selected city and pincode
+    selected_city_id = request.GET.get("city")
+    selected_pincode_id = request.GET.get("pincode")
+
+    # Filter pincodes based on selected city
     pincodes = Pincode.objects.filter(city_id=selected_city_id) if selected_city_id else []
 
     # Check for active membership
@@ -417,18 +423,11 @@ def checkout(request):
     ).select_related('plan').first()
 
     membership_discount = Decimal(0)
-    membership_plan_name = None
     is_member = False
 
     if user_membership:
         membership_discount = Decimal(user_membership.plan.discount_rate)
-        membership_plan_name = user_membership.plan.plan_name
         is_member = True
-
-    for item in cart_items:
-        inventory = Inventory.objects.filter(batch=item.product_batch).first()
-        item.product_variants = ProductVariant.objects.filter(product=item.product_variant.product)
-        item.sales_price = Decimal(inventory.sales_price) if inventory else Decimal(0)
 
     # Calculate grand total
     grand_total = sum(Decimal(item.total_price) for item in cart_items)
@@ -442,22 +441,12 @@ def checkout(request):
 
     final_total = total_after_discount + delivery_charge
 
-    # Store variant prices
-    variant_prices = {
-        str(variant.variant_id): Decimal(Inventory.objects.filter(batch__variant=variant).first().sales_price)  
-        if Inventory.objects.filter(batch__variant=variant).exists() else Decimal(0)
-        for item in cart_items for variant in item.product_variants
-    }
-
     context = {
         "cart_items": cart_items,
-        "cart_product_ids": cart_product_ids,
-        "variant_prices": json.dumps({k: str(v) for k, v in variant_prices.items()}),
         "grand_total": grand_total,
         "discount_amount": discount_amount,
         "total_after_discount": total_after_discount,
         "is_member": is_member,
-        "membership_plan_name": membership_plan_name,
         "delivery_charge": delivery_charge,
         "final_total": final_total,
         "cities": cities,
@@ -468,6 +457,7 @@ def checkout(request):
 
     return render(request, "Ecommerce/checkout_page.html", context)
 
+
 def get_delivery_charge(pincode_id):
     """Fetches delivery charge from the database using the Pincode model."""
     try:
@@ -476,11 +466,127 @@ def get_delivery_charge(pincode_id):
     except Pincode.DoesNotExist:
         return 0
     
-    
-def order_details(request):
-    return render(request,"Ecommerce/order_detail.html")
+@login_required  
+def order_details(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id, user=request.user)
+    order_items = order.order_item_set.all() 
+    total_products=sum(item.quantity for item in order_items)
+    return render(request, "Ecommerce/order_detail.html", {
+        "order": order,
+        "order_items": order_items,
+        "total_products": total_products,
+    })
 
+
+@login_required
 def confirm_Order(request):
     return render(request,'Ecommerce/confirm.html')
+
+
+
+@login_required
+def cod_checkout(request):
+    user = request.user
+    cart = Cart.objects.filter(user=user).first()
+
+    if not cart or not cart.cartitem_set.exists():
+        messages.error(request, "Your cart is empty!")
+        return redirect("cart_view")
+
+    total_price = sum(item.total_price for item in cart.cartitem_set.all())
+
+    # Check if user has an active membership
+    user_membership = User_membership.objects.filter(
+        user=user,
+        status=True,
+        membership_end_date__gte=date.today()
+    ).first()
+
+    order_member_type = "member" if user_membership else "non-member"
+    discount_amount = 0
+
+    if user_membership:
+        discount_rate = user_membership.plan.discount_rate  # This is a float
+        discount_amount = (Decimal(discount_rate) / Decimal(100)) * Decimal(total_price)  # Convert float to Decimal
+        total_price -= discount_amount
+        delivery_charges = 0  # Free delivery for members
+    else:
+        delivery_charges = 0  # Default, will be set below
+
+
+    if request.method == "GET":
+        address = request.GET.get("address")  # Ensure correct method
+        city_id = request.GET.get("city")
+        pincode = request.GET.get("pincode", "").strip() or request.POST.get("pincode", "").strip()
+
+
+    print(f"Received pincode from form: '{pincode}'")  # Debugging output
+
+    if not pincode:
+        messages.error(request, "Pincode is required!")
+        return redirect("Ecommerce:checkout")
+
+    try:
+        pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)  # Case-insensitive lookup
+        delivery_charges = 0 if user_membership else pincode_obj.delivery_charges
+    except Pincode.DoesNotExist:
+        messages.error(request, "Invalid pincode.")
+        return redirect("Ecommerce:checkout")
+
+
+
+
+        # Create Order
+    with transaction.atomic():
+            order = Order.objects.create(
+                user=user,
+                order_user_type=order_member_type,
+                total_price=total_price,
+                discounted_price=total_price + delivery_charges,
+                order_status="pending",
+                state=user.state,
+                city_id=city_id,
+                address=address,
+                pincode=pincode_obj,
+                delivery_charges=delivery_charges,
+            )
+
+            # Move Cart Items to Order Items
+            for item in cart.cartitem_set.all():
+                Order_Item.objects.create(
+                    order=order,
+                    batch=item.product_batch,
+                    variant=item.product_variant,
+                    quantity=item.quantity,
+                    price=item.total_price,
+                )
+
+                # Decrease Stock
+                inventory = Inventory.objects.filter(batch=item.product_batch).first()
+                if inventory and inventory.quantity >= item.quantity:
+                    inventory.quantity -= item.quantity
+                    inventory.save()
+                else:
+                    messages.error(request, f"Not enough stock for {item.product_variant}.")
+                    return redirect("Ecommerce:cart_view")
+
+            # Create Payment Record for COD
+            Payment.objects.create(
+                order=order,
+                total_price=total_price + delivery_charges,
+                payment_mode="cash",
+                payment_status="pending",
+            )
+
+            # Clear Cart
+            cart.cartitem_set.all().delete()
+
+    messages.success(request, "Order placed successfully! Pay on delivery.")
+    return redirect("Ecommerce:confirm_Order")
+
+    return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
+
+
+
 
 
