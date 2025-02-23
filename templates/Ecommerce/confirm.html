@@ -1,52 +1,20 @@
 {% extends 'Ecommerce/base.html' %}
 {% load static %}
 {% block content%}
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <link rel="stylesheet" href="{% static 'css/confirm_order.css' %}">
-
-
-
-    <!--Thank you page-->
-    <div class="container">
-        <button type="submit" class="btn" onclick="openPopup()">SUBMIT</button>
-        <div class="popup" id="popup">
-            <img src="images/tick.jpeg">
-            <div class="subcon">
-                <h2>Thank you for ordering!</h2>
-                <p>Your order is placed. Thanks!</p>
-                    <div class="b">
-                        <button type="button" class="button">
-                            <a href="base.html" target="_blank" style="color:#000000;"> View Order
-                            </a>
-                        </button>
-                        <button type="button" class="button">
-                            <a href="base.html" target="_blank" style="color:#000000;">Continue shopping   
-                            </a>
-                        </button>
-                    </div>    
+    
+    <div class="confirmation-container">
+        <div class="confirmation-box">
+            <div class="icon-container">
+                <img src="{% static 'images/tick.png' %}" alt="Success" class="success-icon">
+            </div>
+            <h1>Thank you for Ordering!</h1>
+            <p>Your order has been placed successfully.</p>
+            <div class="button-container">
+                <a href="order_history.html" class="order-button">View Order</a>
+                <a href="{% url 'Ecommerce:homepage' %}" class="continue-button">Continue Shopping</a>
             </div>
         </div>
     </div>
 
-    <script>
-        let popup=document.getElementById("popup");
-
-            function openPopup() {
-                popup.classList.add("open-popup");
-            }
-
-            // function openPopup() {
-            //     popup.classList.add("close-popup");
-            // }
-
-    </script>
-
-   
-
-    <script>
-        function toggleMenu() {
-            const navbarMenu = document.querySelector('.navbar-menu');
-            navbarMenu.classList.toggle('active');
-        }
-    </script>
-    {% endblock %}
+{% endblock %}
