@@ -227,10 +227,10 @@ nav ul li a {
 }
 
 
-a{
+/* a{
     height: 45px;
-    width: 220px;
-}
+    width: fit-content;
+} */
 
 /* Membership Section */
 .membership {

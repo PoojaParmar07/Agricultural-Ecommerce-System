@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'css/password_reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/password_reset.css' %}">
 </head>
 
 <body>
@@ -25,11 +25,10 @@
    
 
     <nav class="navbar">
-        <div class="nav">
-        <!-- Logo -->
+        <div class="nav-content">
+        
             <div class="logo">
                 <a href="{% url 'Ecommerce:homepage' %}" class="green"><img src="/media/logo.jpg" alt="" height="70px"></a>
-                {% comment %} <span>FOOD<span class="green">FARM</span></span> {% endcomment %}
             </div>
 
             <!-- Search Bar -->
@@ -112,7 +111,7 @@
         {% block content%}
         {% endblock %}
     </div>
-</main>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -183,6 +182,20 @@
                 }
             });
         });
+
+
+
+        function updateCartCount() {
+            fetch("{% url 'Ecommerce:cart_count' %}")
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(".cart-counter").innerText = data.cart_count;
+                })
+                .catch(error => console.error("Error fetching cart count:", error));
+        }
+    
+        // Call function when page loads
+        document.addEventListener("DOMContentLoaded", updateCartCount);
 
     </script>
 </body>
