@@ -187,14 +187,18 @@
     padding: 17px 15%;
 }
 
-.sub-navbar .sub-nav {
+.sub-navbar {
     display: flex;
-    list-style: none;
+    align-items: center;
+    height: 60px; /* Adjust as needed */
 }
 
-.sub-navbar .sub-nav li {
-    margin: 0 5px;
+.sub-navbar .sub-nav li a {
+    line-height: 1.5;
+    padding: 8px 12px;
 }
+
+
 
 .sub-navbar .sub-nav li a {
     text-decoration: none;
@@ -270,29 +274,47 @@
 .category-dropdown, .about-dropdown {
     position: relative;
     display: inline-block;
-  }
-  
-  .category-dropdown-menu , .about-dropdown-menu{
-    display: none;
+    padding-bottom: 10px; /* Prevents accidental loss of hover */
+}
+
+
+.category-dropdown-menu, .about-dropdown-menu {
+    visibility: hidden;
+    opacity: 0;
     position: absolute;
-    top: 200%;
+    top:85%;  /* Push dropdown slightly down */
+    left: 0;
     background-color: #ffffff;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 100;
-  }
-  
-  .category-dropdown-menu a , .about-dropdown-menu a{
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;  /* Ensures vertical stacking */
+}
+
+.category-dropdown-menu a, .about-dropdown-menu a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
-    display: block;
-  }
-  
-  .category-dropdown-menu a:hover , .about-dropdown-menu a:hover{background-color: #ebebeb;}
-  
-  .category-dropdown:hover .category-dropdown-menu, .about-dropdown:hover .about-dropdown-menu {display: block;}
-  
+    display: block; /* Ensures each item takes up full width */
+    width: 100%;
+}
+
+.category-dropdown-menu a:hover, .about-dropdown-menu a:hover {
+    background-color: #ebebeb;
+}
+
+/* Show the dropdown on hover */
+.category-dropdown:hover .category-dropdown-menu, 
+.about-dropdown:hover .about-dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto; /* Enables interaction */
+    display: flex; /* Keep it flex so items remain stacked */
+}
+
 
 
 /* Body */
