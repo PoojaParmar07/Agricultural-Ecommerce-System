@@ -513,6 +513,14 @@ def confirm_Order(request):
 
     return render(request, 'Ecommerce/confirm.html', {'order': order})
 
+@login_required
+def get_pincode(request, city_id):
+    """Fetches all pincodes for a given city ID."""
+    city = get_object_or_404(City, pk=city_id)  # Ensures the city exists
+    pincodes = city.pincode_set.values("pincode_id", "area_pincode")  # Using related_name for clarity
+
+    return JsonResponse({"pincodes": list(pincodes)})
+
 
 
 
@@ -523,58 +531,48 @@ def cod_checkout(request):
 
     if not cart or not cart.cartitem_set.exists():
         messages.error(request, "Your cart is empty!")
-        return redirect("cart_view")
+        return redirect("Ecommerce:cart_view")
 
     total_price = sum(item.total_price for item in cart.cartitem_set.all())
 
-    # Check if user has an active membership
+    # Check user membership
     user_membership = User_membership.objects.filter(
-        user=user,
-        status=True,
-        membership_end_date__gte=date.today()
+        user=user, status=True, membership_end_date__gte=date.today()
     ).first()
 
-    order_member_type = "member" if user_membership else "non-member"
-    discount_amount = 0
-
+    discount_amount = Decimal(0)
     if user_membership:
-        discount_rate = user_membership.plan.discount_rate  # This is a float
-        discount_amount = (Decimal(discount_rate) / Decimal(100)) * Decimal(total_price)  # Convert float to Decimal
+        discount_rate = Decimal(user_membership.plan.discount_rate)  # Convert to Decimal
+        discount_amount = (discount_rate / Decimal(100)) * total_price
         total_price -= discount_amount
-        delivery_charges = 0  # Free delivery for members
+        delivery_charges = Decimal(0)  # Free delivery for members
     else:
-        delivery_charges = 0  # Default, will be set below
-        discount_amount = 0
+        delivery_charges = Decimal(0)  # Default, updated below
+
+    if request.method == "POST":
+        address = request.POST.get("address", "").strip()
+        city_id = request.POST.get("city", "").strip()
+        pincode = request.POST.get("pincode", "").strip()
+        print(f"Received pincode from user: '{pincode}'")
 
 
-    if request.method == "GET":
-        address = request.GET.get("address")  # Ensure correct method
-        city_id = request.GET.get("city")
-        pincode = request.GET.get("pincode", "").strip() or request.POST.get("pincode", "").strip()
+        if not address or not city_id or not pincode:
+            messages.error(request, "All fields (Address, City, and Pincode) are required!")
+            return redirect("Ecommerce:checkout")
 
+        try:
+            pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
+            delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges)
+        except Pincode.DoesNotExist:
+            messages.error(request, "Invalid pincode.")
+            return redirect("Ecommerce:checkout")
 
-    print(f"Received pincode from form: '{pincode}'")  # Debugging output
-
-    if not pincode:
-        messages.error(request, "Pincode is required!")
-        return redirect("Ecommerce:checkout")
-
-    try:
-        pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)  # Case-insensitive lookup
-        delivery_charges = 0 if user_membership else pincode_obj.delivery_charges
-    except Pincode.DoesNotExist:
-        messages.error(request, "Invalid pincode.")
-        return redirect("Ecommerce:checkout")
-
-
-
-
-        # Create Order
-    with transaction.atomic():
+        # Create order in an atomic transaction
+        with transaction.atomic():
             order = Order.objects.create(
                 user=user,
-                order_user_type=order_member_type,
-                total_price=total_price+discount_amount+delivery_charges,
+                order_user_type="member" if user_membership else "non-member",
+                total_price=total_price + delivery_charges,
                 discounted_price=discount_amount,
                 order_status="pending",
                 state=user.state,
@@ -584,7 +582,7 @@ def cod_checkout(request):
                 delivery_charges=delivery_charges,
             )
 
-            # Move Cart Items to Order Items
+            # Move cart items to order items
             for item in cart.cartitem_set.all():
                 Order_Item.objects.create(
                     order=order,
@@ -594,7 +592,7 @@ def cod_checkout(request):
                     price=item.total_price,
                 )
 
-                # Decrease Stock
+                # Decrease stock
                 inventory = Inventory.objects.filter(batch=item.product_batch).first()
                 if inventory and inventory.quantity >= item.quantity:
                     inventory.quantity -= item.quantity
@@ -603,7 +601,7 @@ def cod_checkout(request):
                     messages.error(request, f"Not enough stock for {item.product_variant}.")
                     return redirect("Ecommerce:cart_view")
 
-            # Create Payment Record for COD
+            # Create payment record for COD
             Payment.objects.create(
                 order=order,
                 total_price=total_price + delivery_charges,
@@ -611,15 +609,13 @@ def cod_checkout(request):
                 payment_status="pending",
             )
 
-            # Clear Cart
+            # Clear the cart
             cart.cartitem_set.all().delete()
 
-    messages.success(request, "Order placed successfully! Pay on delivery.")
-    return redirect("Ecommerce:confirm_Order")
+        messages.success(request, "Order placed successfully! Pay on delivery.")
+        return redirect("Ecommerce:confirm_Order")
 
     return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
-
-
 
 
 
