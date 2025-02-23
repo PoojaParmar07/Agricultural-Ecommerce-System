@@ -11,7 +11,7 @@
             <h1>Thank you for Ordering!</h1>
             <p>Your order has been placed successfully.</p>
             <div class="button-container">
-                <a href="order_history.html" class="order-button">View Order</a>
+                <a href="{% url 'order_details' order.id %}" class="order-button">View Order</a>
                 <a href="{% url 'Ecommerce:homepage' %}" class="continue-button">Continue Shopping</a>
             </div>
         </div>

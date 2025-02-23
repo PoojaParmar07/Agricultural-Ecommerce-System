@@ -101,6 +101,14 @@ class Inventory(models.Model):
         inventory = Inventory.objects.filter(batch__variant=self).order_by('-create_at').first()
         return inventory.sales_price if inventory else 0
     
+    def decrease_stock(self, quantity):
+        """Decreases stock if available; raises error if not enough stock"""
+        if self.quantity >= quantity:
+            self.quantity -= quantity
+            self.save()
+        else:
+            raise ValueError("Not enough stock available")
+    
       
 class City(models.Model):
     city_id = models.AutoField(primary_key=True)
