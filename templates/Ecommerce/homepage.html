@@ -2,9 +2,10 @@
 {% load static %}
 
 {% block content %}
-  <link rel="stylesheet" href="{% static 'Ecommerce/homepage.css' %}" />
 
-  <section class="hero">
+<link rel="stylesheet" href="{% static 'Ecommerce/homepage.css' %}" >
+
+<section class="hero">
     <div class="sub-hero"></div>
     <div class="sub-cont">
       <div class="header">
@@ -17,9 +18,9 @@
       </div>
       <img src="/media/header.jpg" alt="Home" />
     </div>
-  </section>
+</section>
 
-  <section class="categories">
+<section class="categories">
     <h2 class="category-title">Category</h2>
     <div class="category-list">
         {% for category in categories %}
@@ -38,8 +39,8 @@
         {% empty %}
         <p>No categories available.</p>
         {% endfor %}
-      
-  </section>
+    </div>
+</section>
 
 
 <section class="product-list">
@@ -121,7 +122,7 @@
   
   {% comment %} FAQ Section {% endcomment %}
   
-  <section class="faq">
+<section class="faq">
     <h2>Frequently Asked Questions</h2>
     <div class="box" onclick="toggleFAQ(this)">
       <span>What is Netflix?</span>
@@ -156,16 +157,13 @@
     <div class="box" onclick="toggleFAQ(this)">
         <span>Is Netflix good for kids?</span>
         <box-icon name='chevron-down'></box-icon>
-      </div>
-      <div class="answer">Yes, Netflix provides a Kids section with age-appropriate content and parental controls.</div>
-    </section>
+    </div>
+    <div class="answer">Yes, Netflix provides a Kids section with age-appropriate content and parental controls.</div>
+  </section>
     
     
-    
-    <script src="{% static 'js/cart.js' %}"></script>
-    
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {   
+  <script>
+      {% comment %} document.addEventListener('DOMContentLoaded', function () {   
         // Handle FAQ Section
         const faqItems = document.querySelectorAll('.faq-item')
         
@@ -174,33 +172,29 @@
             const answer = item.querySelector('.faq-answer')
             answer.classList.toggle('visible')
         })
-      })
+      });
     
       // Handle Add to Cart Buttons
-      const cartButtons = document.querySelectorAll('.add-to-cart')
+      const cartButtons = document.querySelectorAll('.add-to-cart');
     
-     // cartButtons.forEach((button) => {
-     //   button.addEventListener('click', () => {
-     //     alert('Product added to cart!')
-     //   })
-     // })
-    //})
-    function toggleFAQ(element) {
-      let answer = element.nextElementSibling;
-      let icon = element.querySelector('box-icon');
-      
-      if (answer.style.display === "block") {
-          answer.style.display = "none";
-          element.classList.remove("active");
-          icon.setAttribute('name', 'chevron-down');
-      } else {
-          document.querySelectorAll(".answer").forEach(a => a.style.display = "none");
-          document.querySelectorAll(".box").forEach(b => b.classList.remove("active"));
-          
-          answer.style.display = "block";
-          element.classList.add("active");
-          icon.setAttribute('name', 'chevron-up');
-      }
-  }
+      function toggleFAQ(element) {
+        let answer = element.nextElementSibling;
+        let icon = element.querySelector('box-icon');
+        
+        if (answer.style.display === "block") {
+            answer.style.display = "none";
+            element.classList.remove("active");
+            icon.setAttribute('name', 'chevron-down');
+        } else {
+            document.querySelectorAll(".answer").forEach(a => a.style.display = "none");
+            document.querySelectorAll(".box").forEach(b => b.classList.remove("active"));
+            
+            answer.style.display = "block";
+            element.classList.add("active");
+            icon.setAttribute('name', 'chevron-up');
+        }
+      } {% endcomment %}
+
   </script>
+
 {% endblock %}
