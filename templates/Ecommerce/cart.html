@@ -3,7 +3,7 @@
 {% block content %}
 
 
-{% comment %} 
+
 <link rel="stylesheet" href="{% static 'Ecommerce/cart.css' %}">
 
 <div class="cart-container">
@@ -36,6 +36,7 @@
                             {{ item.product_variant.product.product_name }}
                         </a>
                     </td>
+                    
                     <td>
                         <form method="post" action="{% url 'Ecommerce:update_variant' item.cart_item_id %}">
                             {% csrf_token %}
@@ -95,7 +96,7 @@
         <a href="{% url 'Ecommerce:homepage' %}" class="back">Back to Home</a>
     </div>
     {% endif %}
-</div> {% endcomment %}
+</div> 
 
 
 {% endblock %}
