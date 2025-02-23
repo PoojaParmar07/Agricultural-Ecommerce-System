@@ -1,6 +1,6 @@
 
 from django.shortcuts import render,redirect,get_object_or_404
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse,HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from Ecommerce.models import *
@@ -11,6 +11,7 @@ from django.db.models import Avg
 from django.db import transaction
 from datetime import date
 from decimal import Decimal
+# from django.http import HttpResponse
 import json
 
 
@@ -468,9 +469,17 @@ def get_delivery_charge(pincode_id):
     
 @login_required  
 def order_details(request, order_id):
-    order = get_object_or_404(Order, order_id=order_id, user=request.user)
+    order = Order.objects.filter(order_id=order_id).first()
+
+    if not order:
+        return HttpResponse("Order not found in the database", status=404)
+    
+    if order.user != request.user:
+        return HttpResponse("You do not have permission to view this order", status=403)
+
     order_items = order.order_item_set.all() 
-    total_products=sum(item.quantity for item in order_items)
+    total_products = sum(item.quantity for item in order_items)
+
     return render(request, "Ecommerce/order_detail.html", {
         "order": order,
         "order_items": order_items,
@@ -478,9 +487,17 @@ def order_details(request, order_id):
     })
 
 
+
 @login_required
 def confirm_Order(request):
-    return render(request,'Ecommerce/confirm.html')
+    # Get the latest order for the logged-in user
+    order = Order.objects.filter(user=request.user).last()
+    
+    if not order:  # Handle case when no order exists
+        return render(request, 'Ecommerce/confirm.html', {'error': "No order found"})
+
+    return render(request, 'Ecommerce/confirm.html', {'order': order})
+
 
 
 
@@ -512,6 +529,7 @@ def cod_checkout(request):
         delivery_charges = 0  # Free delivery for members
     else:
         delivery_charges = 0  # Default, will be set below
+        discount_amount = 0
 
 
     if request.method == "GET":
@@ -541,8 +559,8 @@ def cod_checkout(request):
             order = Order.objects.create(
                 user=user,
                 order_user_type=order_member_type,
-                total_price=total_price,
-                discounted_price=total_price + delivery_charges,
+                total_price=total_price+discount_amount+delivery_charges,
+                discounted_price=discount_amount,
                 order_status="pending",
                 state=user.state,
                 city_id=city_id,
