@@ -274,6 +274,21 @@ def cart_view(request):
 
 
 
+
+def get_cart_count(request):
+    """Returns the cart product count as a JSON response."""
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user).first()
+        unique_product_count = CartItem.objects.filter(cart=cart).values("product_variant__product").distinct().count() if cart else 0
+    else:
+        unique_product_count = 0
+
+    return JsonResponse({"cart_count": unique_product_count})
+
+
+
+
+
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, product_id=product_id)

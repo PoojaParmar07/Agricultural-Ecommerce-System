@@ -36,7 +36,7 @@
                             {{ item.product_variant.product.product_name }}
                         </a>
                     </td>
-                    
+
                     <td>
                         <form method="post" action="{% url 'Ecommerce:update_variant' item.cart_item_id %}">
                             {% csrf_token %}
@@ -97,6 +97,8 @@
     </div>
     {% endif %}
 </div> 
+
+
 
 
 {% endblock %}

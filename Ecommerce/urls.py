@@ -17,7 +17,7 @@ urlpatterns = [
     path('Ecommerce/increase_quantity/', increase_quantity, name='increase_quantity'),
     path('Ecommerce/decrease_quantity/', decrease_quantity, name='decrease_quantity'),
     path('Ecommerce/update_variant/<int:cart_item_id>/', update_variant, name='update_variant'),
-
+    path("cart/count/", get_cart_count, name="cart_count"), 
     
     
     path('remove-from-cart/<int:item_id>/', remove_from_cart, name='remove_from_cart'),

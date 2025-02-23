@@ -183,6 +183,20 @@
             });
         });
 
+
+
+        function updateCartCount() {
+            fetch("{% url 'Ecommerce:cart_count' %}")
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(".cart-counter").innerText = data.cart_count;
+                })
+                .catch(error => console.error("Error fetching cart count:", error));
+        }
+    
+        // Call function when page loads
+        document.addEventListener("DOMContentLoaded", updateCartCount);
+
     </script>
 </body>
 
