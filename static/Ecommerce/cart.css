@@ -32,7 +32,7 @@
 
 /* Table Rows */
 .cart-table tbody tr:hover {
-    background: #f8f9fa;
+    background: #ffffff;
 }
 
 .cart-table tbody a{
@@ -83,8 +83,8 @@
 
 /* Remove Button */
 .remove-cart {
-    background:rgb(2, 2, 2);
-    color: white;
+    background:rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     border: none;
     padding: 6px 12px;
     cursor: pointer;
@@ -92,7 +92,7 @@
 }
 
 .remove-cart:hover {
-    background:rgb(47, 46, 46);
+    background:rgb(255, 255, 255);
 }
 
 /* Checkout Button */
@@ -178,3 +178,19 @@
     }
 }
 
+
+.wishlist-btn {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: none;
+    height: 30px;
+    width: 120px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+.cancel-btn{
+    
+}

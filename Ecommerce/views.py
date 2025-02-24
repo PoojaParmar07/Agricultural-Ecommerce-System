@@ -599,9 +599,69 @@ def cod_checkout(request):
     messages.success(request, "Order placed successfully! Pay on delivery.")
     return redirect("Ecommerce:confirm_Order")
 
-    return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
+    # return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
+
+
+# Wishlist view
+
+@login_required
+def wishlist_view(request):
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    items = WishlistItem.objects.filter(wishlist=wishlist)
+    return render(request, 'Ecommerce/wishlist_view.html', {'items': items})
+
+# @login_required
+# def add_to_wishlist(request, variant_id):
+#     variant = get_object_or_404(ProductVariant, id=variant_id)
+#     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    
+#     # Check if already in wishlist
+#     if not WishlistItem.objects.filter(wishlist=wishlist, product_variant=variant).exists():
+#         WishlistItem.objects.create(wishlist=wishlist, product_variant=variant)
+    
+#     return redirect('wishlist')
 
 
 
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, product_id=product_id)
 
+    # Get first available variant and batch
+    variant = ProductVariant.objects.filter(product=product).first()
+    batch = ProductBatch.objects.filter(product=product, variant=variant).first()
 
+    if not variant or not batch:
+        return JsonResponse({"success": False, "message": "Product variant or batch not found"})
+
+    # Get or create the user's cart
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+
+    # Check if the item already exists in the cart
+    wishlist_item, created = WishlistItem.objects.get_or_create(
+        wishlist=wishlist,
+        product_batch=batch,
+        product_variant=variant,
+        # defaults={'quantity': 1}  # Default quantity when adding for the first time
+    )
+
+    if not created:
+        # wishlist_item.quantity += 1
+        wishlist_item.save()
+
+    return redirect("Ecommerce:homepage")
+    
+
+@login_required
+def remove_from_wishlist(request, item_id):
+    item = get_object_or_404(WishlistItem, id=item_id)
+    if item.wishlist.user == request.user:
+        item.delete()
+    return redirect('Ecommerce:wishlist')
+
+# @login_required
+# def remove_from_wishlist(request,item_id):
+#     wishlist_item = get_object_or_404(WishlistItem, wishlist__user=request.user, wishlist_item_id=item_id)
+#     wishlist_item.delete()
+
+#     return redirect('Ecommerce:wishlist')

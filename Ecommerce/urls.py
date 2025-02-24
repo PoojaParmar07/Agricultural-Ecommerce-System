@@ -27,7 +27,10 @@ urlpatterns = [
     path('order_details/<int:order_id>/',order_details,name="order_details"),
     path('confirm_Order/',confirm_Order,name='confirm_Order'),
     
-
+    path('wishlist/', wishlist_view, name='wishlist'),
+    path('add/<int:product_id>/', add_to_wishlist, name='add_to_wishlist'),
+    path('remove/<int:item_id>/', remove_from_wishlist, name='remove_from_wishlist'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
