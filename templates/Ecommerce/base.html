@@ -230,7 +230,7 @@
         // Set timeout to remove them after 5 seconds
         setTimeout(function () {
           messages.forEach((msg) => {
-            msg.style.transition = "opacity 0.5s";
+            msg.style.transition = "opacity 0s";
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500); // Remove after fade-out
           });
