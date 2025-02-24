@@ -21,7 +21,7 @@
 
 .sidebar {
     width: 250px;
-    background-color: #ffffff;
+    background-color: #FFFFFF;
     color: #3B823E;
     padding: 20px;
     display: flex;
@@ -58,7 +58,7 @@
 
 #text1 {
     /* flex: 1; */
-    color: white;
+    color: #FFFFFF;
     font-weight: 400;
     font-size: 16px;
     text-decoration: none;
@@ -95,10 +95,10 @@
     margin-bottom: 5px;
     display: block;
     background-color: #3B823E;
-    color: white;
+    color: #FFFFFF;
     padding:3px 12px 9px 13px;
     height: 30px;
-    text-align: left    ;
+    text-align: left;
 
 }
 
@@ -142,7 +142,7 @@ header {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
-    background-color: #ffffff;
+    background-color: #FFFFFF;
     height: 65px;
     width: 100%;
     
@@ -155,7 +155,7 @@ header {
 
 .login-btn {
     background-color: #3B823E;
-    color: white;
+    color: #FFFFFF;
     border: none;
     padding: 10px 20px;
     margin: 10px 35px;
@@ -214,7 +214,7 @@ header {
 
 .message.error {
     background-color: #ff0015;
-    color: #ffffff;
+    color: #FFFFFF;
     border-color: #ff0019;
     margin:0px 20px;
 }
@@ -237,7 +237,7 @@ header {
 main header button
 {
     background-color: #3B823E;
-    color: white;
+    color: #FFFFFF;
     border: none;
     padding: 10px 20px;
     margin: 10px 20px;
@@ -273,7 +273,7 @@ main header button
     position: absolute;
     top: 100%; /* Positions dropdown below parent */
     left: 0;
-    background: #fff;
+    background: #FFFFFF;
     border: 1px solid #ddd;
     border-radius: 5px;
     width: 150px;

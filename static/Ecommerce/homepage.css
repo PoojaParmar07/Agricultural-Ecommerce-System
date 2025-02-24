@@ -4,13 +4,13 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: white;
+    background-color: #FFFFFF;
 }
 
 /* Header Section */
 header {
     background: #2f5d21;
-    color: white;
+    color: #FFFFFF;
     display: flex;
     justify-content: space-between;
     
@@ -33,14 +33,14 @@ nav ul li {
 }
 
 nav ul li a {
-    color: white;
+    color: #FFFFFF;
     text-decoration: none;
 }
 
 /* Hero Section */
 .hero {
     background-image: url('/media/Rectangle.png');
-    color: rgb(255, 255, 255);
+    color: #FFFFFF;
     padding: 30px 20px;
     position: relative;
     background-repeat: no-repeat;
@@ -88,7 +88,7 @@ nav ul li a {
     margin: 30px 0;
     font-size: 15px;
     color: #2e6430;
-    border-radius: 10px solid white;
+    border-radius: 10px solid #FFFFFF;
     cursor: pointer;
 }
 
@@ -169,7 +169,7 @@ nav ul li a {
 }
 
 .product-item {
-    background: white;
+    background: #FFFFFF;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -218,7 +218,7 @@ nav ul li a {
 
 .product-item button {
     background: #4CAF50;
-    color: white;
+    color: #FFFFFF;
     padding: 8px 15px;
     border: none;
     cursor: pointer;
@@ -235,7 +235,7 @@ nav ul li a {
 /* Membership Section */
 .membership {
     text-align: center;
-    background-color: white;
+    background-color: #FFFFFF;
     
 }
 
@@ -243,7 +243,7 @@ nav ul li a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
+    background:#FFFFFF;
     padding: 40px;
     border-radius: 12px;
     max-width: 1200px;
@@ -296,7 +296,7 @@ nav ul li a {
     width: 35%;
     height: 45px;
     background: #3B823E;
-    color: white;
+    color: #FFFFFF;
     border: none;
     font-size: 16px;
     font-weight: bold;
@@ -359,7 +359,7 @@ nav ul li a {
 
 /* Product Card */
 .product-card {
-    background: #fff;
+    background: #FFFFFF;
     border-radius: 12px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
     overflow: hidden;
@@ -476,7 +476,7 @@ nav ul li a {
     width: 100%;
     height: 45px;
     background: #3B823E;
-    color: white;
+    color: #FFFFFF;
     border: none;
     font-size: 16px;
     font-weight: bold;
@@ -529,7 +529,7 @@ nav ul li a {
     margin-bottom: 45px;
 }
 .box {
-    background: white;
+    background: #FFFFFF;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -549,7 +549,7 @@ nav ul li a {
 } */
 .answer {
     display: none;
-    background: white;
+    background: #FFFFFF;
     border-radius: 0 0 10px 10px;
     padding: 15px 20px;
     color: #555;

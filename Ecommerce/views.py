@@ -16,6 +16,7 @@ import json
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from account.models import CustomUser
+from account.form import *
 
 
 def is_admin_user(user):
@@ -680,3 +681,37 @@ def render_pdf_view(request):
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     
     return response
+
+
+def user_profile(request):
+    
+    user = request.user
+    
+    # profile, create = CustomUser.objects.get_or_create(user = user)
+    # try:
+    #     profile = CustomUser.objects.get(user=user)  # Fetch profile using OneToOneField
+    # except CustomUser.DoesNotExist:
+    #     profile = None  # Handle the case where no profile exists
+
+    
+    context = {
+        'user' : user,
+        # "profile":profile,
+    }
+    return render(request,'Ecommerce/user_profile.html',context)
+
+
+
+@login_required
+def update_profile(request):
+    profile, created = CustomUser.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = AddUserForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')  # Redirect to profile page
+    else:
+        form = AddUserForm(instance=profile)
+
+    return render(request, 'user_profile.html', {'form': form})

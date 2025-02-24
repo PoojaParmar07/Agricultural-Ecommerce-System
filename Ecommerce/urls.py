@@ -35,6 +35,9 @@ urlpatterns = [
     path('confirm_Order/', confirm_Order, name='confirm_Order'),
     
     path('render_pdf_view/',render_pdf_view,name='render_pdf_view'),
+    
+    path('user_profile/',user_profile,name='user_profile'),
+    path('update_profile/',update_profile ,name='update_profile'),
 
 
 

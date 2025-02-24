@@ -179,4 +179,3 @@ def user_view_details(request,pk):
     context['form'] = form   
     return render(request,'admin_dashboard/view_details.html',context)
 
-
