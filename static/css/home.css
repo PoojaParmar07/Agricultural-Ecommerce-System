@@ -13,7 +13,7 @@
     display: flex;
     justify-content:space-around;
     align-items: center;
-    background-color: #fff;
+    background-color: #FFFFFF;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
     height: 90px;
 }
@@ -40,7 +40,7 @@
 .search-bar select {
     padding: 10px;
     border: none;
-    background: #ffffff;
+    background: #FFFFFF;
     font-size: 14px;
     cursor: pointer;
     width: auto;
@@ -124,7 +124,7 @@
     position: absolute;
     top: 40px;
     right: 0;
-    background-color: white;
+    background-color: #FFFFFF;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     z-index: 1000;
@@ -166,7 +166,7 @@
     top: -5px;
     left: 15px;
     background-color: #3B823E;
-    color: white;
+    color: #FFFFFF;
     font-size: 10px;
     font-weight: bold;
     border-radius: 50%;
@@ -180,7 +180,7 @@
 
 /* Sub Navbar */
 .sub-navbar {
-    background-color: white;
+    background-color: #FFFFFF;
     padding: 10px 30px;
     border-top: 1px solid #ddd;
     height: 60px;
@@ -207,7 +207,7 @@
 
 .sub-navbar .sub-nav li a.active {
     background-color: #4caf50;
-    color: white;
+    color: #FFFFFF;
     border-radius: 5px;
 }
 
@@ -224,7 +224,7 @@
     display: none;
     position: absolute;
     top: 85%;
-    background-color: #ffffff;
+    background-color: #FFFFFF;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 100;
@@ -364,7 +364,7 @@
 
 .message.error {
     background-color: #ff0015;
-    color: #ffffff;
+    color: #FFFFFF;
     border-color: #ff0019;
     margin:0px 20px;
 }

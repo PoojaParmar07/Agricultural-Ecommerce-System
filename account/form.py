@@ -36,7 +36,7 @@ class AddUserForm(forms.ModelForm):
         model = CustomUser
         fields = [
             'username', 'email', 'password', 'confirm_password', 'image',
-            'city', 'state', 'pincode', 'mobile_number', 'address',
+            'city', 'state', 'pincode', 'mobile_number', 'address', 'image',
             'is_staff', 'is_superuser', 'is_active'
         ]
 
