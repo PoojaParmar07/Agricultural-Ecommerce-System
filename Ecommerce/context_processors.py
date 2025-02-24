@@ -1,4 +1,5 @@
-from .models import Cart
+from .models import *
+from django.shortcuts import get_object_or_404
 
 def cart_count(request):
     """Returns the total count of items in the user's cart"""
@@ -8,3 +9,10 @@ def cart_count(request):
     else:
         count = 0
     return {'cart_count': count}
+
+
+def categories_processor(request):
+    return {
+        'categories': Category.objects.all()
+    }
+    

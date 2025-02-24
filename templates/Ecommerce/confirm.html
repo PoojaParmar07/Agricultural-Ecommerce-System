@@ -10,8 +10,13 @@
             </div>
             <h1>Thank you for Ordering!</h1>
             <p>Your order has been placed successfully.</p>
-            <div class="button-container">
-                <a href="{% url 'order_details' order.id %}" class="order-button">View Order</a>
+            <div class="button-container">  
+                {% if order and order.order_id %}
+    {% comment %} <a href="{% url 'order_details' order.order_id %}" class="order-button">View Order</a> {% endcomment %}
+{% else %}
+    <p>No Order Found</p>
+{% endif %}
+
                 <a href="{% url 'Ecommerce:homepage' %}" class="continue-button">Continue Shopping</a>
             </div>
         </div>
