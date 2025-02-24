@@ -13,6 +13,9 @@ from datetime import date
 from decimal import Decimal
 # from django.http import HttpResponse
 import json
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from account.models import CustomUser
 
 
 def is_admin_user(user):
@@ -655,3 +658,25 @@ def cod_checkout(request):
         return redirect("Ecommerce:confirm_Order")
 
     return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
+
+
+
+
+
+def render_pdf_view(request):
+    users = CustomUser.objects.all()
+    template_path = 'admin_dashboard/userlist.html'
+    context = {'users': users}
+    
+    template = get_template(template_path)
+    html = template.render(context)
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="user_report.pdf"'
+    
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    
+    return response

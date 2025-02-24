@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Report</title>
+    <style>
+        body {
+            font-family: "Open Sans", sans-serif;
+            margin: 20px;
+            background-color: #fff;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px; /* Ensuring it fits within the PDF */
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 5px; /* Reduced padding to avoid overflow */
+            text-align: center;
+            word-wrap: break-word; /* Prevents content from overflowing */
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 10px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📄 User Report</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 8%;">User ID</th>
+                    <th style="width: 18%;">Username</th>
+                    <th style="width: 25%;">Email</th>
+                    <th style="width: 15%;">Mobile</th>
+                    <th style="width: 8%;">Staff</th>
+                    <th style="width: 8%;">Superuser</th>
+                    <th style="width: 8%;">Active</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.pk }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.mobile_number }}</td>
+                    <td>{% if user.is_staff %}✅ Yes{% else %}❌ No{% endif %}</td>
+                    <td>{% if user.is_superuser %}✅ Yes{% else %}❌ No{% endif %}</td>
+                    <td>{% if user.is_active %}✅ Yes{% else %}❌ No{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="footer">
+            Page 1 | © Jyoti Agro
+        </div>
+    </div>
+</body>
+</html>
