@@ -78,15 +78,10 @@
                         <p class="price">₹<span class="price-display" id="price-{{ item.cart_item_id }}">{{ item.total_price }}</span></p>
                     </td>
                     <td>
-                        <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}">
-                            <box-icon name='x' class="cancel-btn"></box-icon><button class="remove-cart" data-item-id="{{ item.cart_item_id }}">Remove</button>
+                        <a href="{% url 'Ecommerce:remove_from_cart' item.cart_item_id %}"><button class="remove-wishlist" data-item-id="{{ item.cart_item_id }}">❌ Remove</button>
                         </a>
                     </td>
-                    <td>
-                        <a href="#">
-                            <button class="wishlist-btn" data-item-id="{{ item.cart_item_id }}">Add to wishlist</button>
-                        </a>
-                    </td>
+                  
                 </tr>
                 {% endfor %}
             </tbody>

@@ -297,14 +297,6 @@ class CartItem(models.Model):
         db_table = 'CartItem'
         unique_together = (('cart', 'product_batch', 'product_variant'),)
         
-    # @property
-    # def total_price(self):
-    #     """Dynamically calculates total price based on quantity and sales price."""
-    #     inventory = Inventory.objects.filter(batch=self.product_batch).first()
-    #     if inventory:
-    #         return self.quantity * inventory.sales_price
-    #     return 0  # If no inventory record found, return 0 to prevent errors
-
     @property
     def total_price(self):
         """Calculates total price based on quantity and selected variant's sales price."""
@@ -330,7 +322,7 @@ class Wishlist(models.Model):
         db_table = 'Wishlist'
         
     def __str__(self):
-        return f"Wishlist of {self.user}"
+        return f"self.wishlist_id"
 
 class WishlistItem(models.Model):
     wishlist = models.ForeignKey(Wishlist,on_delete=models.CASCADE)

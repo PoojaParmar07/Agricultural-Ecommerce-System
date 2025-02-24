@@ -1,203 +1,241 @@
-
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     {% block head %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
     {% endblock %}
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/password_reset.css' %}">
-</head>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/password_reset.css' %}" />
+  </head>
 
-<body>
+  <body>
     <!-- Navbar -->
-   
 
     <nav class="navbar">
-        <div class="nav-content">
-        
-            <div class="logo">
-                <a href="{% url 'Ecommerce:homepage' %}" class="green"><img src="/media/logo.jpg" alt="" height="70px"></a>
-            </div>
+      <div class="nav-content">
+        <div class="logo">
+          <a href="{% url 'Ecommerce:homepage' %}" class="green"
+            ><img src="/media/logo.jpg" alt="" height="70px"
+          /></a>
+        </div>
 
-            <!-- Search Bar -->
-            <div class="search-bar">
-                <div class="search-icon"><box-icon name='search'></box-icon></div>
-                <input type="text" placeholder="Search anything">
-                <button><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
+        <!-- Search Bar -->
+        <div class="search-bar">
+          <div class="search-icon"><box-icon name="search"></box-icon></div>
+          <input type="text" placeholder="Search anything" />
+          <button><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
-        <!-- Icons -->
-        <div class="nav-icons">
-             <!-- User Dropdown -->
-            <div class="user-dropdown">
-                <a href="#" id="user-icon"><i class='bx bx-user-circle user'></i></a>
-                <div class="dropdown-menu" id="dropdown-menu">
-                    {% if user.is_authenticated %}
-                        <form id="logout-form" action="{% url 'account:logout' %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" style="border: none; background: none; color: black; cursor: pointer;">
-                                <a>Logout</a>
-                            </button>
-                        </form>
-                        <a href="#">Profile</a>
-                    {% else %}
-                        <a href="{% url 'account:login' %}">Login</a>
-                        <a href="{% url 'account:registration' %}">Register</a>
-                    {% endif %}
-                </div>
-                
-            </div>
-            <a href="{% url 'Ecommerce:wishlist' %}"><i class='bx bx-heart' ></i></a>
-            <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"><i class='bx bx-cart-alt' ></i>
-                <span class="cart-counter">{{ cart_count }}</span>
-            </a>
+      </div>
+      <!-- Icons -->
+      <div class="nav-icons">
+        <!-- User Dropdown -->
+        <div class="user-dropdown">
+          <a href="#" id="user-icon"><i class="bx bx-user-circle user"></i></a>
+          <div class="dropdown-menu" id="dropdown-menu">
+            {% if user.is_authenticated %}
+            <form
+              id="logout-form"
+              action="{% url 'account:logout' %}"
+              method="post"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                style="
+                  border: none;
+                  background: none;
+                  color: black;
+                  cursor: pointer;
+                "
+              >
+                <a>Logout</a>
+              </button>
+            </form>
+            <a href="#">Profile</a>
+            {% else %}
+            <a href="{% url 'account:login' %}">Login</a>
+            <a href="{% url 'account:registration' %}">Register</a>
+            {% endif %}
+          </div>
         </div>
+        <a href="{% url 'Ecommerce:wishlist' %}"><i class="bx bx-heart"></i></a>
+        <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"
+          ><i class="bx bx-cart-alt"></i>
+          <span class="cart-counter">{{ cart_count }}</span>
+        </a>
+      </div>
     </nav>
 
     <!-- Secondary Navbar -->
     <nav class="sub-navbar">
-        <ul class="sub-nav">
-            <li><a href="{% url 'Ecommerce:homepage' %}" class="active">Home</a></li>
-            <li class="category-dropdown">
-                <a href="#">CATEGORY</a>
-                <ul class="category-dropdown-menu">  
-                    {% for category in categories %}
-                    <li><a href="{% url 'Ecommerce:product_list' category.category_id %}">{{ category.category_name }}</a></li>
-                    {% endfor %}
-                </ul>
+      <ul class="sub-nav">
+        <li>
+          <a href="{% url 'Ecommerce:homepage' %}" class="active">Home</a>
+        </li>
+        <li class="category-dropdown">
+          <a href="#">CATEGORY</a>
+          <ul class="category-dropdown-menu">
+            {% for category in categories %}
+            <li>
+              <a href="{% url 'Ecommerce:product_list' category.category_id %}"
+                >{{ category.category_name }}</a
+              >
             </li>
-            
-            <li><a href="#">CROF-INFO.</a></li>
+            {% endfor %}
+          </ul>
+        </li>
 
-            <!-- ABOUT US Dropdown -->
-            <li class="about-dropdown">
-                <a href="#">ABOUT US</a>
-                <ul class="about-dropdown-menu">
-                    <li><a href="#">Enquiry</a></li>
-                    <li><a href="#">Membership</a></li>
-                </ul>
-            </li>
-            <li><a href="#">KISHAN CHARCHA</a></li>
-            
-        </ul>
+        <li><a href="#">CROF-INFO.</a></li>
+
+        <!-- ABOUT US Dropdown -->
+        <li class="about-dropdown">
+          <a href="#">ABOUT US</a>
+          <ul class="about-dropdown-menu">
+            <li><a href="#">Enquiry</a></li>
+            <li><a href="#">Membership</a></li>
+          </ul>
+        </li>
+        <li><a href="#">KISHAN CHARCHA</a></li>
+      </ul>
     </nav>
 
-
-      <!-- Messages Section -->
-  {% if messages %}
-  <ul class="messages">
+    <!-- Messages Section -->
+    {% if messages %}
+    <ul class="messages">
       {% for message in messages %}
-      <li  class="message {{ message.tags }}">
-          {{ message }}
-      </li>
+      <li class="message {{ message.tags }}">{{ message }}</li>
       {% endfor %}
-  </ul>
-  {% endif %}
+    </ul>
+    {% endif %}
 
     <main>
-    <div class="container">
-        {% block content%}
-        {% endblock %}
-    </div>
+      <div class="container">{% block content%} {% endblock %}</div>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer1"></div>
-        <div class="footer-container">
-            <!-- Logo Section -->
-            <div class="footer-logo">
-                <img src="/media/newlogo-removebg-preview.png" alt="Jyoti Agro Logo" class="logo">
-                
-            </div>
-
-            <div class="footer-section">
-                <h3>Contact Us</h3>
-                <p><box-icon name='phone-call' class="footer-icon"></box-icon>9913883517</p>
-                <p><box-icon name='envelope' class="footer-icon"></box-icon>jyotiagro123@gmail.com</p>
-                <p><box-icon name='map' class="footer-icon"></box-icon> JamalPur Char Rasta, Jamalpur, Ahmedabad, Gujarat.</p>
-            </div>
-
-            <div class="footer-section">
-                <h3>Links</h3>
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Enquiry</a>
-            </div>
-
-            <div class="footer-section">
-                <h3>Categories</h3>
-                <a href="#">Seeds</a>
-                <a href="#">Fertilizer</a>
-                <a href="#">Insecticides</a>
-            </div>
-
-            <div class="footer-section">
-                <h3>Membership</h3>
-                <h3>Support</h3>
-                <a href="#">FAQs</a>
-                <a href="#">Contact Us</a>
-            </div>
+      <div class="footer1"></div>
+      <div class="footer-container">
+        <!-- Logo Section -->
+        <div class="footer-logo">
+          <img
+            src="/media/newlogo-removebg-preview.png"
+            alt="Jyoti Agro Logo"
+            class="logo"
+          />
         </div>
 
-        <!-- Bottom Footer -->
-        <div class="footer-bottom">
-            <p>2025 © All Rights Reserved | Terms of Use | JYOTI AGRO</p>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>
+            <box-icon name="phone-call" class="footer-icon"></box-icon
+            >9913883517
+          </p>
+          <p>
+            <box-icon name="envelope" class="footer-icon"></box-icon
+            >jyotiagro123@gmail.com
+          </p>
+          <p>
+            <box-icon name="map" class="footer-icon"></box-icon> JamalPur Char
+            Rasta, Jamalpur, Ahmedabad, Gujarat.
+          </p>
         </div>
+
+        <div class="footer-section">
+          <h3>Links</h3>
+          <a href="#">Home</a>
+          <a href="#">About</a>
+          <a href="#">Enquiry</a>
+        </div>
+
+        <div class="footer-section">
+          <h3>Categories</h3>
+          <a href="#">Seeds</a>
+          <a href="#">Fertilizer</a>
+          <a href="#">Insecticides</a>
+        </div>
+
+        <div class="footer-section">
+          <h3>Membership</h3>
+          <h3>Support</h3>
+          <a href="#">FAQs</a>
+          <a href="#">Contact Us</a>
+        </div>
+      </div>
+
+      <!-- Bottom Footer -->
+      <div class="footer-bottom">
+        <p>2025 © All Rights Reserved | Terms of Use | JYOTI AGRO</p>
+      </div>
     </footer>
 
     <script>
-        function toggleMenu() {
-            const navbarMenu = document.querySelector('.navbar-menu');
-            navbarMenu.classList.toggle('active');
-        }
+      function toggleMenu() {
+        const navbarMenu = document.querySelector(".navbar-menu");
+        navbarMenu.classList.toggle("active");
+      }
 
+      document.addEventListener("DOMContentLoaded", function () {
+        let userIcon = document.getElementById("user-icon");
+        let dropdownMenu = document.getElementById("dropdown-menu");
 
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let userIcon = document.getElementById("user-icon");
-            let dropdownMenu = document.getElementById("dropdown-menu");
-        
-            userIcon.addEventListener("click", function (event) {
-                event.preventDefault();
-                dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
-            });
-        
-            // Close dropdown if clicked outside
-            document.addEventListener("click", function (event) {
-                if (!userIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                    dropdownMenu.style.display = "none";
-                }
-            });
+        userIcon.addEventListener("click", function (event) {
+          event.preventDefault();
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === "block" ? "none" : "block";
         });
 
+        // Close dropdown if clicked outside
+        document.addEventListener("click", function (event) {
+          if (
+            !userIcon.contains(event.target) &&
+            !dropdownMenu.contains(event.target)
+          ) {
+            dropdownMenu.style.display = "none";
+          }
+        });
+      });
 
+      function updateCartCount() {
+        fetch("{% url 'Ecommerce:cart_count' %}")
+          .then((response) => response.json())
+          .then((data) => {
+            document.querySelector(".cart-counter").innerText = data.cart_count;
+          })
+          .catch((error) => console.error("Error fetching cart count:", error));
+      }
 
-        function updateCartCount() {
-            fetch("{% url 'Ecommerce:cart_count' %}")
-                .then(response => response.json())
-                .then(data => {
-                    document.querySelector(".cart-counter").innerText = data.cart_count;
-                })
-                .catch(error => console.error("Error fetching cart count:", error));
-        }
-    
-        // Call function when page loads
-        document.addEventListener("DOMContentLoaded", updateCartCount);
+      // Call function when page loads
+      document.addEventListener("DOMContentLoaded", updateCartCount);
 
+      // Wait for the page to load
+      document.addEventListener("DOMContentLoaded", function () {
+        // Select all messages
+        let messages = document.querySelectorAll(".messages li");
+        // Set timeout to remove them after 5 seconds
+        setTimeout(function () {
+          messages.forEach((msg) => {
+            msg.style.transition = "opacity 0.2s";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500); // Remove after fade-out
+          });
+        }, 5000);
+      });
     </script>
-</body>
-
+  </body>
 </html>

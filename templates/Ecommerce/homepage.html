@@ -51,7 +51,12 @@
             <div class="product-card">
                 <div class="product-image-container">
                     <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
-                    <a href="{% url 'Ecommerce:add_to_wishlist' product.product_id %}"><span class="wishlist-icon"><box-icon name='heart'></box-icon></span></a>
+                    <a href="{% url 'Ecommerce:add_to_wishlist' product.variant.variant_id %}">
+                      <span class="wishlist-icon">
+                          <box-icon name='heart'></box-icon>
+                      </span>
+                  </a>
+                  
                 </div>
                 <div class="product-details">
                     <div class="product-header">
@@ -61,7 +66,7 @@
                        
                     </div>
                     <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
-                    <div class="rating-container">
+                    {% comment %} <div class="rating-container">
                         <span class="star-rating">
                             {% if product.rating %}
                                 {% for i in "12345" %}
@@ -79,7 +84,7 @@
                                 <span class="rating">(0/5)</span>
                             {% endif %}
                         </span>
-                    </div>
+                    </div> {% endcomment %}
 
                   {% if product.inventory_quantity > 0 %}
                     {% if product.product_id in cart_product_ids %}

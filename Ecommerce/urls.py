@@ -13,6 +13,7 @@ urlpatterns = [
     path('product_view/<int:product_id>/',product_view,name='product_view'),
     path('cart_view/',cart_view, name='cart_view'),
     path('add_to_cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
+    path('remove-from-cart/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
     
     path('Ecommerce/increase_quantity/', increase_quantity, name='increase_quantity'),
     path('Ecommerce/decrease_quantity/', decrease_quantity, name='decrease_quantity'),
@@ -20,16 +21,21 @@ urlpatterns = [
     path("cart/count/", get_cart_count, name="cart_count"), 
     
     
-    path('remove-from-cart/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
    
     path('checkout/',checkout,name='checkout'),
+     path('get-delivery-charge/<int:pincode_id>/',
+         get_delivery_charge_ajax, name='get_delivery_charge'),
+    path('checkout/', checkout, name='checkout'),
+    path('get_pincode/<int:city_id>/', get_pincode, name='get_pincode'),
     path('cod_checkout/',cod_checkout,name='cod_checkout'),
     path('order_details/<int:order_id>/',order_details,name="order_details"),
     path('confirm_Order/',confirm_Order,name='confirm_Order'),
+    path('render_pdf_view',render_pdf_view,name="render_pdf_view"),
     
     path('wishlist/', wishlist_view, name='wishlist'),
-    path('add/<int:product_id>/', add_to_wishlist, name='add_to_wishlist'),
-    path('remove/<int:item_id>/', remove_from_wishlist, name='remove_from_wishlist'),
+    path('add/<int:variant_id>/', add_to_wishlist, name='add_to_wishlist'),
+    path('remove/<int:item_id>/',remove_from_wishlist, name='remove_from_wishlist'),
+
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
