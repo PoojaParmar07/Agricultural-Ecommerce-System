@@ -73,7 +73,7 @@
             {% endif %}
           </div>
         </div>
-        <a href="#"><i class="bx bx-heart"></i></a>
+        <a href="{% url 'Ecommerce:wishlist' %}"><i class="bx bx-heart"></i></a>
         <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"
           ><i class="bx bx-cart-alt"></i>
           <span class="cart-counter">{{ cart_count }}</span>
@@ -230,7 +230,7 @@
         // Set timeout to remove them after 5 seconds
         setTimeout(function () {
           messages.forEach((msg) => {
-            msg.style.transition = "opacity 0s";
+            msg.style.transition = "opacity 0.2s";
             msg.style.opacity = "0";
             setTimeout(() => msg.remove(), 500); // Remove after fade-out
           });

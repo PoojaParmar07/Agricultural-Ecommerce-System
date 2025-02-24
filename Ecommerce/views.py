@@ -16,7 +16,6 @@ import json
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from account.models import CustomUser
-from account.form import *
 
 
 def is_admin_user(user):
@@ -102,21 +101,23 @@ def homepage(request):
             "product_variant__product__product_id", flat=True))
 
     for product in products:
-        variant = ProductVariant.objects.filter(product=product).first()
-        inventory = Inventory.objects.filter(
-            batch__variant=variant).first() if variant else None
+        variant = ProductVariant.objects.filter(product=product).first() if ProductVariant.objects.filter(product=product).exists() else None
+        inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
-        rating = Review.objects.filter(product=product).aggregate(
-            avg_rating=Avg('rating'))['avg_rating']
         inventory_quantity = inventory.quantity if inventory else 0
+        rating = Review.objects.filter(product=product).aggregate(
+            avg_rating=Avg('rating'))['avg_rating'] or 0
+
+        # print(f"Product: {product.product_name} | Variant: {variant} | Sales Price: {sales_price} | Inventory Quantity: {inventory_quantity}")
 
         product_data.append({
             'product_id': product.product_id,
+            'variant': variant,
             'product_name': product.product_name,
             'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
-            'sales_price': sales_price if sales_price is not None else "N/A",
-            'rating': rating if rating is not None else 0,
-            'inventory_quantity': inventory_quantity,
+            'sales_price': sales_price if sales_price else "N/A",
+            'rating': rating,
+            'inventory_quantity': inventory_quantity if inventory_quantity else 0,
         })
 
     return render(request, "Ecommerce/homepage.html", {
@@ -683,35 +684,128 @@ def render_pdf_view(request):
     return response
 
 
-def user_profile(request):
-    
-    user = request.user
-    
-    # profile, create = CustomUser.objects.get_or_create(user = user)
-    # try:
-    #     profile = CustomUser.objects.get(user=user)  # Fetch profile using OneToOneField
-    # except CustomUser.DoesNotExist:
-    #     profile = None  # Handle the case where no profile exists
 
-    
+@login_required
+def wishlist_view(request):
+    wishlist, _ = Wishlist.objects.get_or_create(
+        user=request.user)  # Get the user's cart
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist).select_related(  # ✅ Filter by user's cart
+        "product_variant", "product_variant__product", "product_batch"
+    ).prefetch_related("product_batch__inventory_set")
+
+    categories = Category.objects.all()  # Fetch all categories
+
+    # Store variant prices
+    variant_prices = {}
+
+    wishlist_product_ids = list(wishlist_items.values_list(
+        "product_variant__product__product_id", flat=True))
+
+    # Calculate grand total
+    # grand_total = sum(item.total_price for item in wishlist_items)
+
+
+    for item in wishlist_items:
+        if not item.product_variant or not item.product_variant.product:
+          print(f"❌ Missing product for item {item.id}")  # Debugging line
+
+        inventory = Inventory.objects.filter(batch=item.product_batch).first()
+        item.product_variants = ProductVariant.objects.filter(
+            product=item.product_variant.product)
+        # Convert Decimal to float
+        item.sales_price = float(inventory.sales_price) if inventory else 0
+        # Handle missing inventory
+        item.variant_price = inventory.sales_price if inventory else 0
+
+        # Get all variants of the same product
+        item.product_variants = ProductVariant.objects.filter(
+            product=item.product_variant.product)
+
+        # Store prices for each variant
+        for variant in item.product_variants:
+            inventory_variant = Inventory.objects.filter(
+                batch__variant=variant).first()
+            variant_prices[str(variant.variant_id)] = float(
+                inventory_variant.sales_price) if inventory_variant else 0
+
     context = {
-        'user' : user,
-        # "profile":profile,
+        "wishlist_items": wishlist_items,
+        "wishlist_product_ids": wishlist_product_ids,
+        "variant_prices": variant_prices,
+        'categories': categories,
     }
-    return render(request,'Ecommerce/user_profile.html',context)
 
+    return render(request, "Ecommerce/wishlist_view.html", context)
+
+
+# @login_required
+# def add_to_wishlist(request, product_variant):
+#     product = get_object_or_404(Product, product_variant=product_variant)
+
+#     # Get first available variant and batch
+#     variant = ProductVariant.objects.filter(product=product).first()
+#     batch = ProductBatch.objects.filter(
+#         product=product, variant=variant).first()
+
+#     if not variant or not batch:
+#         return JsonResponse({"success": False, "message": "Product variant or batch not found"})
+
+#     # Get or create the user's cart
+#     wishlist, created = wishlist.objects.get_or_create(user=request.user)
+
+#     # Check if the item already exists in the cart
+#     wishlist_item, created = WishlistItem.objects.get_or_create(
+#         wishlist=wishlist,
+#         product_batch=batch,
+#         product_variant=variant,
+#         # Default quantity when adding for the first time
+#         defaults={'quantity': 1}
+#     )
+
+#     if not created:
+#         wishlist_item.quantity += 1
+#         wishlist_item.save()
+
+#     return redirect("Ecommerce:homepage")
+@login_required
+def add_to_wishlist(request, variant_id):
+    # Get the product variant
+    variant = get_object_or_404(ProductVariant, variant_id=variant_id)
+    
+    # Get the first available batch of this variant
+    batch = ProductBatch.objects.filter(variant=variant).first()
+    
+    if not batch:
+        return JsonResponse({"success": False, "message": "No available batch for this variant."})
+
+    # Get or create the wishlist for the user
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+
+    # Check if the item already exists in the wishlist
+    wishlist_item, created = WishlistItem.objects.get_or_create(
+        wishlist=wishlist,
+        product_batch=batch,
+        product_variant=variant
+    )
+
+    if created:
+        message = "Item added to wishlist."
+    else:
+        message = "Item already in wishlist."
+
+    return redirect('Ecommerce:homepage')
 
 
 @login_required
-def update_profile(request):
-    profile, created = CustomUser.objects.get_or_create(user=request.user)
+def remove_from_wishlist(request, item_id):
+    print(f"Trying to remove wishlist item: {item_id}")  # Debugging line
 
-    if request.method == 'POST':
-        form = AddUserForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile')  # Redirect to profile page
-    else:
-        form = AddUserForm(instance=profile)
+    wishlist_item = get_object_or_404(
+        WishlistItem, wishlist__user=request.user, id=item_id)  # ✅ Use wishlist__user instead of cart__user
 
-    return render(request, 'user_profile.html', {'form': form})
+    wishlist_item.delete()
+    print(f"Removed wishlist item: {item_id}")  # Debugging line
+
+    return redirect('Ecommerce:wishlist')
+
+

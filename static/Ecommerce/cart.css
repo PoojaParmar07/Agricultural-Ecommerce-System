@@ -17,11 +17,16 @@
     border-collapse: collapse;
 }
 
-.cart-table th, 
+.cart-table th {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
 .cart-table td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #ddd;
+    vertical-align: middle; /* Ensures content is properly aligned */
 }
 
 /* Table Header */
@@ -32,7 +37,7 @@
 
 /* Table Rows */
 .cart-table tbody tr:hover {
-    background: #f8f9fa;
+    background: #ffffff;
 }
 
 .cart-table tbody a{
@@ -81,19 +86,6 @@
     border-radius: 5px;
 }
 
-/* Remove Button */
-.remove-cart {
-    background:rgb(2, 2, 2);
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.remove-cart:hover {
-    background:rgb(47, 46, 46);
-}
 
 /* Checkout Button */
 .cart-footer {
@@ -102,6 +94,7 @@
     display: flex;
     justify-content: end;
     align-items: center;
+    margin-right: 32px;
 
 }
 
@@ -136,19 +129,74 @@
     color: #666;
     padding: 20px;
 }
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Space between buttons */
+}
+/* Common Button Styles */
+.remove-wishlist {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Space between icon and text */
+    background: #28a745;
+    color: white;
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
 
-.back-btn{
+.remove-wishlist:hover {
+    background: #218838;
+}
+
+/* Box Icon Styling */
+.remove-wishlist box-icon {
+    fill: white;
+    width: 18px;
+    height: 18px;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Space between icon and text */
+    background: #28a745;
+    color: white;
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background: #28a745;
+}
+.add-to-cart-btn box-icon
+{
+    fill:white;
+    width: 18px;
+    height: 18px;
+}
+
+/* Back Button */
+.back-btn {
     display: flex;
     justify-content: center;
     font-weight: 500;
 }
 
-.back-btn box-icon{
-    fill: white;
-
-}
-
-.back-btn .back{
+.back-btn .back {
     display: inline-block;
     background: #28a745;
     color: white;
@@ -156,7 +204,6 @@
     text-decoration: none;
     border-radius: 4px;
     font-weight: bold;
-
 }
 
 /* Responsive Design */
@@ -178,3 +225,14 @@
     }
 }
 
+
+.wishlist-btn {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: none;
+    height: 30px;
+    width: 120px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
