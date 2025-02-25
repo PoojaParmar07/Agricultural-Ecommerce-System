@@ -211,8 +211,8 @@ def update_profile(request):
                 user.image = request.FILES['image']
 
             user.save()
-            messages.success(request, "Profile Updated Successfully")  # ✅ Fixed messages
-            return redirect('account:profile')  # Redirect to profile page after update
+            messages.success(request, "Profile Updated Successfully")
+            return redirect('account:profile') 
 
     else:
         form = ProfileForm(instance=user)
