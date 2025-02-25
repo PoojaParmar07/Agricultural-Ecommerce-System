@@ -19,7 +19,6 @@ class CustomUser(AbstractUser):
     is_superuser=models.BooleanField(default=False)
     image=models.ImageField(upload_to='account/',default='media/account/profile.jpg', blank=True, null=True)
     
-
     class Meta:
          db_table = 'user' 
          
