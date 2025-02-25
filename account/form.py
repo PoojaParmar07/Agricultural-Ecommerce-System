@@ -74,4 +74,3 @@ class ProfileForm(forms.ModelForm):
     image = forms.ImageField(required=False)
 
         
-
