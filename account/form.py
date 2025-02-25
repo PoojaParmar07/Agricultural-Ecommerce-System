@@ -60,7 +60,7 @@ class DeleteUserForm(forms.ModelForm):
             'username', 'email', 
             'city', 'state', 'pincode', 
             'mobile_number', 'address', 
-            'is_staff', 'is_superuser', 'is_active'
+            'is_staff', 'is_superuser','is_active'
         ]
         
 
