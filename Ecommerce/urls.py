@@ -37,6 +37,7 @@ urlpatterns = [
     path('remove/<int:item_id>/',remove_from_wishlist, name='remove_from_wishlist'),
 
     
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

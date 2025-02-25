@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
+from django.conf import settings
+
 # Create your models here.
 
 
@@ -15,7 +17,7 @@ class CustomUser(AbstractUser):
     address=models.TextField(max_length=255)
     is_staff=models.BooleanField(default=False)
     is_superuser=models.BooleanField(default=False)
-    image=models.ImageField(upload_to='media/account/',default='http://pluspng.com/img-png/png-user-icon-person-icon-png-people-person-user-icon-2240.png')
+    image=models.ImageField(upload_to='account/',default='http://pluspng.com/img-png/png-user-icon-person-icon-png-people-person-user-icon-2240.png')
     
 
     class Meta:
@@ -23,3 +25,16 @@ class CustomUser(AbstractUser):
          
     def __str__(self):
         return str(self.username) if self.username else "Unnamed User"   
+    
+    
+# class Profile(models.Model):
+#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='profile_pics/', default='default.jpg')
+#     mobile_number = models.CharField(max_length=15, blank=True, null=True)
+#     address = models.TextField(blank=True, null=True)
+#     city = models.CharField(max_length=50, blank=True, null=True)
+#     state = models.CharField(max_length=50, blank=True, null=True)
+#     pincode = models.CharField(max_length=10, blank=True, null=True)
+
+#     def __str__(self):
+#         return self.user.username

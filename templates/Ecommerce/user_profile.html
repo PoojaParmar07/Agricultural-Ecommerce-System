@@ -1,171 +1,177 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Settings</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% extends 'Ecommerce/base.html' %}
+{% load static %}
 
-    <style>
-        body {
-    background-color:rgb(255, 255, 255);
-    font-family: Arial, sans-serif;
-}
-
-.main-container {
-    margin: 40px auto;
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 1200px;
-}
-
-.sidebar {
-    background: white;
-    text-align: center;
-    padding: 20px;
-    border-radius: 10px 0 0 10px;
-}
-
-.profile-img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid #3B823E;
-    margin-bottom: 10px;
-}
-
-.profile h4 {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.profile p {
-    font-size: 14px;
-    color: gray;
-}
-
-.profile-form {
-    padding: 20px;
-    margin-left: 60px;
-}
-
-.profile-form h3 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.form-control {
-    margin-bottom: 10px;
-    padding: 8px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.save-btn {
-    background-color: #3B823E;
-    color: white;
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 5px;
-}
-
-.experience-form {
-    padding: 20px;
-    border-left: 1px solid #ccc;
-}
-
-.experience-form h4 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.experience-btn {
-    background-color: #3B823E;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-@media (max-width: 768px) {
+{% block content %}
+  <style>
+    .main-container {
+      margin: 40px auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 1200px;
+      box-shadow: 2px 2px 5px #0000003d;
+    }
+    
+    .row {
+      display: flex;
+      margin-top: 70px;
+    }
+    
     .sidebar {
+      background: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px 0 0 10px;
+    }
+    
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid #3b823e;
+      margin-bottom: 10px;
+    }
+    
+    .profile h4 {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    .profile p {
+      font-size: 14px;
+      color: gray;
+    }
+    
+    .profile-form {
+      padding: 20px;
+      margin-left: 60px;
+    }
+    
+    .profile-form h3 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    
+    .form-control {
+      margin-bottom: 10px;
+      padding: 8px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 500px;
+    }
+    
+    .form-image{
+        width: 200px;
+    }
+
+    .save-btn {
+      background-color: #3b823e;
+      color: white;
+      width: 40%;
+      padding: 10px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 5px;
+      margin: 30px 0px 0px -5px;
+      align-items: start;
+    }
+    
+    
+   
+    
+    @media (max-width: 768px) {
+      .sidebar {
         display: none;
+      }
     }
-    .experience-form {
-        border-left: none;
-        margin-top: 20px;
-    }
-}
+  </style>
 
-    </style>
+  <div class="container-fluid main-container">
+    <div class="row">
+      <!-- Sidebar -->
 
-</head>
-<body>
-
-    <div class="container-fluid main-container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 sidebar">
-                <div class="profile text-center">
-                    <img src="{{ user.image.url }}" alt="Profile Image" class="profile-img">
-                    <h4>Edogaru</h4>
-                    <p>edogaru@mail.com.my</p>
-                </div>
-                <a href="#"><button>Add Profile</button></a>
+      <div class="col-md-3 sidebar">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="profile text-center">
+                {% if user.image %}
+                    <img src="{{ user.image }}" alt="Profile Image" class="profile-img">
+                {% else %}
+                    <img src="{% static 'default_profile.png' %}" alt="Profile Image" class="profile-img">
+                {% endif %}
             </div>
+        
+            <input type="file" name="image" class="form-image">
+            <button type="submit" class="btn save-btn">Upload Image</button>
+        </form>
+        <h4 class="user-name">{{ user.username }}</h4>
+        <p class="user-email">{{ user.email }}</p>
+        </div>
 
-            <!-- Profile Form -->
-            <div class="col-md-6 profile-form">
-                <h3>Profile Settings</h3>
-                <form>
-                    
-                    <label>User Name</label>
-                    <input type="text" class="form-control" placeholder="Enter your User Name" value="{{ user.username }}" name="username">
+        <!-- Profile Form -->
+        <div class="col-md-6 profile-form">
+          <h3>Profile Settings</h3>
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+          <div>
+            <div>User Name</div>
+            <input type="text" class="form-control" placeholder="your User Name" value="{{ user.username }}" name="username" />
+          </div>
 
-                    <label>Email</label>
-                    <input type="text" class="form-control" placeholder="Enter email" value="{{ user.email }}">
+          <div>
+            <div>Email</div>
+            <input type="text" class="form-control" placeholder="email" value="{{ user.email }}" />
+          </div>
 
-                    <label>Mobile Number</label>
-                    <input type="text" class="form-control" placeholder="Enter mobile number" value="{{ user.mobile_number }}">
+          <div>
+            <div>Mobile Number</div>
+            <input type="text" class="form-control" placeholder="mobile number" value="{{ user.mobile_number }}" />
+          </div>
 
-                    <label>Address</label>
-                    <input type="text" class="form-control" placeholder="Enter Address" value="{{ user.address }}">
+          <div>
+            <div>Address</div>
+            <input type="text" class="form-control" placeholder="Address" value="{{ user.address }}" />
+          </div>
 
-                    <label>City</label>
-                    <input type="text" class="form-control" placeholder="Enter city" value="{{ user.city }}">
+          <div>
+            <div>City</div>
+            <input type="text" class="form-control" placeholder="city" value="{{ user.city }}" />
+          </div>
 
-                    <label>State</label>
-                    <input type="text" class="form-control" placeholder="Enter state" value="{{ user.state }}">
+          <div>
+            <div>State</div>
+            <input type="text" class="form-control" placeholder="state" value="{{ user.state }}" />
+          </div>
 
-                    <label>Pincode</label>
-                    <input type="text" class="form-control" placeholder="Enter pincode" value="{{ user.pincode }}">
+          <div>
+            <div>Pincode</div>
+            <input type="text" class="form-control" placeholder="pincode" value="{{ user.pincode }}" />
+          </div>
 
-
-                    <button type="submit" class="btn save-btn">Save Profile</button>
-                </form>
-            </div>
-{% comment %} 
-            <!-- Experience Section -->
-            <div class="col-md-3 experience-form">
-                <h4>Edit Experience</h4>
-                <button class="btn experience-btn">Experience</button>
-
-                <label>Experience in Designing</label>
-                <input type="text" class="form-control" placeholder="Experience">
-
-                <label>Additional Details</label>
-                <input type="text" class="form-control" placeholder="Additional details">
-            </div> {% endcomment %}
+          <button type="submit" class="btn save-btn">Save Profile</button>
+        </form>
         </div>
     </div>
+  </div>
 
-</body>
-</html>
+  {% comment %} <script>
+    document.getElementById('addProfileButton').addEventListener('click', function () {
+      document.getElementById('profileImageInput').click()
+    })
+    
+    // Show selected image preview
+    document.getElementById('profileImageInput').addEventListener('change', function (event) {
+      let file = event.target.files[0]
+      if (file) {
+        let reader = new FileReader()
+        reader.onload = function (e) {
+          document.getElementById('profilePreview').src = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
+    })
+  </script> {% endcomment %}
+{% endblock %}
+

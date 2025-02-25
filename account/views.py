@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib import messages
 from .models import CustomUser
 from django.contrib.auth import authenticate, login,logout
-from .form import AdminLoginForm,AddUserForm,DeleteUserForm
+from .form import *
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required,user_passes_test
 from Ecommerce.views import is_admin_user
@@ -179,3 +179,29 @@ def user_view_details(request,pk):
     context['form'] = form   
     return render(request,'admin_dashboard/view_details.html',context)
 
+# @login_required
+# def profile_view(request):
+#     profile, created = Profile.objects.get_or_create(user=request.user)
+    
+#     if request.method == 'POST':
+#         form = ProfileForm(request.POST, request.FILES, instance=profile)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('profile_view')
+#     else:
+#         form = ProfileForm(instance=profile)
+
+#     return render(request, 'Ecommerce/user_profile.html', {'form': form})
+
+
+@login_required
+def upload_profile_image(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Change to your profile URL
+    else:
+        form = ProfileForm(instance=request.user)
+
+    return render(request, 'Ecommerce/user_profile.html', {'form': form})

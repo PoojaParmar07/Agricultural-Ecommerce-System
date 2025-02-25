@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomUser
+from .models import *
 from django.core.exceptions import ValidationError
 
 class AdminLoginForm(forms.Form):
@@ -62,3 +62,11 @@ class DeleteUserForm(forms.ModelForm):
             'mobile_number', 'address', 
             'is_staff', 'is_superuser', 'is_active'
         ]
+        
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 
+            'city', 'state', 'pincode', 
+            'mobile_number', 'address','image']

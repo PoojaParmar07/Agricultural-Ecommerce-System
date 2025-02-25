@@ -933,10 +933,10 @@ def cartitem_view_details(request, pk):
 
 # City
 
-
 def city_list(request):
     cities = City.objects.all()
     return render(request,'admin_dashboard/city_list.html',{'cities':cities})
+
 
 def add_city(request):
     context = {
@@ -1045,3 +1045,5 @@ def pincode_view_details(request, pk):
     context['form']=form
     context['pincode']=pincode
     return render(request, 'admin_dashboard/view_details.html', context)
+
+

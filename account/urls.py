@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 # from account.views import handlelog,handleregi,handlelgout,user_list,user_add,user_view_details
 from account.views import user_list,user_add,user_view_details,handleregi
-from .views import CustomLoginView
+from .views import *
 from django.contrib.auth.views import LogoutView
 
 
@@ -18,7 +18,10 @@ urlpatterns = [
     path('user_add/',user_add,name='user_add'),
     path('user_view_details/<int:pk>',user_view_details,name='user_view_details'),
     
-    # Password reset URLs
+    # path('profile_view/',profile_view,name="profile_view"),
+    path("profile/", upload_profile_image, name="profile"),
+    
+    
     
      
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -26,6 +26,7 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Mobile</th>
+                    <th>Profile</th>
                     <th>Staff</th>
                     <th>Superuser</th>
                     <th>Active</th>
@@ -39,6 +40,11 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.mobile_number }}</td>
+                    <td > {% if user.image %}
+                        <img src="{{  user.image.url }}" alt="Profile Image" width="100">
+                    {% else %}
+                        No Image
+                    {% endif %}</td>
                     <td><input type="checkbox" disabled {% if user.is_staff %}checked{% endif %}></td>
                     <td><input type="checkbox" disabled {% if user.is_superuser %}checked{% endif %}></td>
                     <td><input type="checkbox" disabled {% if user.is_active %}checked{% endif %}></td>

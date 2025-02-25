@@ -15,7 +15,8 @@ from decimal import Decimal
 import json
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-from account.models import CustomUser
+from account.models import *
+from account.form import *
 
 
 def is_admin_user(user):
@@ -738,35 +739,7 @@ def wishlist_view(request):
     return render(request, "Ecommerce/wishlist_view.html", context)
 
 
-# @login_required
-# def add_to_wishlist(request, product_variant):
-#     product = get_object_or_404(Product, product_variant=product_variant)
 
-#     # Get first available variant and batch
-#     variant = ProductVariant.objects.filter(product=product).first()
-#     batch = ProductBatch.objects.filter(
-#         product=product, variant=variant).first()
-
-#     if not variant or not batch:
-#         return JsonResponse({"success": False, "message": "Product variant or batch not found"})
-
-#     # Get or create the user's cart
-#     wishlist, created = wishlist.objects.get_or_create(user=request.user)
-
-#     # Check if the item already exists in the cart
-#     wishlist_item, created = WishlistItem.objects.get_or_create(
-#         wishlist=wishlist,
-#         product_batch=batch,
-#         product_variant=variant,
-#         # Default quantity when adding for the first time
-#         defaults={'quantity': 1}
-#     )
-
-#     if not created:
-#         wishlist_item.quantity += 1
-#         wishlist_item.save()
-
-#     return redirect("Ecommerce:homepage")
 @login_required
 def add_to_wishlist(request, variant_id):
     # Get the product variant
@@ -807,5 +780,4 @@ def remove_from_wishlist(request, item_id):
     print(f"Removed wishlist item: {item_id}")  # Debugging line
 
     return redirect('Ecommerce:wishlist')
-
 
