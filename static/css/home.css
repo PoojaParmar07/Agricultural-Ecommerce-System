@@ -278,12 +278,14 @@
     text-align: left;
     margin-top: 10px;
     margin-bottom: 10px;
+    color:white;
+    font-size: 20px;
 }
 
 .newsletter h3 {
     font-size: 14px;
     color: #d5d5d5;
-    margin: 0;
+    margin-top:-18px;
 }
 
 .newsletter h2 {
@@ -359,8 +361,7 @@ flex: 1;
 }
 
 .column ul li a:hover {
-    color: #a3d9a5;
-    text-decoration: underline;
+    color: black;
     transform: translateX(3px);
 }
 
