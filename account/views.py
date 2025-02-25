@@ -198,7 +198,7 @@ def user_view_details(request,pk):
 
 @login_required
 def update_profile(request):
-    user = request.user  # Get the currently logged-in user
+    user = request.user 
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=user)
