@@ -196,12 +196,12 @@ def user_view_details(request,pk):
 
 @login_required
 def update_profile(request):
-    profile = request.user.profile
+    profile = request.user.image
     if request.method == "POST":
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect("profile")  # Redirect to profile page after update
+            return redirect("account:profile")  # Redirect to profile page after update
     else:
         form = ProfileForm(instance=profile)
 
