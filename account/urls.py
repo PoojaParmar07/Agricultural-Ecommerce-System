@@ -1,8 +1,7 @@
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-# from account.views import handlelog,handleregi,handlelgout,user_list,user_add,user_view_details
-from account.views import user_list,user_add,user_view_details,handleregi
+from account.views import *
 from .views import *
 from django.contrib.auth.views import LogoutView
 
