@@ -19,7 +19,7 @@ urlpatterns = [
     path('user_view_details/<int:pk>',user_view_details,name='user_view_details'),
     
     # path('profile_view/',profile_view,name="profile_view"),
-    path("profile/", upload_profile_image, name="profile"),
+    path("profile/", update_profile, name="profile"),
     
     
     

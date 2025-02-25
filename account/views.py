@@ -194,14 +194,32 @@ def user_view_details(request,pk):
 #     return render(request, 'Ecommerce/user_profile.html', {'form': form})
 
 
+
+
 @login_required
-def upload_profile_image(request):
+def update_profile(request):
+    user = request.user  # Get the currently logged-in user
+
     if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        form = ProfileForm(request.POST, request.FILES, instance=user)
+
         if form.is_valid():
-            form.save()
-            return redirect('profile')  # Change to your profile URL
+            user = form.save(commit=False)
+
+            # Check if a new image is uploaded
+            if 'image' in request.FILES:
+                user.image = request.FILES['image']
+
+            user.save()
+            messages.success(request, "Profile Updated Successfully")  # ✅ Fixed messages
+            return redirect('account:profile')  # Redirect to profile page after update
+
     else:
-        form = ProfileForm(instance=request.user)
+        form = ProfileForm(instance=user)
 
     return render(request, 'Ecommerce/user_profile.html', {'form': form})
+    
+
+
+
+

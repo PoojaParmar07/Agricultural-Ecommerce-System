@@ -64,9 +64,15 @@ class DeleteUserForm(forms.ModelForm):
         ]
         
 
+
+
 class ProfileForm(forms.ModelForm):
     class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 
-            'city', 'state', 'pincode', 
-            'mobile_number', 'address','image']
+        model = CustomUser  # Assuming you're using Django's built-in User model
+        fields = ['username', 'email', 'mobile_number', 'address', 'city', 'state', 'pincode', 'image']
+
+    # Ensure `image` is optional in form validation
+    image = forms.ImageField(required=False)
+
+        
+
