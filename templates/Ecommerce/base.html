@@ -92,9 +92,7 @@
           <ul class="category-dropdown-menu">
             {% for category in categories %}
             <li>
-              <a href="{% url 'Ecommerce:product_list' category.category_id %}"
-                >{{ category.category_name }}</a
-              >
+              <a href="{% url 'Ecommerce:product_list' category.category_id %}">{{ category.category_name }}</a>
             </li>
             {% endfor %}
           </ul>
@@ -133,9 +131,9 @@
           
           <!-- Newsletter & Membership Section -->
           <div class="newsletter">
-              <h3>Exclusive Offers & Discounts</h3>
+              <h3>To Get Exclusive Offers & Discounts</h3>
               <h1>Become a <strong>Premium Member</strong></h1>
-              <p>Get special discounts</p>
+              {% comment %} <p>Get special discounts</p> {% endcomment %}
               <div class="newsletter-input">
                   <button>Join Now</button>
               </div>
@@ -143,41 +141,38 @@
 
           <!-- Footer Links -->
           <div class="footer-links">
+             
               <div class="column">
-                  <h4>Contact Us</h4>
-                  <ul>
-                      <li><a href="tel:+919913883517"><i class='bx bx-phone-call'></i> +91 99138 83517</a></li>
-                      <li><a href="mailto:jyotiagro123@gmail.com"><i class='bx bx-envelope'></i> jyotiagro123@gmail.com</a></li>
-                      <li><a href="#"><i class='bx bx-map'></i> JamalPur, Ahmedabad, Gujarat</a></li>
-                  </ul>
-              </div>
+                <h4>Categories</h4>
+                <ul>
+                  {% for category in categories %}
+                    <li><a href="{% url 'Ecommerce:product_list' category.category_id %}">{{ category.category_name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
               <div class="column">
                   <h4>Quick Links</h4>
                   <ul>
-                      <li><a href="#">Home</a></li>
+                      <li><a href="{% url 'Ecommerce:homepage' %}">Home</a></li>
                       <li><a href="#">About</a></li>
                       <li><a href="#">Enquiry</a></li>
-                      <li><a href="#">Services</a></li>
-                  </ul>
-              </div>
-              <div class="column">
-                  <h4>Categories</h4>
-                  <ul>
-                      <li><a href="#">Seeds</a></li>
-                      <li><a href="#">Fertilizers</a></li>
-                      <li><a href="#">Pesticides</a></li>
-                      <li><a href="#">Tools</a></li>
                   </ul>
               </div>
               <div class="column">
                   <h4>Support</h4>
                   <ul>
                       <li><a href="#">FAQs</a></li>
-                      <li><a href="#">Privacy Policy</a></li>
-                      <li><a href="#">Terms & Conditions</a></li>
                       <li><a href="#">Contact Support</a></li>
                   </ul>
               </div>
+              <div class="column">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li><a href="tel:+919913883517"><i class='bx bx-phone-call'></i> +91 99138 83517</a></li>
+                    <li><a href="mailto:jyotiagro123@gmail.com"><i class='bx bx-envelope'></i> jyotiagro123@gmail.com</a></li>
+                    <li><a href="#"><i class='bx bx-map'></i> JamalPur, Ahmedabad, Gujarat</a></li>
+                </ul>
+            </div>
           </div>
 
       </div>
