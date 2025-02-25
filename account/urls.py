@@ -17,8 +17,6 @@ urlpatterns = [
     path('user_list/',user_list,name='user_list'),
     path('user_add/',user_add,name='user_add'),
     path('user_view_details/<int:pk>',user_view_details,name='user_view_details'),
-    
-    # path('profile_view/',profile_view,name="profile_view"),
     path("profile/", update_profile, name="profile"),
     
     
