@@ -60,13 +60,18 @@ class DeleteUserForm(forms.ModelForm):
             'username', 'email', 
             'city', 'state', 'pincode', 
             'mobile_number', 'address', 
-            'is_staff', 'is_superuser', 'is_active'
+            'is_staff', 'is_superuser','is_active'
         ]
         
 
+
+
 class ProfileForm(forms.ModelForm):
     class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 
-            'city', 'state', 'pincode', 
-            'mobile_number', 'address','image']
+        model = CustomUser  
+        fields = ['username', 'email', 'mobile_number', 'address', 'city', 'state', 'pincode', 'image']
+
+    image = forms.ImageField(required=False)
+
+        
+
