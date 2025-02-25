@@ -97,7 +97,7 @@
             {% csrf_token %}
             <div class="profile text-center">
                 {% if user.image %}
-                    <img src="{{ user.image }}" alt="Profile Image" class="profile-img">
+                    <img src="{{ user.image.url }}" alt="Profile Image" class="profile-img">
                 {% else %}
                     <img src="{% static 'default_profile.png' %}" alt="Profile Image" class="profile-img">
                 {% endif %}
