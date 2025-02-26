@@ -196,13 +196,25 @@ def user_view_details(request,pk):
 
 @login_required
 def update_profile(request):
-    profile = request.user.image
-    if request.method == "POST":
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect("account:profile")  # Redirect to profile page after update
-    else:
-        form = ProfileForm(instance=profile)
+    user = request.user
 
-    return render(request, "Ecommerce/user_profile.html", {"form": form})
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            # Check if a new image is uploaded
+            if 'image' in request.FILES:
+                user.image = request.FILES['image']
+
+            user.save()
+            messages.success(request, "Profile Updated Successfully")
+            return redirect('account:profile')
+        else:
+            print(form.errors)  # Debugging line to see errors
+
+    else:
+        form = ProfileForm(instance=user)
+
+    return render(request, 'Ecommerce/user_profile.html', {'form': form})
