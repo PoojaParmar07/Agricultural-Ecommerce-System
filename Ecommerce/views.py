@@ -175,15 +175,13 @@ def product_list(request, category_id):
 def product_view(request, product_id):
     product = get_object_or_404(Product, product_id=product_id)
     print(f"Product ID: {product.product_id}")  # Debugging
+
     # Fetch variants and related brands
-    variants = list(ProductVariant.objects.filter(
-        product=product).select_related('brand'))
+    variants = list(ProductVariant.objects.filter(product=product).select_related('brand'))
 
     # Fetch inventory related to those variants
-    inventories = Inventory.objects.filter(
-        batch__variant__in=variants).select_related('batch__variant')
-    inventory_quantity = sum(
-        inventory.quantity for inventory in inventories) if inventories else 0
+    inventories = Inventory.objects.filter(batch__variant__in=variants).select_related('batch__variant')
+    inventory_quantity = sum(inventory.quantity for inventory in inventories) if inventories else 0
 
     # Build variant prices dictionary
     variant_prices = {
@@ -192,14 +190,11 @@ def product_view(request, product_id):
     }
 
     # Get the first available price, else "N/A"
-    first_price = next(
-        (price for price in variant_prices.values() if price is not None), "N/A")
+    first_price = next((price for price in variant_prices.values() if price is not None), "N/A")
 
     # Calculate average rating
-    rating_data = Review.objects.filter(
-        product=product).aggregate(avg_rating=Avg('rating'))
-    rating = round(rating_data['avg_rating'],
-                   1) if rating_data['avg_rating'] is not None else 0
+    rating_data = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))
+    rating = round(rating_data['avg_rating'], 1) if rating_data['avg_rating'] is not None else 0
 
     # Fetch reviews in descending order
     reviews = Review.objects.filter(product=product).order_by('-created_at')
@@ -209,11 +204,16 @@ def product_view(request, product_id):
     if request.user.is_authenticated:
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
-        cart_product_ids = list(cart_items.values_list(
-            "product_variant__product__product_id", flat=True))
+        cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
 
-    # ✅ Handle review submission
-    if request.method == "POST":
+        # ✅ Check if the user has placed an order for this product
+        has_ordered = Order_Item.objects.filter(order__user=request.user, variant__product=product).exists()
+
+    else:
+        has_ordered = False
+
+    # ✅ Handle review submission only if user has placed an order
+    if request.method == "POST" and has_ordered:
         rating_value = request.POST.get('rating')
         review_text = request.POST.get('comment')
 
@@ -225,6 +225,8 @@ def product_view(request, product_id):
                 review=review_text.strip()  # Trim spaces
             )
             return redirect('Ecommerce:product_view', product_id=product.product_id)
+    else:
+        messages.error(request," You can only review this product if you have placed an order.")
 
     # Prepare product data
     product_data = {
@@ -234,10 +236,11 @@ def product_view(request, product_id):
         'description': product.description,
         'rating': rating,
         'first_price': first_price,
-
     }
-    print("✅ Variant Prices JSON:", json.dumps(
-        variant_prices, ensure_ascii=False))
+
+    print("✅ Variant Prices JSON:", json.dumps(variant_prices, ensure_ascii=False))
+    print(f"Inventory: {inventory_quantity}")
+
     context = {
         'product': product_data,
         'inventory_quantity': inventory_quantity,
@@ -245,10 +248,11 @@ def product_view(request, product_id):
         'reviews': reviews,
         'variants': variants,
         'cart_product_ids': cart_product_ids,  # ✅ Add cart products for button logic
+        'has_ordered': has_ordered,  # ✅ Pass order status to template
     }
-    print(f"Inventory{inventory_quantity}")
 
     return render(request, 'Ecommerce/product_view.html', {**context, 'variant_prices': json.dumps(variant_prices)})
+
 
 
 # View Cart
