@@ -112,7 +112,7 @@ def add_brand(request):
             else:
                 form.save()
                 messages.success(request, "Brand added successfully.")
-                return redirect('membership:list_brand')
+                return redirect('admin_dashboard:list_brand')
     else:
         form = BrandForm()
         

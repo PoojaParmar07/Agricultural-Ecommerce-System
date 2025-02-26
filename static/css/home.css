@@ -419,9 +419,9 @@ flex: 1;
 
 
 .message.error {
-    background-color: rgba(255, 0, 25, 0.451);
+    background-color: rgba(255, 0, 25, 0.575);
     color: #FFFFFF;
-    border-color: rgba(255, 0, 25, 0.451);
+    border-color: rgba(224, 26, 45, 0.451);
     margin:5px 20px;
 }
 
