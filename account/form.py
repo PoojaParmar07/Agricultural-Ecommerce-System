@@ -75,13 +75,13 @@ class DeleteUserForm(forms.ModelForm):
             'is_staff', 'is_superuser', 'is_active'
         ]
         widgets = {
-            'username': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'email': forms.EmailInput(attrs={'readonly': 'readonly'}),
-            'city': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'state': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'pincode': forms.NumberInput(attrs={'readonly': 'readonly'}),
-            'mobile_number': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'address': forms.Textarea(attrs={'rows': 3, 'readonly': 'readonly'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'state': forms.TextInput(attrs={'class': 'form-control'}),
+            'pincode': forms.NumberInput(attrs={'class': 'form-control'}),
+            'mobile_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
 
 
