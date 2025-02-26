@@ -61,7 +61,6 @@ class AddUserForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match.")
         return confirm_password
 
-
 class DeleteUserForm(forms.ModelForm):
     is_staff = forms.BooleanField(required=False, label="Staff Status", disabled=True)
     is_superuser = forms.BooleanField(required=False, label="Superuser Status", disabled=True)
@@ -73,9 +72,17 @@ class DeleteUserForm(forms.ModelForm):
             'username', 'email', 
             'city', 'state', 'pincode', 
             'mobile_number', 'address', 
-            'is_staff', 'is_superuser','is_active'
+            'is_staff', 'is_superuser', 'is_active'
         ]
-        
+        widgets = {
+            'username': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'email': forms.EmailInput(attrs={'readonly': 'readonly'}),
+            'city': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'state': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'pincode': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'mobile_number': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'address': forms.Textarea(attrs={'rows': 3, 'readonly': 'readonly'}),
+        }
 
 
 
