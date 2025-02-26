@@ -27,7 +27,7 @@ class UserMembershipForm(forms.ModelForm):
             'plan': forms.Select(attrs={'class': 'form-control'}),  # Dropdown for selecting a plan
             'membership_start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'membership_end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'status': forms.Select(attrs={'class': 'form-control'}),  # Dropdown for selecting status
+            'status': forms.CheckboxInput(attrs={'class': 'form-control'}),  # Dropdown for selecting status
         }
         
     
