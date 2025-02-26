@@ -245,7 +245,7 @@
 
 /* Body */
 .container {
-    min-height: 340px;
+    min-height: 550px;
     width: 100%;
     
 }
@@ -419,10 +419,10 @@ flex: 1;
 
 
 .message.error {
-    background-color: #ff0015;
+    background-color: rgba(255, 0, 25, 0.318);
     color: #FFFFFF;
-    border-color: #ff0019;
-    margin:0px 20px;
+    border-color: rgba(255, 0, 25, 0.318);
+    margin:5px 20px;
 }
 
 .message.success {

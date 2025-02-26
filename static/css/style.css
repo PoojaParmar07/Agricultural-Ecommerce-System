@@ -8,6 +8,8 @@
     font-style: medium;
     font-variation-settings:
         "width" 100;
+        list-style: none;
+    text-decoration: none;
 }
 
 
@@ -213,9 +215,9 @@ header {
 
 
 .message.error {
-    background-color: #ff0015;
+    background-color: #ff001941;
     color: #FFFFFF;
-    border-color: #ff0019;
+    border-color: #ff001941;
     margin:0px 20px;
 }
 
@@ -266,13 +268,15 @@ main header button
     color: #333;
     padding: 10px;
     display: inline-block;
+    margin-left: 22px;
+    
 }
 
 .settings .dropdown-menu {
     display: none;
     position: absolute;
-    top: 100%; /* Positions dropdown below parent */
-    left: 0;
+    top: -90%; /* Positions dropdown below parent */
+    left: 13%;
     background: #FFFFFF;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -299,4 +303,11 @@ main header button
 
 .settings .dropdown:hover .dropdown-menu {
     display: block;
+}
+
+.settings .dropdown box-icon{
+    fill: black;
+    position: absolute;
+    top: 20%;
+    left: 0;
 }
