@@ -7,12 +7,14 @@
 }
 .confirmation-box {
     background: #ffffff;
-    padding: 30px;
+    padding: 0 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     /* max-width: 487px; */
     width: 483px;
+    
+    
 }
 .icon-container {
     display: flex;
