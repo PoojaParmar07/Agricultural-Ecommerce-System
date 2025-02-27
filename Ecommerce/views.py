@@ -17,6 +17,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from account.models import *
 from account.form import *
+from django.core.paginator import Paginator
 
 
 def is_admin_user(user):
@@ -34,10 +35,11 @@ def home(request):
         for category in categories
     ]
 
+    products = Product.objects.all()
+    
     cart_count = cart_items.values(
         "product_variant__product").distinct().count()
 
-    products = Product.objects.all()
     product_data = []
 
     # Default empty cart_product_ids (for non-logged-in users)
@@ -57,6 +59,8 @@ def home(request):
         rating = Review.objects.filter(product=product).aggregate(
             avg_rating=Avg('rating'))['avg_rating']
 
+    
+
         product_data.append({
             'product_id': product.product_id,
             'product_name': product.product_name,
@@ -64,7 +68,7 @@ def home(request):
             'sales_price': sales_price if sales_price is not None else "N/A",
             'rating': rating if rating is not None else 0
         })
-
+    
     return render(request, "Ecommerce/base.html", {
         'categories': category_data,
         'product_data': product_data,
@@ -95,6 +99,16 @@ def homepage(request):
     # Default empty cart_product_ids (for non-logged-in users)
     cart_product_ids = []
 
+
+    product_name = request.GET.get('product_name')
+    
+    if product_name != '' and product_name is not None:
+        products = products.filter(product_name__icontains = product_name)
+
+    paginator = Paginator(products,2)
+    page = request.GET.get('page')
+    products = paginator.get_page(page)
+
     if request.user.is_authenticated:
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
@@ -119,6 +133,7 @@ def homepage(request):
             'sales_price': sales_price if sales_price else "N/A",
             'rating': rating,
             'inventory_quantity': inventory_quantity if inventory_quantity else 0,
+            'products' :products,
         })
 
     return render(request, "Ecommerce/homepage.html", {

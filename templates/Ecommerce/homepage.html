@@ -104,6 +104,15 @@
                 </div>
             </div>
         {% endfor %}
+
+        {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}" class="prev-page">Previous</a>
+
+        {% endif %}
+            <p>{{ products.number }} of {{ products.paginator.num_pages }}</p>
+        {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}" class="next-page">Next</a
+        {% endif %}
     </div>
 </section>
 

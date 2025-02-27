@@ -36,8 +36,11 @@
 
         <!-- Search Bar -->
         <div class="search-bar">
-          <div class="search-icon"><box-icon name="search"></box-icon></div>
-          <input type="text" placeholder="Search anything" />
+          <form method="GET" action="">
+            <input type="search" placeholder="Search anything" name="product_name"/>
+            <button class="search-icon"><box-icon name="search"></box-icon></button>
+            {% comment %} <button type="button">Search</button> {% endcomment %}
+          </form>
           <button><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
       </div>
