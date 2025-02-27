@@ -18,6 +18,7 @@ from xhtml2pdf import pisa
 from account.models import *
 from account.form import *
 from django.core.paginator import Paginator
+from django.views.generic import ListView
 
 
 def is_admin_user(user):
@@ -100,14 +101,14 @@ def homepage(request):
     cart_product_ids = []
 
 
-    product_name = request.GET.get('product_name')
+    # product_name = request.GET.get('product_name', '').strip()
     
-    if product_name != '' and product_name is not None:
-        products = products.filter(product_name__icontains = product_name)
+    # if product_name != '' and product_name is not None:
+    #     products = products.filter(product_name__icontains = product_name)
 
-    paginator = Paginator(products,2)
-    page = request.GET.get('page')
-    products = paginator.get_page(page)
+    # paginator = Paginator(products,5)
+    # page = request.GET.get('page')
+    # products = paginator.get_page(page)
 
     if request.user.is_authenticated:
         cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -133,7 +134,7 @@ def homepage(request):
             'sales_price': sales_price if sales_price else "N/A",
             'rating': rating,
             'inventory_quantity': inventory_quantity if inventory_quantity else 0,
-            'products' :products,
+            # 'products' :products,
         })
 
     return render(request, "Ecommerce/homepage.html", {
@@ -802,3 +803,24 @@ def remove_from_wishlist(request, item_id):
     print(f"Removed wishlist item: {item_id}")  # Debugging line
 
     return redirect('Ecommerce:wishlist')
+
+
+class ProductListView(ListView):
+    model = Product
+    template_name = "Ecommerce/product_list.html"  # Your template file
+    context_object_name = "products"
+    paginate_by = 2  # Add pagination (optional)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        product_name = self.request.GET.get('product_name', '')
+        
+        if product_name:
+            queryset = queryset.filter(product_name__icontains=product_name)
+        
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_query"] = self.request.GET.get("product_name", "")
+        return context
