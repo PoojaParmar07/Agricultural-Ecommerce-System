@@ -38,7 +38,7 @@ urlpatterns = [
     #  path("reports/sales-purchase/", sales_purchase_report, name="sales_purchase_report"),
 
     
-    path('products/', ProductListView.as_view(), name='product_list'),
+    path("search-results/", ProductSearchView.as_view(), name="search_results"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

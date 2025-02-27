@@ -805,22 +805,21 @@ def remove_from_wishlist(request, item_id):
     return redirect('Ecommerce:wishlist')
 
 
-class ProductListView(ListView):
+
+class ProductSearchView(ListView):
     model = Product
-    template_name = "Ecommerce/searcha.html"  # Your template file
+    template_name = "Ecommerce/search.html"
     context_object_name = "products"
-    paginate_by = 2  # Add pagination (optional)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        product_name = self.request.GET.get('product_name', '')
-        
-        if product_name:
-            queryset = queryset.filter(product_name__icontains=product_name)
-        
-        return queryset
+        query = self.request.GET.get("product_name", "")
+        if query:
+            return Product.objects.filter(product_name__icontains=query)
+        return Product.objects.none()  # Return an empty queryset if no search
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["search_query"] = self.request.GET.get("product_name", "")
         return context
+    
+    
