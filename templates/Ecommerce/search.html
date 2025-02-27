@@ -1,10 +1,12 @@
 {% extends "Ecommerce/base.html" %}
 
 {% block content %}
-<section class="search-section">
-    <h2>Search Products</h2>
+<section class="search-results">
+    <h2>Search Results</h2>
 
-    
+    {% if search_query %}
+        <p>Showing results for: <strong>{{ search_query }}</strong></p>
+    {% endif %}
 
     <div class="product-list">
         {% for product in products %}
