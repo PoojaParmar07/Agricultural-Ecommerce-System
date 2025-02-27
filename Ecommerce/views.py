@@ -13,11 +13,23 @@ from datetime import date
 from decimal import Decimal
 # from django.http import HttpResponse
 import json
+import os
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from account.models import *
 from account.form import *
 from django.core.paginator import Paginator
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle, Image
+from PIL import Image as PILImage
+from reportlab.lib.styles import getSampleStyleSheet
+from PIL import Image as PILImage
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.units import inch
+from reportlab.lib.utils import ImageReader
+
 
 
 def is_admin_user(user):
@@ -802,3 +814,13 @@ def remove_from_wishlist(request, item_id):
     print(f"Removed wishlist item: {item_id}")  # Debugging line
 
     return redirect('Ecommerce:wishlist')
+
+
+
+
+
+
+
+
+
+
