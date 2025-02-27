@@ -35,7 +35,7 @@ urlpatterns = [
     path('wishlist/', wishlist_view, name='wishlist'),
     path('add/<int:variant_id>/', add_to_wishlist, name='add_to_wishlist'),
     path('remove/<int:item_id>/',remove_from_wishlist, name='remove_from_wishlist'),
-     path("reports/sales-purchase/", sales_purchase_report, name="sales_purchase_report"),
+ 
 
     
     
