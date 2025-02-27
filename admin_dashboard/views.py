@@ -558,7 +558,7 @@ def payment_view_details(request,pk):
     form = PaymentForm(instance=payment)
     if request.method=='POST':
         if 'update' in request.POST:
-            form=OrderItemForm(request.POST,instance=payment)
+            form=PaymentForm(request.POST,instance=payment)
             if form.is_valid():
                 form.save()
                 messages.success(request,"Payment updated successfully")

@@ -47,7 +47,10 @@
 }
 
 .search-icon{
-    padding: 10px 0px 5px 10px;
+    /* padding: 10px 0px 5px 10px; */
+    position:absolute;
+    top: 3%;
+    right: 57.5%;
     fill: #5b5b5b;
 }
 
