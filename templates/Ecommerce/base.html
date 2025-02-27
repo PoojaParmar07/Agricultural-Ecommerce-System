@@ -36,11 +36,10 @@
 
         <!-- Search Bar -->
         <div class="search-bar">
-          <form method="GET" action="">
-            <input type="search" placeholder="Search anything" name="product_name"/>
-            <button class="search-icon"><box-icon name="search"></box-icon></button>
-            {% comment %} <button type="button">Search</button> {% endcomment %}
-          </form>
+          <form method="GET" action="{% url 'product_list' %}">
+            <input type="text" name="product_name" placeholder="Search products..." value="{{ search_query }}">
+            <button type="submit">Search</button>
+        </form>
           <button><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
       </div>

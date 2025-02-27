@@ -4,10 +4,7 @@
 <section class="search-section">
     <h2>Search Products</h2>
 
-    <form method="GET" action="{% url 'product_list' %}">
-        <input type="text" name="product_name" placeholder="Search products..." value="{{ search_query }}">
-        <button type="submit">Search</button>
-    </form>
+    
 
     <div class="product-list">
         {% for product in products %}

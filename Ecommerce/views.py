@@ -807,7 +807,7 @@ def remove_from_wishlist(request, item_id):
 
 class ProductListView(ListView):
     model = Product
-    template_name = "Ecommerce/product_list.html"  # Your template file
+    template_name = "Ecommerce/searcha.html"  # Your template file
     context_object_name = "products"
     paginate_by = 2  # Add pagination (optional)
 
