@@ -36,7 +36,7 @@
 
         <!-- Search Bar -->
         <div class="search-bar">
-          <form method="GET" action="{% url 'product_list' %}">
+          <form method="GET" action="{% url 'Ecommerce:product_list' %}">
             <input type="text" name="product_name" placeholder="Search products..." value="{{ search_query }}">
             <button type="submit">Search</button>
         </form>
