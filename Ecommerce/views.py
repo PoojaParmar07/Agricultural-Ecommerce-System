@@ -475,8 +475,7 @@ def checkout(request):
     selected_pincode_id = request.GET.get("pincode")
 
     # Filter pincodes based on selected city
-    pincodes = Pincode.objects.filter(
-        city_id=selected_city_id) if selected_city_id else []
+    pincodes = Pincode.objects.filter(city_id=selected_city_id) if selected_city_id else []
 
     # Check for active membership
     user_membership = User_membership.objects.filter(
@@ -494,22 +493,23 @@ def checkout(request):
 
     # Calculate grand total
     grand_total = sum(Decimal(item.total_price) for item in cart_items)
-    discount_amount = (grand_total * membership_discount /
-                       Decimal(100)) if user_membership else Decimal(0)
+    discount_amount = (grand_total * membership_discount / Decimal(100)) if user_membership else Decimal(0)
     total_after_discount = grand_total - discount_amount
 
     # ✅ Fetch delivery charge for selected pincode (default to 0 if not found)
     delivery_charge = Decimal(0)
     if selected_pincode_id:
         try:
-            pincode_instance = Pincode.objects.get(
-                area_pincode=selected_pincode_id)
+            pincode_instance = Pincode.objects.get(area_pincode=selected_pincode_id)
             delivery_charge = Decimal(pincode_instance.delivery_charges)
         except Pincode.DoesNotExist:
-            # Default to free shipping if pincode not found
-            delivery_charge = Decimal(0)
+            delivery_charge = Decimal(0)  # Default to free shipping if pincode not found
 
-    # ✅ Update total after adding delivery charge
+    # ✅ Apply free shipping if user is a member
+    if is_member:
+        delivery_charge = Decimal(0)
+
+    # ✅ Update total after checking membership status
     final_total = total_after_discount + delivery_charge
 
     context = {
@@ -523,10 +523,11 @@ def checkout(request):
         "pincodes": pincodes,
         "selected_city_id": selected_city_id,
         "selected_pincode_id": selected_pincode_id,
-        "delivery_charge": delivery_charge,  # Pass to template
+        "delivery_charge": delivery_charge,  # Pass updated delivery charge
     }
 
     return render(request, "Ecommerce/checkout_page.html", context)
+
 
 
 def get_delivery_charge_ajax(request, pincode_id):
