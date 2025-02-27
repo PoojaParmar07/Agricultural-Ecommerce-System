@@ -1,0 +1,133 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales & Purchase Order Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h2 { background: #007bff; color: white; padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <h2>Sales Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Unit</th>
+                <th>Total Quantity Sold</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in sales_data %}
+            <tr>
+                <td>{{ item.batch__variant__product__product_name }}</td>
+                <td>{{ item.batch__variant__brand__brand_name }}</td>
+                <td>{{ item.batch__variant__units }}</td>
+                <td>{{ item.total_quantity }}</td>
+                <td>₹{{ item.total_revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Purchase Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Unit</th>
+                <th>Total Quantity Purchased</th>
+                <th>Total Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.batch__variant__product__product_name }}</td>
+                <td>{{ purchase.batch__variant__brand__brand_name }}</td>
+                <td>{{ purchase.batch__variant__units }}</td>
+                <td>{{ purchase.total_quantity }}</td>
+                <td>₹{{ purchase.total_cost }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
+{% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales & Purchase Order Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h2 { background: #007bff; color: white; padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <h2>Sales Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Unit</th>
+                <th>Total Quantity Sold</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in sales_data %}
+            <tr>
+                <td>{{ item.batch__variant__product__product_name }}</td>
+                <td>{{ item.batch__variant__brand__brand_name }}</td>
+                <td>{{ item.batch__variant__units }}</td>
+                <td>{{ item.total_quantity }}</td>
+                <td>₹{{ item.total_revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Purchase Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Unit</th>
+                <th>Total Quantity Purchased</th>
+                <th>Total Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.batch__variant__product__product_name }}</td>
+                <td>{{ purchase.batch__variant__brand__brand_name }}</td>
+                <td>{{ purchase.batch__variant__units }}</td>
+                <td>{{ purchase.total_quantity }}</td>
+                <td>₹{{ purchase.total_cost }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
