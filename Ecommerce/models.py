@@ -108,6 +108,7 @@ class Inventory(models.Model):
             self.save()
         else:
             raise ValueError("Not enough stock available")
+
     
       
 class City(models.Model):

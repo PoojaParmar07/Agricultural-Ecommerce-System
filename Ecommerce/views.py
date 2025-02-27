@@ -17,6 +17,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from account.models import *
 from account.form import *
+from django.db.models import Sum
 
 
 def is_admin_user(user):
@@ -787,3 +788,27 @@ def remove_from_wishlist(request, item_id):
     print(f"Removed wishlist item: {item_id}")  # Debugging line
 
     return redirect('Ecommerce:wishlist')
+
+
+def sales_purchase_report(request):
+    # Sales Report Data
+    sales_orders = Order.objects.filter(order_status="delivered").order_by("-create_at")
+    sales_data = Order_Item.objects.select_related("order", "batch", "variant").filter(order__order_status="delivered").values(
+        "batch__variant__product__product_name",
+        "batch__variant__brand__brand_name",
+        "batch__variant__units",
+    ).annotate(total_quantity=Sum("quantity"), total_revenue=Sum("price"))
+
+    # Purchase Report Data (Stock added to Inventory)
+    purchases = Inventory.objects.all().values(
+        "batch__variant__product__product_name",
+        "batch__variant__brand__brand_name",
+        "batch__variant__units",
+    ).annotate(total_quantity=Sum("quantity"), total_cost=Sum("purchase_price"))
+
+    context = {
+        "sales_orders": sales_orders,
+        "sales_data": sales_data,
+        "purchases": purchases,
+    }
+    return render(request, "Ecommerce/report.html", context)
