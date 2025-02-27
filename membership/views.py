@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.http import Http404
 from django.utils.timezone import now
+from django.urls import reverse
 from datetime import timedelta
 from account.models import CustomUser
 
@@ -114,38 +115,31 @@ def user_membership(request):
 
 
 @login_required
-@user_passes_test(is_admin_user)  # Ensure only admin users can access
+@user_passes_test(is_admin_user)  
 def add_user_membership(request):
-    
     context = {
-        'model_name' : "User Member",
-        'list':'membership:user_membership',
+        'model_name': "User Member",
+        'list': reverse('membership:user_membership'), 
     }
     
     if request.method == "POST" and 'plan' in request.POST:
         form = UserMembershipForm(request.POST)
         if form.is_valid():
-            plan_id = form.cleaned_data.get('plan')  # Fetch the selected plan from the form
-            # Check if the user already has an active membership for the selected plan
+            plan_id = form.cleaned_data.get('plan')  
             existing_membership = User_membership.objects.filter(user=request.user, plan=plan_id).exists()
             
             if existing_membership:
                 messages.error(request, "You already have an active membership for this plan.")
                 return render(request, 'admin_dashboard/add_form.html', {'form': form})
             
-            # Proceed to create the membership if no active membership exists
             membership = form.save(commit=False)
-            membership.user = request.user  # Assign the logged-in user
-            membership.plan = plan_id  # Assign the selected plan
-
-            # Calculate membership_end_date
-            start_date = membership.membership_start_date
-            membership.membership_end_date = start_date + timedelta(days=365)
-
-            # Save the membership
+            membership.user = request.user  
+            membership.plan = plan_id  
+            membership.membership_end_date = membership.membership_start_date + timedelta(days=365)
             membership.save()
+            
             messages.success(request, "User membership added successfully!")
-            return redirect('membership:user_membership')
+            return redirect(reverse('membership:user_membership'))  # ✅ Fixed
         else:
             messages.error(request, "Error adding user membership. Please check the form.")
     else:

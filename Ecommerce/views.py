@@ -134,6 +134,8 @@ def product_list(request, category_id):
 
     product_data = []
     cart_product_ids = []  # Default empty cart for unauthenticated users
+    
+    
 
     # Check if the user is logged in, then get cart details
     if request.user.is_authenticated:
