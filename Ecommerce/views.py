@@ -1,6 +1,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import Http404, JsonResponse, HttpResponse
+from django.http import Http404, JsonResponse, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from Ecommerce.models import *
@@ -19,7 +20,7 @@ from account.models import *
 from account.form import *
 from django.core.paginator import Paginator
 from django.views.generic import ListView
-
+from django.db.models import F
 
 def is_admin_user(user):
     return user.is_authenticated and user.is_staff  # Example function
@@ -806,20 +807,60 @@ def remove_from_wishlist(request, item_id):
 
 
 
+# class ProductSearchView(ListView):
+#     model = Product
+#     template_name = "Ecommerce/search.html"
+#     context_object_name = "products"
+    
+#     home = "Ecommerce:homepage"
+
+    
+#     def get_queryset(self):
+#         query = self.request.GET.get("product_name", "")
+#         if query:
+#             products = Product.objects.filter(product_name__icontains=query)
+#             if not products.exists():  # Redirect if no products found
+#                 return redirect("Ecommerce:homepage")
+#             return products
+#         return Product.objects.none()
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["search_query"] = self.request.GET.get("product_name", "")
+#         return context
+    
 class ProductSearchView(ListView):
     model = Product
     template_name = "Ecommerce/search.html"
     context_object_name = "products"
-
+    
     def get_queryset(self):
         query = self.request.GET.get("product_name", "")
         if query:
-            return Product.objects.filter(product_name__icontains=query)
-        return Product.objects.none()  # Return an empty queryset if no search
-
+            products = Product.objects.filter(product_name__icontains=query).annotate(
+                sales_price=F("productbatch__inventory__sales_price"),
+                # variant_id=F("productbatch__productvariant__variant_id")  
+            )
+            if not products.exists():
+                return HttpResponseRedirect(reverse("Ecommerce:homepage")) 
+            return products
+        return Product.objects.none()
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_query"] = self.request.GET.get("product_name", "")
+        search_query = self.request.GET.get("product_name", "")
+        context["search_query"] = search_query
+
+        if self.request.user.is_authenticated:
+            # Fetch product IDs instead of product_batch_id
+            cart_items = CartItem.objects.filter(cart__user=self.request.user).values_list("product_batch__product_id", flat=True)
+            wishlist_items = WishlistItem.objects.filter(wishlist__user=self.request.user).values_list("product_batch__product_id", flat=True)
+        else:
+            cart_items = []
+            wishlist_items = []
+
+        context["cart_product_ids"] = list(cart_items)  # Convert to list for easier template use
+        context["wishlist_product_ids"] = list(wishlist_items)
+        
         return context
-    
-    
+
