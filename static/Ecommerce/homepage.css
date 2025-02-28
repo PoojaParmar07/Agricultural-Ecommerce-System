@@ -430,6 +430,7 @@ nav ul li a {
     border-radius: 10px;
 }
 
+
 /* Wishlist Icon */
 .wishlist-icon {
     position: absolute;
@@ -445,7 +446,10 @@ nav ul li a {
     justify-content: center;
 }
 
-
+.wishlist-icon:hover {
+    background: rgba(162, 3, 67, 0.8);
+    transform: scale(1.0);
+}
 
 .wishlist-icon box-icon {
     width: 22px;
@@ -453,15 +457,8 @@ nav ul li a {
 }
 
 .wishlist-icon:hover box-icon {
-    /* color: rgba(255, 0, 0, 0.8);
-    fill: rgba(255, 0, 0, 0.8); */
-    display: inline-block;  /* Ensures it wraps the icon properly */
-    background-color: rgba(255, 0, 0, 0.8); /* Light red background */
-    
-    border-radius: 50%; /* Makes it circular */
-    transition: background-color 0.3s ease; /* Smooth transition */
+    fill: white;
 }
-
 /* Product Details */
 .product-details {
     padding: 15px 14px 8px 14px;

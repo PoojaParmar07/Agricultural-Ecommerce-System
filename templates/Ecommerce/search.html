@@ -1,37 +1,250 @@
 {% extends "Ecommerce/base.html" %}
-
 {% block content %}
+
 <section class="search-results">
-    <h2>Search Results</h2>
+    
 
-    {% if search_query %}
+    {% comment %} {% if search_query %}
         <p>Showing results for: <strong>{{ search_query }}</strong></p>
-    {% endif %}
+    {% endif %} {% endcomment %}
 
-    <div class="product-list">
+    <div class="products-container">
         {% for product in products %}
             <div class="product-card">
-                <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
-                <h3>{{ product.product_name }}</h3>
-                <p>₹{{ product.sales_price }}</p>
+                <div class="product-image-container">
+                    <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
+                    
+                    <!-- Wishlist Icon -->
+                    <a href="#" class="wishlist-icon">
+                        {% if product.id in wishlist_product_ids %}
+                            <box-icon type='solid' name='heart' color='red'></box-icon>
+                        {% else %}
+                            <box-icon name='heart'></box-icon>
+                        {% endif %}
+                    </a>
+
+                </div>
+
+                <div class="product-details">
+                    <div class="product-header">
+                        <a href="{% url 'Ecommerce:product_view' product.product_id %}">
+                            <h3>{{ product.product_name }}</h3>
+                        </a>
+                    </div>
+
+                    <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+
+                    <!-- Add to Cart Button -->
+                    {% if product.product_id in cart_product_ids %}
+                    <a href="{% url 'Ecommerce:cart_view' %}">
+                        <button class="add-to-cart">Go to Cart</button>
+                    </a>
+                {% else %}
+                    <a href="{% url 'Ecommerce:add_to_cart' product.product_id %}">
+                        <button class="add-to-cart">Add to Cart</button>
+                    </a>
+                {% endif %}
+                
+                </div>
             </div>
-        {% empty %}
-            <p>No products found.</p>
         {% endfor %}
     </div>
 
+    <!-- Pagination -->
     {% if is_paginated %}
         <div class="pagination">
             {% if page_obj.has_previous %}
                 <a href="?product_name={{ search_query }}&page={{ page_obj.previous_page_number }}">Previous</a>
             {% endif %}
-
             <p>Page {{ page_obj.number }} of {{ paginator.num_pages }}</p>
-
             {% if page_obj.has_next %}
                 <a href="?product_name={{ search_query }}&page={{ page_obj.next_page_number }}">Next</a>
             {% endif %}
         </div>
     {% endif %}
 </section>
+
+
+<style>
+    h2 {
+        margin: 20px 0;
+        text-align: center;
+        font-size: 42px;
+        font-weight: bold;
+        color: #333;
+        font-family: "Open sans", sans-serif;
+    }
+    
+    /* Product Grid */
+    .products-container {
+        display: flex;
+        justify-content: center; /* ✅ Centers horizontally */
+        align-items: center; /* ✅ Centers vertically */
+        flex-wrap: wrap; /* ✅ Ensures wrapping for responsiveness */
+        gap: 50px;
+        padding: 20px;
+        max-width: 1300px;
+        margin: 80px auto;
+        
+    }
+    
+    /* Product Card */
+    .product-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #eee;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    /* Product Image Container */
+    .product-image-container {
+        position: relative;
+        width: 100%;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .product-image-container img {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 10px;
+    }
+    
+    /* Wishlist Icon */
+    .wishlist-icon {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 8px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .wishlist-icon:hover {
+        background: rgba(162, 3, 67, 0.8);
+        transform: scale(1.0);
+    }
+    
+    .wishlist-icon box-icon {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .wishlist-icon:hover box-icon {
+        fill: white;
+    }
+    
+    /* Product Details */
+    .product-details {
+        padding: 15px 14px 8px 14px;
+        display: flex
+    ;
+        flex-direction: column;
+        align-items: flex-start;
+    
+    }
+    
+    .product-header a{
+        color: black;
+    }
+    /* Product Name */
+    .product-details h2 {
+        font-size: 20px;
+        color: #222;
+        font-weight: bold;
+        font-family: "Open Sans", sans-serif;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        cursor: pointer;
+    }
+    
+    /* Price */
+    .price {
+        font-size: 18px;
+        font-weight: 600;
+        color:#3B823E;
+        margin-bottom: 10px;
+    }
+    
+    /* Rating */
+    .rating-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .star-rating {
+        color: #f39c12;
+        font-size: 16px;
+    }
+    
+    .rating {
+        font-size: 14px;
+        font-weight: 600;
+        color: #777;
+    }
+    
+    /* Add to Cart Button */
+    .add-to-cart {
+        width: 220px;
+        height: 45px;
+        background: #3B823E;
+        color: white;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+    
+     {% comment %} a{
+        height: 45px;
+        width: 220px;
+    } {% endcomment %}
+    
+    .add-to-cart:hover {
+        background: #3B823E;
+    }
+    
+    /* Responsive Grid */
+    @media (max-width: 1024px) {
+        .products-container {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .products-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .products-container {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+    
+</style>
+
 {% endblock %}

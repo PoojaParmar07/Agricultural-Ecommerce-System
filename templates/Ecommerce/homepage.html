@@ -51,10 +51,14 @@
             <div class="product-card">
                 <div class="product-image-container">
                     <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
-                    <a href="{% url 'Ecommerce:add_to_wishlist' product.variant.variant_id %}">
-                      <span class="wishlist-icon">
+                    <a href="{% url 'Ecommerce:add_to_wishlist' product.variant.variant_id %}" class="wishlist-icon">
+                      <!-- Wishlist Icon -->
+                      {% if product.id in wishlist_product_ids %}
+                          <box-icon type='solid' name='heart' color='red'></box-icon>
+                      {% else %}
                           <box-icon name='heart'></box-icon>
-                      </span>
+                      {% endif %}
+                
                   </a>
                   
                 </div>
@@ -84,7 +88,7 @@
                                 <span class="rating">(0/5)</span>
                             {% endif %}
                         </span>
-                    </div> {% endcomment %}
+                    </div>  {% endcomment %}
 
                   {% if product.inventory_quantity > 0 %}
                     {% if product.product_id in cart_product_ids %}
@@ -105,18 +109,7 @@
             </div>
         {% endfor %}
 
-        {% comment %} <div class="pagination">
-          {% if products.has_previous %}
-              <a href="?product_name={{ product_name }}&page={{ products.previous_page_number }}" class="prev-page">Previous</a>
-          {% endif %}
-      
-          <p>Page {{ products.number }} of {{ products.paginator.num_pages }}</p>
-      
-          {% if products.has_next %}
-              <a href="?product_name={{ product_name }}&page={{ products.next_page_number }}" class="next-page">Next</a>
-          {% endif %}
-      </div>
-       {% endcomment %}
+        
     </div>
 </section>
 

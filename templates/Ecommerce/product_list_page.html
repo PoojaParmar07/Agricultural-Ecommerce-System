@@ -8,7 +8,15 @@
         <div class="product-card">
             <div class="product-image-container">
                 <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
-                <span class="wishlist-icon"><box-icon name='heart'></box-icon></span>
+                {% comment %} <span class="wishlist-icon"><box-icon name='heart' color='red'></box-icon></span> {% endcomment %}
+                <!-- Wishlist Icon -->
+                <a href="#" class="wishlist-icon">
+                    {% if product.id in wishlist_product_ids %}
+                        <box-icon type='solid' name='heart' color='red'></box-icon>
+                    {% else %}
+                        <box-icon name='heart'></box-icon>
+                    {% endif %}
+                </a>
             </div>
             <div class="product-details">
                 <a href="{% url 'Ecommerce:product_view' product.product_id %}">
