@@ -828,13 +828,12 @@ def remove_from_wishlist(request, item_id):
 #         context = super().get_context_data(**kwargs)
 #         context["search_query"] = self.request.GET.get("product_name", "")
 #         return context
-
-
+    
 class ProductSearchView(ListView):
     model = Product
     template_name = "Ecommerce/search.html"
     context_object_name = "products"
-
+    
     def get_queryset(self):
         query = self.request.GET.get("product_name", "").strip()
         if query:
@@ -849,22 +848,22 @@ class ProductSearchView(ListView):
         if not queryset.exists():
             return redirect(reverse("Ecommerce:homepage"))  # ✅ Redirects if no products found
         return super().get(request, *args, **kwargs)
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         search_query = self.request.GET.get("product_name", "")
         context["search_query"] = search_query
 
         if self.request.user.is_authenticated:
+            # Fetch product IDs instead of product_batch_id
             cart_items = CartItem.objects.filter(cart__user=self.request.user).values_list("product_batch__product_id", flat=True)
             wishlist_items = WishlistItem.objects.filter(wishlist__user=self.request.user).values_list("product_batch__product_id", flat=True)
         else:
             cart_items = []
             wishlist_items = []
 
-        context["cart_product_ids"] = list(cart_items)
+        context["cart_product_ids"] = list(cart_items)  # Convert to list for easier template use
         context["wishlist_product_ids"] = list(wishlist_items)
-
+        
         return context
-
 
