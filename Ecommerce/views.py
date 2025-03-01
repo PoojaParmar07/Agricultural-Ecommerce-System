@@ -141,7 +141,7 @@ def homepage(request):
     return render(request, "Ecommerce/homepage.html", {
         'categories': category_data,
         'product_data': product_data,
-        'cart_product_ids': cart_product_ids,  # ✅ Pass this to the template
+        'cart_product_ids': cart_product_ids,  #  Pass this to the template
     })
 
 
@@ -166,7 +166,7 @@ def product_list(request, category_id):
         inventory = Inventory.objects.filter(
             batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
-        inventory_quantity = inventory.quantity if inventory else 0  # ✅ Get stock quantity
+        inventory_quantity = inventory.quantity if inventory else 0  #  Get stock quantity
 
         # Get average rating
         rating = Review.objects.filter(product=product).aggregate(
@@ -178,13 +178,13 @@ def product_list(request, category_id):
             'product_image': product.product_image.url if product.product_image else None,
             'sales_price': sales_price,
             'rating': rating,
-            'inventory_quantity': inventory_quantity,  # ✅ Include quantity for stock check
+            'inventory_quantity': inventory_quantity,  #  Include quantity for stock check
         })
 
     context = {
         'category_name': category.category_name,
         'products': product_data,
-        # ✅ Add this for the cart check in the template
+        #  Add this for the cart check in the template
         'cart_product_ids': cart_product_ids,
     }
 
@@ -218,20 +218,20 @@ def product_view(request, product_id):
     # Fetch reviews in descending order
     reviews = Review.objects.filter(product=product).order_by('-created_at')
 
-    # ✅ Get cart product IDs
+    #  Get cart product IDs
     cart_product_ids = []
     if request.user.is_authenticated:
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
 
-        # ✅ Check if the user has placed an order for this product
+        #  Check if the user has placed an order for this product
         has_ordered = Order_Item.objects.filter(order__user=request.user, variant__product=product).exists()
 
     else:
         has_ordered = False
 
-    # ✅ Handle review submission only if user has placed an order
+    #  Handle review submission only if user has placed an order
     if request.method == "POST" and has_ordered:
         rating_value = request.POST.get('rating')
         review_text = request.POST.get('comment')
@@ -257,7 +257,7 @@ def product_view(request, product_id):
         'first_price': first_price,
     }
 
-    print("✅ Variant Prices JSON:", json.dumps(variant_prices, ensure_ascii=False))
+    print(" Variant Prices JSON:", json.dumps(variant_prices, ensure_ascii=False))
     print(f"Inventory: {inventory_quantity}")
 
     context = {
@@ -266,8 +266,8 @@ def product_view(request, product_id):
         'stars_range': range(1, 6),
         'reviews': reviews,
         'variants': variants,
-        'cart_product_ids': cart_product_ids,  # ✅ Add cart products for button logic
-        'has_ordered': has_ordered,  # ✅ Pass order status to template
+        'cart_product_ids': cart_product_ids,  #  Add cart products for button logic
+        'has_ordered': has_ordered,  #  Pass order status to template
     }
 
     return render(request, 'Ecommerce/product_view.html', {**context, 'variant_prices': json.dumps(variant_prices)})
@@ -280,7 +280,7 @@ def product_view(request, product_id):
 def cart_view(request):
     cart, _ = Cart.objects.get_or_create(
         user=request.user)  # Get the user's cart
-    cart_items = CartItem.objects.filter(cart=cart).select_related(  # ✅ Filter by user's cart
+    cart_items = CartItem.objects.filter(cart=cart).select_related(  #  Filter by user's cart
         "product_variant", "product_variant__product", "product_batch"
     ).prefetch_related("product_batch__inventory_set")
 
@@ -295,7 +295,7 @@ def cart_view(request):
     # Calculate grand total
     grand_total = sum(item.total_price for item in cart_items)
 
-    # ✅ Count unique products in cart
+    #  Count unique products in cart
     cart_count = cart_items.values(
         "product_variant__product").distinct().count()
 
@@ -498,7 +498,7 @@ def checkout(request):
     discount_amount = (grand_total * membership_discount / Decimal(100)) if user_membership else Decimal(0)
     total_after_discount = grand_total - discount_amount
 
-    # ✅ Fetch delivery charge for selected pincode (default to 0 if not found)
+    #  Fetch delivery charge for selected pincode (default to 0 if not found)
     delivery_charge = Decimal(0)
     if selected_pincode_id:
         try:
@@ -507,11 +507,11 @@ def checkout(request):
         except Pincode.DoesNotExist:
             delivery_charge = Decimal(0)  # Default to free shipping if pincode not found
 
-    # ✅ Apply free shipping if user is a member
+    #  Apply free shipping if user is a member
     if is_member:
         delivery_charge = Decimal(0)
 
-    # ✅ Update total after checking membership status
+    #  Update total after checking membership status
     final_total = total_after_discount + delivery_charge
 
     context = {
@@ -714,7 +714,7 @@ def render_pdf_view(request):
 def wishlist_view(request):
     wishlist, _ = Wishlist.objects.get_or_create(
         user=request.user)  # Get the user's cart
-    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist).select_related(  # ✅ Filter by user's cart
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist).select_related(  #  Filter by user's cart
         "product_variant", "product_variant__product", "product_batch"
     ).prefetch_related("product_batch__inventory_set")
 
@@ -798,7 +798,7 @@ def remove_from_wishlist(request, item_id):
     print(f"Trying to remove wishlist item: {item_id}")  # Debugging line
 
     wishlist_item = get_object_or_404(
-        WishlistItem, wishlist__user=request.user, id=item_id)  # ✅ Use wishlist__user instead of cart__user
+        WishlistItem, wishlist__user=request.user, id=item_id)  #  Use wishlist__user instead of cart__user
 
     wishlist_item.delete()
     print(f"Removed wishlist item: {item_id}")  # Debugging line
