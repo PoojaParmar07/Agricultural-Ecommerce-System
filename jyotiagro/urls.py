@@ -28,6 +28,7 @@ urlpatterns = [
     path('account/',include('account.urls')),
     path('membership/',include('membership.urls')),
     path('socialmedia/',include('socialmedia.urls')),
+    path('payment/',include('payment.urls')),
     
     
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

@@ -588,103 +588,103 @@ def get_pincode(request, city_id):
     return JsonResponse({"pincodes": list(pincodes)})
 
 
-@login_required
-def cod_checkout(request):
-    user = request.user
-    cart = Cart.objects.filter(user=user).first()
+# @login_required
+# def cod_checkout(request):
+#     user = request.user
+#     cart = Cart.objects.filter(user=user).first()
 
-    if not cart or not cart.cartitem_set.exists():
-        messages.error(request, "Your cart is empty!")
-        return redirect("Ecommerce:cart_view")
+#     if not cart or not cart.cartitem_set.exists():
+#         messages.error(request, "Your cart is empty!")
+#         return redirect("Ecommerce:cart_view")
 
-    total_price = sum(item.total_price for item in cart.cartitem_set.all())
+#     total_price = sum(item.total_price for item in cart.cartitem_set.all())
 
-    # Check user membership
-    user_membership = User_membership.objects.filter(
-        user=user, status=True, membership_end_date__gte=date.today()
-    ).first()
+#     # Check user membership
+#     user_membership = User_membership.objects.filter(
+#         user=user, status=True, membership_end_date__gte=date.today()
+#     ).first()
 
-    discount_amount = Decimal(0)
-    if user_membership:
-        discount_rate = Decimal(
-            user_membership.plan.discount_rate)  # Convert to Decimal
-        discount_amount = (discount_rate / Decimal(100)) * total_price
-        total_price -= discount_amount
-        delivery_charges = Decimal(0)  # Free delivery for members
-    else:
-        delivery_charges = Decimal(0)  # Default, updated below
+#     discount_amount = Decimal(0)
+#     if user_membership:
+#         discount_rate = Decimal(
+#             user_membership.plan.discount_rate)  # Convert to Decimal
+#         discount_amount = (discount_rate / Decimal(100)) * total_price
+#         total_price -= discount_amount
+#         delivery_charges = Decimal(0)  # Free delivery for members
+#     else:
+#         delivery_charges = Decimal(0)  # Default, updated below
 
-    if request.method == "POST":
-        address = request.POST.get("address", "").strip()
-        city_id = request.POST.get("city", "").strip()
-        pincode = request.POST.get("pincode", "").strip()
-        print(f"Received pincode from user: '{pincode}'")
+#     if request.method == "POST":
+#         address = request.POST.get("address", "").strip()
+#         city_id = request.POST.get("city", "").strip()
+#         pincode = request.POST.get("pincode", "").strip()
+#         print(f"Received pincode from user: '{pincode}'")
 
-        if not address or not city_id or not pincode:
-            messages.error(
-                request, "All fields (Address, City, and Pincode) are required!")
-            return redirect("Ecommerce:checkout")
+#         if not address or not city_id or not pincode:
+#             messages.error(
+#                 request, "All fields (Address, City, and Pincode) are required!")
+#             return redirect("Ecommerce:checkout")
 
-        try:
-            pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
-            delivery_charges = Decimal(0) if user_membership else Decimal(
-                pincode_obj.delivery_charges)
-        except Pincode.DoesNotExist:
-            messages.error(request, "Invalid pincode.")
-            return redirect("Ecommerce:checkout")
+#         try:
+#             pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
+#             delivery_charges = Decimal(0) if user_membership else Decimal(
+#                 pincode_obj.delivery_charges)
+#         except Pincode.DoesNotExist:
+#             messages.error(request, "Invalid pincode.")
+#             return redirect("Ecommerce:checkout")
 
-        # Create order in an atomic transaction
-        with transaction.atomic():
-            order = Order.objects.create(
-                user=user,
-                order_user_type="member" if user_membership else "non-member",
-                total_price=total_price + delivery_charges,
-                discounted_price=discount_amount,
-                order_status="pending",
-                state=user.state,
-                city_id=city_id,
-                address=address,
-                pincode=pincode_obj,
-                delivery_charges=delivery_charges,
-            )
+#         # Create order in an atomic transaction
+#         with transaction.atomic():
+#             order = Order.objects.create(
+#                 user=user,
+#                 order_user_type="member" if user_membership else "non-member",
+#                 total_price=total_price + delivery_charges,
+#                 discounted_price=discount_amount,
+#                 order_status="pending",
+#                 state=user.state,
+#                 city_id=city_id,
+#                 address=address,
+#                 pincode=pincode_obj,
+#                 delivery_charges=delivery_charges,
+#             )
 
-            # Move cart items to order items
-            for item in cart.cartitem_set.all():
-                Order_Item.objects.create(
-                    order=order,
-                    batch=item.product_batch,
-                    variant=item.product_variant,
-                    quantity=item.quantity,
-                    price=item.total_price,
-                )
+#             # Move cart items to order items
+#             for item in cart.cartitem_set.all():
+#                 Order_Item.objects.create(
+#                     order=order,
+#                     batch=item.product_batch,
+#                     variant=item.product_variant,
+#                     quantity=item.quantity,
+#                     price=item.total_price,
+#                 )
 
-                # Decrease stock
-                inventory = Inventory.objects.filter(
-                    batch=item.product_batch).first()
-                if inventory and inventory.quantity >= item.quantity:
-                    inventory.quantity -= item.quantity
-                    inventory.save()
-                else:
-                    messages.error(
-                        request, f"Not enough stock for {item.product_variant}.")
-                    return redirect("Ecommerce:cart_view")
+#                 # Decrease stock
+#                 inventory = Inventory.objects.filter(
+#                     batch=item.product_batch).first()
+#                 if inventory and inventory.quantity >= item.quantity:
+#                     inventory.quantity -= item.quantity
+#                     inventory.save()
+#                 else:
+#                     messages.error(
+#                         request, f"Not enough stock for {item.product_variant}.")
+#                     return redirect("Ecommerce:cart_view")
 
-            # Create payment record for COD
-            Payment.objects.create(
-                order=order,
-                total_price=total_price + delivery_charges,
-                payment_mode="cash",
-                payment_status="pending",
-            )
+#             # Create payment record for COD
+#             Payment.objects.create(
+#                 order=order,
+#                 total_price=total_price + delivery_charges,
+#                 payment_mode="cash",
+#                 payment_status="pending",
+#             )
 
-            # Clear the cart
-            cart.cartitem_set.all().delete()
+#             # Clear the cart
+#             cart.cartitem_set.all().delete()
 
-        messages.success(
-            request, "Order placed successfully! Pay on delivery.")
-        return redirect("Ecommerce:confirm_Order")
+#         messages.success(
+#             request, "Order placed successfully! Pay on delivery.")
+#         return redirect("Ecommerce:confirm_Order")
 
-    return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
+#     return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
 
 
 
@@ -861,6 +861,7 @@ class ProductSearchView(ListView):
         else:
             cart_items = []
             wishlist_items = []
+
         context["cart_product_ids"] = list(cart_items)
         context["wishlist_product_ids"] = list(wishlist_items)
 

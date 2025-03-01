@@ -91,7 +91,7 @@
         </div>
         
         <h3>Payment Method</h3>
-        <div class="payment-options">
+        {% comment %} <div class="payment-options">
             <label class="payment-option">
                 <input type="radio" name="payment_method" value="COD" checked>
                 <span class="custom-radio"></span> Cash on Delivery
@@ -100,7 +100,18 @@
                 <input type="radio" name="payment_method" value="Online">
                 <span class="custom-radio"></span> Online Payment
             </label>
-        </div>
+        </div> {% endcomment %}
+        
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="COD" id="payment_method_cod" checked>
+                    <span class="custom-radio"></span> Cash on Delivery
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="Online" id="payment_method_cod">
+                    <span class="custom-radio"></span> Online Payment
+                </label>
+            </div>
         
         <button type="submit" id="placeOrder" name="placeOrder">Place Order</button>
     </form>
@@ -108,6 +119,7 @@
 </div>
 
 {% comment %} <script src="{% static 'js/script.js' %}"></script> {% endcomment %}
+
 <script>
     document.getElementById('city').addEventListener('change', function() {
         let cityId = this.value;
@@ -128,7 +140,7 @@
         }
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
+    {% comment %} document.addEventListener("DOMContentLoaded", function () {
         let form = document.getElementById("checkout-form");
         let placeOrderBtn = document.getElementById("placeOrder");
 
@@ -140,12 +152,12 @@
             if (selectedPaymentMethod === "COD") {
                 form.action = "{% url 'Ecommerce:cod_checkout' %}"; // COD view
             } else {
-                form.action = "{% url 'Ecommerce:homepage' %}"; // Correct online payment view
+                form.action = "{% url 'Ecommerce:stripe_checkout' %}"; // Update to correct online payment view
             }
 
             form.submit(); // Submit form to the updated action URL
         });
-    });
+    }); {% endcomment %}
 
     document.addEventListener("DOMContentLoaded", function () {
         let shippingChargeSpan = document.getElementById("shipping-charge");
@@ -180,7 +192,20 @@
     });
     
     
-     
+    document.getElementById("placeOrder").addEventListener("click", function (event) {
+        event.preventDefault();
+
+        let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;
+        let form = document.getElementById("checkout-form");
+
+        if (selectedPaymentMethod === "COD") {
+            form.action = "{% url 'payment:cod_checkout' %}";
+        } else {
+            form.action = "{% url 'payment:stripe_checkout' %}";
+        }
+
+        form.submit();
+    });
     
 </script>
 

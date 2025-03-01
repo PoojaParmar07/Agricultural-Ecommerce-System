@@ -10,7 +10,7 @@ from django.conf import settings
 class CustomUser(AbstractUser):
     username=models.CharField(max_length=100,unique=True)
     city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
+    state = models.CharField(max_length=100,default='Gujarat')
     pincode = models.CharField(max_length=10)
     mobile_number = models.CharField(max_length=10)
     email=models.EmailField(unique=True,max_length=100)

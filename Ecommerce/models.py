@@ -163,7 +163,7 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2)
     order_status = models.CharField(max_length=100,default='pending',choices=STATUS_CHOICES)
-    state = models.CharField(max_length=100)
+    state = models.CharField(max_length=100,default='Gujarat')
     city = models.ForeignKey('City',on_delete=models.CASCADE)
     address = models.CharField(max_length=100)
     pincode = models.ForeignKey('Pincode',on_delete=models.CASCADE,null=True, blank=True)
