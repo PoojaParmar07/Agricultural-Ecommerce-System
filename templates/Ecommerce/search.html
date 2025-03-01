@@ -33,6 +33,7 @@
                     </div>
 
                     <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+                    
 
                     <!-- Add to Cart Button -->
                     {% if product.product_id in cart_product_ids %}
