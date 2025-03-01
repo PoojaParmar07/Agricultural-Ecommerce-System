@@ -170,3 +170,4 @@ AUTHENTICATION_BACKENDS = [
 # Payment keys
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='')
+    
