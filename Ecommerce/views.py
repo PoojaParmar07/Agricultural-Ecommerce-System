@@ -861,7 +861,6 @@ class ProductSearchView(ListView):
         else:
             cart_items = []
             wishlist_items = []
-
         context["cart_product_ids"] = list(cart_items)
         context["wishlist_product_ids"] = list(wishlist_items)
 
