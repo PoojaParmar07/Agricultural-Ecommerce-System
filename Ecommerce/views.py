@@ -847,7 +847,7 @@ class ProductSearchView(ListView):
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         if not queryset.exists():
-            return redirect(reverse("Ecommerce:homepage"))  # ✅ Redirects if no products found
+            return redirect(reverse("Ecommerce:homepage"))  #  Redirects if no products found
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
