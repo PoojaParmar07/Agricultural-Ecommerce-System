@@ -199,7 +199,6 @@ def stripe_checkout(request):
         return redirect("Ecommerce:checkout")
 
 
-
 def stripe_success(request):
     return render(request, "payment/success.html")
 
