@@ -149,6 +149,65 @@ def cod_checkout(request):
 #         return redirect("Ecommerce:checkout")
 
 
+# def stripe_checkout(request):
+#     if request.method == "POST":
+#         user = request.user
+#         cart = Cart.objects.filter(user=user).first()
+
+#         if not cart or not cart.cartitem_set.exists():
+#             messages.error(request, "Your cart is empty!")
+#             return redirect("Ecommerce:cart_view")
+
+#         line_items = []
+#         total_price = 0
+
+#         for cart_item in cart.cartitem_set.all():
+#             variant = cart_item.product_variant
+
+#             # Fetch the latest inventory price
+#             inventory = Inventory.objects.filter(batch__variant=variant).order_by('-create_at').first()
+#             if not inventory or inventory.sales_price is None:
+#                 return JsonResponse({"error": f"Price not available for variant {variant}"}, status=400)
+
+#             price = inventory.sales_price
+#             total_price += price * cart_item.quantity  # Accumulate total price
+#             if variant.product.product_image:
+#                 product_image_url = request.build_absolute_uri(variant.product.product_image.url)
+                
+#             else:
+#                 product_image_url = "https://via.placeholder.com/150" 
+
+#             # Append product to line_items for Stripe
+#             line_items.append({
+#                 'price_data': {
+#                     "currency": "inr",
+#                     'product_data': {
+#                         'name': str(variant),
+#                         'images': [product_image_url], 
+#                     },
+#                     "unit_amount": int(price * 100),  # Convert price to cents
+#                 },
+#                 'quantity': cart_item.quantity,
+#             })
+
+#         # Create Stripe checkout session with multiple items
+#         try:
+#             session = stripe.checkout.Session.create(
+#                 payment_method_types=['card'],
+#                 line_items=line_items,
+#                 mode='payment',
+#                 success_url='http://127.0.0.1:8000/payment/success/',
+#                 cancel_url='http://127.0.0.1:8000/payment/cancel/',
+#             )
+
+#             return redirect(session.url)
+
+#         except Exception as e:
+#             print(f"Stripe error: {e}")  # Debugging
+#             return JsonResponse({"error": "Stripe session creation failed"}, status=500)
+
+
+
 def stripe_checkout(request):
     if request.method == "POST":
         user = request.user
@@ -158,39 +217,92 @@ def stripe_checkout(request):
             messages.error(request, "Your cart is empty!")
             return redirect("Ecommerce:cart_view")
 
+        # Initialize price calculations
+        total_price = Decimal(0)
+        discount_rate = Decimal(0)
+        delivery_charges = Decimal(0)
         line_items = []
-        total_price = 0
 
+        # Fetch user membership details
+        user_membership = User_membership.objects.filter(
+            user=user, status=True, membership_end_date__gte=date.today()
+        ).first()
+        
+        if user_membership:
+            discount_rate = Decimal(user_membership.plan.discount_rate)
+
+        # Calculate total price from cart items (applying discount per item)
         for cart_item in cart.cartitem_set.all():
             variant = cart_item.product_variant
 
-            # Fetch the latest inventory price
+            # Fetch latest inventory price
             inventory = Inventory.objects.filter(batch__variant=variant).order_by('-create_at').first()
             if not inventory or inventory.sales_price is None:
                 return JsonResponse({"error": f"Price not available for variant {variant}"}, status=400)
 
-            price = inventory.sales_price
-            total_price += price * cart_item.quantity  # Accumulate total price
-            if variant.product.product_image:
-                product_image_url = request.build_absolute_uri(variant.product.product_image.url)
-                
-            else:
-                product_image_url = "https://via.placeholder.com/150" 
+            original_price = Decimal(inventory.sales_price)
+            discounted_price = original_price * (1 - discount_rate / 100)  # Apply discount
+            item_total_price = discounted_price * cart_item.quantity
+            total_price += item_total_price  # Accumulate total price
 
-            # Append product to line_items for Stripe
+            # Get product image
+            product_image_url = (
+                request.build_absolute_uri(variant.product.product_image.url)
+                if variant.product.product_image else "https://via.placeholder.com/150"
+            )
+
+            # ✅ Add product details to Stripe line items (with discounted price)
             line_items.append({
                 'price_data': {
                     "currency": "inr",
                     'product_data': {
                         'name': str(variant),
-                        'images': [product_image_url], 
+                        'images': [product_image_url],
                     },
-                    "unit_amount": int(price * 100),  # Convert price to cents
+                    "unit_amount": max(1, int(discounted_price * 100)),  # Convert to paise
                 },
                 'quantity': cart_item.quantity,
             })
 
-        # Create Stripe checkout session with multiple items
+        # Fetch pincode and calculate delivery charges
+        address = request.POST.get("address", "").strip()
+        city_id = request.POST.get("city", "").strip()
+        pincode = request.POST.get("pincode", "").strip()
+
+        if not address or not city_id or not pincode:
+            messages.error(request, "All fields (Address, City, and Pincode) are required!")
+            return JsonResponse({"error": "Missing address, city, or pincode!"}, status=400)
+
+        try:
+            pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
+            if user_membership:
+                delivery_charges = Decimal(0)  # Free delivery for members
+            else:
+                delivery_charges = Decimal(pincode_obj.delivery_charges)  # Delivery charge for non-members
+        except Pincode.DoesNotExist:
+            messages.error(request, "Invalid pincode.")
+            return JsonResponse({"error": "Invalid pincode!"}, status=400)
+
+        # ✅ Calculate final price with delivery
+        final_price = total_price + delivery_charges
+        final_amount = max(1, int(final_price * 100))  # Convert to paise, ensure min 1 paise
+
+        # ✅ Add Delivery Charge Separately (If Applicable)
+        if delivery_charges > 0:
+            line_items.append({
+                'price_data': {
+                    "currency": "inr",
+                    'product_data': {'name': "Delivery Charges"},
+                    "unit_amount": int(delivery_charges * 100),  # Convert to paise
+                },
+                'quantity': 1,
+            })
+
+        # ✅ Debugging Prints
+        print(f"✅ Corrected Final Amount Sent to Stripe: {final_amount}")
+        print(f"✅ Updated Line Items Sent to Stripe: {line_items}")
+
+        # ✅ Create Stripe Checkout Session
         try:
             session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
@@ -198,13 +310,22 @@ def stripe_checkout(request):
                 mode='payment',
                 success_url='http://127.0.0.1:8000/payment/success/',
                 cancel_url='http://127.0.0.1:8000/payment/cancel/',
+                metadata={
+                    "final_total": str(final_price)  # Helps verify the final amount in Stripe Dashboard
+                }
             )
 
             return redirect(session.url)
 
+        except stripe.error.StripeError as e:
+            print(f"Stripe API error: {e}")  # Debugging
+            return JsonResponse({"error": f"Stripe error: {str(e)}"}, status=500)
+
         except Exception as e:
-            print(f"Stripe error: {e}")  # Debugging
+            print(f"General error: {e}")  # Debugging
             return JsonResponse({"error": "Stripe session creation failed"}, status=500)
+
+
 
 
 
