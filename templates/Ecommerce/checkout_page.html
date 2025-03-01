@@ -102,16 +102,17 @@
             </label>
         </div> {% endcomment %}
         
-            <div class="payment-options">
-                <label class="payment-option">
-                    <input type="radio" name="payment_method" value="COD" id="payment_method_cod" checked>
-                    <span class="custom-radio"></span> Cash on Delivery
-                </label>
-                <label class="payment-option">
-                    <input type="radio" name="payment_method" value="Online" id="payment_method_cod">
-                    <span class="custom-radio"></span> Online Payment
-                </label>
-            </div>
+        <div class="payment-options">
+            <label class="payment-option">
+                <input type="radio" name="payment_method" value="COD" id="payment_method_cod" checked>
+                <span class="custom-radio"></span> Cash on Delivery
+            </label>
+            <label class="payment-option">
+                <input type="radio" name="payment_method" value="Online" id="payment_method_online">
+                <span class="custom-radio"></span> Online Payment
+            </label>
+        </div>
+        
         
         <button type="submit" id="placeOrder" name="placeOrder">Place Order</button>
     </form>
@@ -192,19 +193,30 @@
     });
     
     
-    document.getElementById("placeOrder").addEventListener("click", function (event) {
-        event.preventDefault();
-
-        let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;
+    document.addEventListener("DOMContentLoaded", function () {
         let form = document.getElementById("checkout-form");
+        let placeOrderBtn = document.getElementById("placeOrder");
 
-        if (selectedPaymentMethod === "COD") {
-            form.action = "{% url 'payment:cod_checkout' %}";
-        } else {
-            form.action = "{% url 'payment:stripe_checkout' %}";
-        }
+        placeOrderBtn.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default form submission
 
-        form.submit();
+            let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;
+
+            if (selectedPaymentMethod === "COD") {
+                form.action = "{% url 'payment:cod_checkout' %}"; // COD view
+            } else {
+                form.action = "{% url 'payment:stripe_checkout' %}"; // Stripe payment view
+            }
+
+            // ✅ Ensure variant_id is included in the request
+            let variantIdInput = document.createElement("input");
+            variantIdInput.type = "hidden";
+            variantIdInput.name = "variant_id";
+            variantIdInput.value = "{{ cart_items.0.product_variant.variant_id }}";  // Assuming first item in cart
+            form.appendChild(variantIdInput);
+
+            form.submit(); // Submit form after updating action URL
+        });
     });
     
 </script>

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 # Create your views here.
 import stripe
 from django.conf import settings
@@ -150,53 +150,62 @@ def cod_checkout(request):
 
 
 def stripe_checkout(request):
-    user = request.user
-    cart = Cart.objects.filter(user=user).first()
+    if request.method == "POST":
+        user = request.user
+        cart = Cart.objects.filter(user=user).first()
 
-    if not cart or not cart.cartitem_set.exists():
-        messages.error(request, "Your cart is empty!")
-        return redirect("Ecommerce:cart_view")
+        if not cart or not cart.cartitem_set.exists():
+            messages.error(request, "Your cart is empty!")
+            return redirect("Ecommerce:cart_view")
 
-    total_price = sum(item.total_price for item in cart.cartitem_set.all())
+        line_items = []
+        total_price = 0
 
-    # Ensure user has a profile
-    profile, created = Profile.objects.get_or_create(user=user)
+        for cart_item in cart.cartitem_set.all():
+            variant = cart_item.product_variant
 
-    customer_name = f"{user.first_name} {user.last_name}"
-    customer_email = user.email
-    billing_address = {
-        "line1": profile.address,  # Use profile fields
-        "city": profile.city,
-        "state": profile.state,
-        "postal_code": profile.pincode,
-        "country": "IN",
-    }
+            # Fetch the latest inventory price
+            inventory = Inventory.objects.filter(batch__variant=variant).order_by('-create_at').first()
+            if not inventory or inventory.sales_price is None:
+                return JsonResponse({"error": f"Price not available for variant {variant}"}, status=400)
 
-    try:
-        session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
-            customer_email=customer_email,
-            line_items=[{
-                "price_data": {
+            price = inventory.sales_price
+            total_price += price * cart_item.quantity  # Accumulate total price
+            if variant.product.product_image:
+                product_image_url = request.build_absolute_uri(variant.product.product_image.url)
+                
+            else:
+                product_image_url = "https://via.placeholder.com/150" 
+
+            # Append product to line_items for Stripe
+            line_items.append({
+                'price_data': {
                     "currency": "inr",
-                    "product_data": {
-                        "name": "Order Payment"
+                    'product_data': {
+                        'name': str(variant),
+                        'images': [product_image_url], 
                     },
-                    "unit_amount": int(total_price * 100),
+                    "unit_amount": int(price * 100),  # Convert price to cents
                 },
-                "quantity": 1,
-            }],
-            mode="payment",
-            success_url=request.build_absolute_uri("/payment/success/"),
-            cancel_url=request.build_absolute_uri("/payment/cancel/"),
-            billing_address_collection="required",
-            metadata={"customer_name": customer_name},
-        )
-        return redirect(session.url)
+                'quantity': cart_item.quantity,
+            })
 
-    except stripe.error.StripeError as e:
-        messages.error(request, f"Stripe error: {e.user_message}")
-        return redirect("Ecommerce:checkout")
+        # Create Stripe checkout session with multiple items
+        try:
+            session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=line_items,
+                mode='payment',
+                success_url='http://127.0.0.1:8000/payment/success/',
+                cancel_url='http://127.0.0.1:8000/payment/cancel/',
+            )
+
+            return redirect(session.url)
+
+        except Exception as e:
+            print(f"Stripe error: {e}")  # Debugging
+            return JsonResponse({"error": "Stripe session creation failed"}, status=500)
+
 
 
 def stripe_success(request):
