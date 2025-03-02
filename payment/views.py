@@ -14,11 +14,13 @@ from datetime import date
 from django.db import transaction
 import json
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
-# @login_required
+
+@login_required
 def cod_checkout(request):
     user = request.user
     cart = Cart.objects.filter(user=user).first()
@@ -153,62 +155,144 @@ def cod_checkout(request):
 #         return redirect("Ecommerce:checkout")
 
 
-def stripe_checkout(request):
-    if request.method == "POST":
-        user = request.user
-        cart = Cart.objects.filter(user=user).first()
+# def stripe_checkout(request):
+#     if request.method == "POST":
+#         user = request.user
+#         cart = Cart.objects.filter(user=user).first()
 
-        if not cart or not cart.cartitem_set.exists():
-            messages.error(request, "Your cart is empty!")
-            return redirect("Ecommerce:cart_view")
+#         if not cart or not cart.cartitem_set.exists():
+#             messages.error(request, "Your cart is empty!")
+#             return redirect("Ecommerce:cart_view")
 
-        line_items = []
-        total_price = 0
+#         line_items = []
+#         total_price = 0
 
-        for cart_item in cart.cartitem_set.all():
-            variant = cart_item.product_variant
+#         for cart_item in cart.cartitem_set.all():
+#             variant = cart_item.product_variant
 
-            # Fetch the latest inventory price
-            inventory = Inventory.objects.filter(batch__variant=variant).order_by('-create_at').first()
-            if not inventory or inventory.sales_price is None:
-                return JsonResponse({"error": f"Price not available for variant {variant}"}, status=400)
+#             # Fetch the latest inventory price
+#             inventory = Inventory.objects.filter(batch__variant=variant).order_by('-create_at').first()
+#             if not inventory or inventory.sales_price is None:
+#                 return JsonResponse({"error": f"Price not available for variant {variant}"}, status=400)
 
-            price = inventory.sales_price
-            total_price += price * cart_item.quantity  # Accumulate total price
-            if variant.product.product_image:
-                product_image_url = request.build_absolute_uri(variant.product.product_image.url)
+#             price = inventory.sales_price
+#             total_price += price * cart_item.quantity  # Accumulate total price
+#             if variant.product.product_image:
+#                 product_image_url = request.build_absolute_uri(variant.product.product_image.url)
                 
-            else:
-                product_image_url = "https://via.placeholder.com/150" 
+#             else:
+#                 product_image_url = "https://via.placeholder.com/150" 
 
-            # Append product to line_items for Stripe
-            line_items.append({
-                'price_data': {
-                    "currency": "inr",
-                    'product_data': {
-                        'name': str(variant),
-                        'images': [product_image_url], 
-                    },
-                    "unit_amount": int(price * 100),  # Convert price to cents
-                },
-                'quantity': cart_item.quantity,
-            })
+#             # Append product to line_items for Stripe
+#             line_items.append({
+#                 'price_data': {
+#                     "currency": "inr",
+#                     'product_data': {
+#                         'name': str(variant),
+#                         'images': [product_image_url], 
+#                     },
+#                     "unit_amount": int(price * 100),  # Convert price to cents
+#                 },
+#                 'quantity': cart_item.quantity,
+#             })
 
-        # Create Stripe checkout session with multiple items
+#         # Create Stripe checkout session with multiple items
+#         try:
+#             session = stripe.checkout.Session.create(
+#                 payment_method_types=['card'],
+#                 line_items=line_items,
+#                 mode='payment',
+#                 success_url='http://127.0.0.1:8000/payment/success/',
+#                 cancel_url='http://127.0.0.1:8000/payment/cancel/',
+#             )
+
+#             return redirect(session.url)
+
+#         except Exception as e:
+#             print(f"Stripe error: {e}")  # Debugging
+#             return JsonResponse({"error": "Stripe session creation failed"}, status=500)
+
+@login_required
+def online_payment(request):
+    """Handles online payment for checkout"""
+    user = request.user
+    cart = Cart.objects.filter(user=user).first()
+
+    if not cart or not cart.cartitem_set.exists():
+        messages.error(request, "Your cart is empty!")
+        return redirect("Ecommerce:cart_view")
+
+    cart_items = cart.cartitem_set.all()
+    
+    # Fetch user details
+    user_profile = user.profile
+    customer_name = f"{user.username}"
+    customer_email = user.email
+
+    # Fetch checkout details
+    selected_city_id = request.GET.get("city")
+    selected_pincode_id = request.GET.get("pincode")
+    
+    # Get membership details
+    user_membership = User_membership.objects.filter(
+        user=user, status=True, membership_end_date__gte=date.today()
+    ).select_related("plan").first()
+
+    is_member = bool(user_membership)
+    membership_discount = Decimal(user_membership.plan.discount_rate) if is_member else Decimal(0)
+
+    # Calculate totals
+    grand_total = sum(Decimal(item.total_price) for item in cart_items)
+    discount_amount = (grand_total * membership_discount / Decimal(100)) if is_member else Decimal(0)
+    total_after_discount = grand_total - discount_amount
+
+    # Fetch delivery charge
+    delivery_charge = Decimal(0)
+    if selected_pincode_id:
         try:
-            session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=line_items,
-                mode='payment',
-                success_url='http://127.0.0.1:8000/payment/success/',
-                cancel_url='http://127.0.0.1:8000/payment/cancel/',
-            )
+            pincode_instance = Pincode.objects.get(area_pincode=selected_pincode_id)
+            delivery_charge = Decimal(pincode_instance.delivery_charges)
+        except Pincode.DoesNotExist:
+            delivery_charge = Decimal(0)
 
-            return redirect(session.url)
+    # Free delivery for members
+    if is_member:
+        delivery_charge = Decimal(0)
 
-        except Exception as e:
-            print(f"Stripe error: {e}")  # Debugging
-            return JsonResponse({"error": "Stripe session creation failed"}, status=500)
+    # Final amount to be paid
+    final_total = total_after_discount + delivery_charge
+
+    # Stripe Checkout Session
+    try:
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            customer_email=customer_email,
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "inr",
+                        "product_data": {
+                            "name": "Order Payment",
+                        },
+                        "unit_amount": int(final_total * 100),  # Convert to paise
+                    },
+                    "quantity": 1,
+                }
+            ],
+            mode="payment",
+            success_url=request.build_absolute_uri("/payment/success/"),
+            cancel_url=request.build_absolute_uri("/payment/cancel/"),
+            metadata={
+                "customer_name": customer_name,
+                "user_id": user.id,
+                "total_price": str(final_total),
+            },
+        )
+        return redirect(session.url)
+
+    except stripe.error.StripeError as e:
+        messages.error(request, f"Payment failed: {e.user_message}")
+        return redirect("Ecommerce:checkout")
 
 
 
