@@ -4,11 +4,12 @@ from django.http import Http404, JsonResponse, HttpResponse, HttpResponseRedirec
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from Ecommerce.models import *
 from membership.models import *
 from .forms import *
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Avg
+from django.db.models import Avg,F
 from django.db import transaction
 from datetime import date
 from decimal import Decimal
@@ -20,7 +21,7 @@ from account.models import *
 from account.form import *
 from django.core.paginator import Paginator
 from django.views.generic import ListView
-from django.db.models import F
+import razorpay
 
 def is_admin_user(user):
     return user.is_authenticated and user.is_staff  # Example function
@@ -464,6 +465,7 @@ def update_variant(request, cart_item_id):
     return redirect("Ecommerce:cart_view")
 
 
+
 @login_required
 def checkout(request):
     cart = Cart.objects.get(user=request.user)
@@ -486,65 +488,79 @@ def checkout(request):
         membership_end_date__gte=date.today()
     ).select_related('plan').first()
 
-    membership_discount = Decimal(0)
-    is_member = False
-
-    if user_membership:
-        membership_discount = Decimal(user_membership.plan.discount_rate)
-        is_member = True
+    is_member = bool(user_membership)
+    membership_discount = Decimal(user_membership.plan.discount_rate) if is_member else Decimal(0)
 
     # Calculate grand total
     grand_total = sum(Decimal(item.total_price) for item in cart_items)
-    discount_amount = (grand_total * membership_discount / Decimal(100)) if user_membership else Decimal(0)
+    discount_amount = (grand_total * membership_discount / Decimal(100)) if is_member else Decimal(0)
     total_after_discount = grand_total - discount_amount
 
-    #  Fetch delivery charge for selected pincode (default to 0 if not found)
+    # Fetch delivery charge (default to 0)
     delivery_charge = Decimal(0)
-    if selected_pincode_id:
-        try:
-            pincode_instance = Pincode.objects.get(area_pincode=selected_pincode_id)
-            delivery_charge = Decimal(pincode_instance.delivery_charges)
-        except Pincode.DoesNotExist:
-            delivery_charge = Decimal(0)  # Default to free shipping if pincode not found
 
-    #  Apply free shipping if user is a member
     if is_member:
         delivery_charge = Decimal(0)
+    elif selected_pincode_id:
+        try:
+                pincode_instance = Pincode.objects.get(area_pincode=selected_pincode_id)
+                delivery_charge = Decimal(pincode_instance.delivery_charges)
+        except Pincode.DoesNotExist:
+                delivery_charge = Decimal(0)  # Default to free shipping if not found
 
-    #  Update total after checking membership status
+
+    # Final total calculation
     final_total = total_after_discount + delivery_charge
-
+   
     context = {
-        "cart_items": cart_items,
-        "grand_total": grand_total,
-        "discount_amount": discount_amount,
-        "total_after_discount": total_after_discount,
-        "final_total": final_total,
-        "is_member": is_member,
-        "cities": cities,
-        "pincodes": pincodes,
-        "selected_city_id": selected_city_id,
-        "selected_pincode_id": selected_pincode_id,
-        "delivery_charge": delivery_charge,  # Pass updated delivery charge
-    }
+    "cart_items": cart_items,
+    "grand_total": float(grand_total),  # Convert Decimal to float
+    "discount_amount": float(discount_amount),
+    "total_after_discount": float(total_after_discount),
+    "final_total": float(final_total),
+    "is_member": is_member,
+    "cities": cities,
+    "pincodes": pincodes,
+    "selected_city_id": selected_city_id,
+    "selected_pincode_id": selected_pincode_id,
+    "delivery_charge": float(delivery_charge),  # Convert Decimal to float
+}
+
+    
 
     return render(request, "Ecommerce/checkout_page.html", context)
 
 
 
+
+
+@login_required
 def get_delivery_charge_ajax(request, pincode_id):
     """AJAX view to fetch delivery charge based on pincode selection."""
+    
+    # Check if user is a member
+    is_member = User_membership.objects.filter(
+        user=request.user,
+        status=True,
+        membership_end_date__gte=date.today()
+    ).exists()
+
+    # If user is a member, delivery is free
+    if is_member:
+        print(f"User {request.user} is a member. Delivery charge set to 0.")
+        return JsonResponse({"delivery_charge": 0.0})  # Convert Decimal to float
+
     try:
-        # Ensure lookup is done correctly
         pincode_instance = Pincode.objects.get(area_pincode=str(pincode_id))
-        delivery_charge = float(pincode_instance.delivery_charges)
-        # Debugging
+        delivery_charge = float(pincode_instance.delivery_charges)  # Convert Decimal to float
         print(f"Pincode: {pincode_id}, Delivery Charge: {delivery_charge}")
     except Pincode.DoesNotExist:
-        delivery_charge = 0  # Default to 0 if pincode not found
+        delivery_charge = 0.0  # Default to 0 if pincode not found
         print(f"Pincode: {pincode_id} not found!")  # Debugging
 
     return JsonResponse({"delivery_charge": delivery_charge})
+
+
 
 
 @login_required

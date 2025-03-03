@@ -216,7 +216,8 @@ class Payment(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     payment_mode = models.CharField(max_length=50,choices=PAYMENT_MODE, default='cash')
     payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES, default='pending')
-    transaction_id = models.CharField(unique=True, max_length=100, null=True, blank=True)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)  # Add this field
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
     payment_date = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now=True)
 

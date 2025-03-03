@@ -16,6 +16,9 @@ import json
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import logging
+import razorpay
+import hmac
+import hashlib
 
 
 logger = logging.getLogger(__name__)
@@ -451,173 +454,369 @@ def cod_checkout(request):
 
 
 
-def stripe_checkout(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Invalid request method"}, status=405)
+# def stripe_checkout(request):
+#     if request.method != "POST":
+#         print("hello")
+#         return JsonResponse({"error": "Invalid request method"}, status=405)
 
+#     user = request.user
+#     cart = Cart.objects.filter(user=user).first()
+#     if not cart or cart.cartitem_set.count() == 0:
+#         messages.error(request, "Your cart is empty!")
+#         return redirect("Ecommerce:cart_view")
+
+#     total_price = Decimal(0)
+#     discount_rate = Decimal(0)
+#     line_items = []
+
+#     user_membership = User_membership.objects.filter(user=user, status=True, membership_end_date__gte=date.today()).first()
+#     if user_membership:
+#         discount_rate = Decimal(user_membership.plan.discount_rate)
+
+#     for cart_item in cart.cartitem_set.select_related("product_variant", "product_batch").all():
+#         inventory = Inventory.objects.filter(batch__variant=cart_item.product_variant).order_by('-create_at').first()
+#         if not inventory or inventory.sales_price is None:
+#             return JsonResponse({"error": f"Price not available for {cart_item.product_variant}"}, status=400)
+
+#         original_price = Decimal(inventory.sales_price)
+#         discounted_price = original_price * (1 - discount_rate / 100)
+#         total_price += discounted_price * cart_item.quantity
+
+#         product_image_url = (
+#             request.build_absolute_uri(cart_item.product_variant.product.product_image.url)
+#             if cart_item.product_variant.product.product_image else "https://via.placeholder.com/150"
+#         )
+
+#         line_items.append({
+#             'price_data': {
+#                 "currency": "inr",
+#                 'product_data': {'name': str(cart_item.product_variant), 'images': [product_image_url]},
+#                 "unit_amount": max(1, int(discounted_price * 100)),
+#             },
+#             'quantity': cart_item.quantity,
+#         })
+
+#     address = request.POST.get("address", "").strip()
+#     city_id = request.POST.get("city", "").strip()
+#     pincode = request.POST.get("pincode", "").strip()
+
+#     if not all([address, city_id, pincode]):
+#         return JsonResponse({"error": "Missing address, city, or pincode!"}, status=400)
+
+#     pincode_obj, _ = Pincode.objects.get_or_create(area_pincode__iexact=pincode, defaults={'delivery_charges': 50})
+#     delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges or 50)
+
+#     final_price = total_price + delivery_charges
+#     final_amount = max(1, int(final_price * 100))
+
+#     if delivery_charges > 0:
+#         line_items.append({
+#             'price_data': {
+#                 "currency": "inr",
+#                 'product_data': {'name': "Delivery Charges"},
+#                 "unit_amount": int(delivery_charges * 100),
+#             },
+#             'quantity': 1,
+#         })
+
+#     try:
+#         session = stripe.checkout.Session.create(
+#             payment_method_types=['card'],
+#             line_items=line_items,
+#             mode='payment',
+#             success_url='http://127.0.0.1:8000/payment/success/',
+#             cancel_url='http://127.0.0.1:8000/payment/cancel/',
+#             metadata={"final_total": str(final_price)},
+#              billing_address_collection="required",
+#         shipping_address_collection={"allowed_countries": ["IN"]},
+            
+#         )
+#         return redirect(session.url)
+#     except stripe.error.StripeError as e:
+#         return JsonResponse({"error": f"Stripe error: {str(e)}"}, status=500)
+
+
+# @csrf_exempt
+# def stripe_webhook(request):
+#     payload = request.body
+#     sig_header = request.headers.get("Stripe-Signature")
+#     endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+
+#     try:
+#         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+#     except (ValueError, stripe.error.SignatureVerificationError) as e:
+#         logger.error(f"Webhook error: {e}")
+#         return JsonResponse({"error": "Webhook validation failed"}, status=400)
+
+#     if event["type"] == "checkout.session.completed":
+#         session = event["data"]["object"]
+
+#         customer_email = session.get("customer_email")
+#         stripe_payment_id = session.get("payment_intent")
+#         amount_total = session.get("amount_total")
+
+#         if not all([customer_email, stripe_payment_id, amount_total]):
+#             logger.error("Missing essential payment details")
+#             return JsonResponse({"error": "Missing essential payment details"}, status=400)
+
+#         final_price = Decimal(amount_total) / 100
+#         user = get_object_or_404(CustomUser, email=customer_email)
+
+#         cart = Cart.objects.filter(user=user).first()
+#         if not cart or not cart.cartitem_set.exists():
+#             logger.error("Cart is empty or does not exist")
+#             return JsonResponse({"error": "Cart not found or empty"}, status=400)
+
+#         user_membership = User_membership.objects.filter(user=user, status=True, membership_end_date__gte=date.today()).first()
+#         discount_rate = Decimal(user_membership.plan.discount_rate) if user_membership else Decimal(0)
+#         discount_amount = final_price * (discount_rate / 100)
+#         final_price -= discount_amount
+#         delivery_charges = Decimal(0) if user_membership else Decimal(50)
+
+#         try:
+#             with transaction.atomic():
+#                 order = Order.objects.create(
+#                     user=user,
+#                     customer_email=customer_email,
+#                     total_price=final_price,
+#                     discounted_price=discount_amount,
+#                     order_status="Pending",
+#                     state=user.state,
+#                     city_id=user.city,
+#                     address=user.address,
+#                     pincode=user.pincode,
+#                     delivery_charges=delivery_charges,
+#                 )
+
+#                 for cart_item in cart.cartitem_set.all():
+#                     inventory = Inventory.objects.filter(batch=cart_item.product_batch).first()
+#                     if not inventory or inventory.quantity < cart_item.quantity:
+#                         logger.error(f"Insufficient stock for {cart_item.product_variant}")
+#                         return JsonResponse({"error": f"Insufficient stock for {cart_item.product_variant}"}, status=400)
+
+#                     Order_Item.objects.create(
+#                         order=order,
+#                         batch=cart_item.product_batch,
+#                         variant=cart_item.product_variant,
+#                         quantity=cart_item.quantity,
+#                         price=inventory.sales_price,
+#                     )
+
+#                     # Decrease inventory stock
+#                     inventory.quantity -= cart_item.quantity
+#                     inventory.save()
+
+#                 Payment.objects.create(
+#                     order=order,
+#                     total_price=final_price,
+#                     payment_mode="online",
+#                     payment_status="completed",
+#                     transaction_id=str(stripe_payment_id),
+#                 )
+
+#                 # Clear the cart after successful order
+#                 cart.cartitem_set.all().delete()
+
+#             return JsonResponse({"status": "success", "message": "Payment processed successfully!"}, status=200)
+
+#         except Exception as e:
+#             logger.error(f"Order processing error: {e}")
+#             return JsonResponse({"error": "Error processing order"}, status=500)
+
+#     return JsonResponse({"status": "ignored", "message": "Event not processed"}, status=200)
+
+
+
+
+
+@login_required
+def razorpay_checkout(request):
+    print("*****")
     user = request.user
-    cart = Cart.objects.filter(user=user).first()
-    if not cart or cart.cartitem_set.count() == 0:
+    try:
+        cart = Cart.objects.get(user=user)
+    except Cart.DoesNotExist:
         messages.error(request, "Your cart is empty!")
         return redirect("Ecommerce:cart_view")
 
-    total_price = Decimal(0)
-    discount_rate = Decimal(0)
-    line_items = []
+    if not cart.cartitem_set.exists():
+        messages.error(request, "Your cart is empty!")
+        return redirect("Ecommerce:cart_view")
 
-    user_membership = User_membership.objects.filter(user=user, status=True, membership_end_date__gte=date.today()).first()
-    if user_membership:
-        discount_rate = Decimal(user_membership.plan.discount_rate)
+    total_price = sum(item.total_price for item in cart.cartitem_set.all())
 
-    for cart_item in cart.cartitem_set.select_related("product_variant", "product_batch").all():
-        inventory = Inventory.objects.filter(batch__variant=cart_item.product_variant).order_by('-create_at').first()
-        if not inventory or inventory.sales_price is None:
-            return JsonResponse({"error": f"Price not available for {cart_item.product_variant}"}, status=400)
+    # Check user membership
+    user_membership = User_membership.objects.filter(
+        user=user, status=True, membership_end_date__gte=date.today()
+    ).first()
 
-        original_price = Decimal(inventory.sales_price)
-        discounted_price = original_price * (1 - discount_rate / 100)
-        total_price += discounted_price * cart_item.quantity
+    discount_amount = (Decimal(user_membership.plan.discount_rate) / 100) * total_price if user_membership else Decimal(0)
+    total_price -= discount_amount
+    delivery_charges = Decimal(0) if user_membership else Decimal(0)
 
-        product_image_url = (
-            request.build_absolute_uri(cart_item.product_variant.product.product_image.url)
-            if cart_item.product_variant.product.product_image else "https://via.placeholder.com/150"
-        )
+    if request.method == "POST":
+        address = request.POST.get("address", "").strip()
+        city_id = request.POST.get("city", "").strip()
+        pincode = request.POST.get("pincode", "").strip()
 
-        line_items.append({
-            'price_data': {
-                "currency": "inr",
-                'product_data': {'name': str(cart_item.product_variant), 'images': [product_image_url]},
-                "unit_amount": max(1, int(discounted_price * 100)),
-            },
-            'quantity': cart_item.quantity,
-        })
+        if not all([address, city_id, pincode]):
+            messages.error(request, "All fields (Address, City, and Pincode) are required!")
+            return redirect("Ecommerce:checkout")
 
-    address = request.POST.get("address", "").strip()
-    city_id = request.POST.get("city", "").strip()
-    pincode = request.POST.get("pincode", "").strip()
+        try:
+            pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
+            delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges)
+        except Pincode.DoesNotExist:
+            messages.error(request, "Invalid pincode.")
+            return redirect("Ecommerce:checkout")
 
-    if not all([address, city_id, pincode]):
-        return JsonResponse({"error": "Missing address, city, or pincode!"}, status=400)
+        # Final Order Total
+        final_total = total_price + delivery_charges
 
-    pincode_obj, _ = Pincode.objects.get_or_create(area_pincode__iexact=pincode, defaults={'delivery_charges': 50})
-    delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges or 50)
+        # Create Order in Database
+        with transaction.atomic():
+            order = Order.objects.create(
+                user=user,
+                order_user_type="member" if user_membership else "non-member",
+                total_price=final_total,
+                discounted_price=discount_amount,
+                order_status="pending",
+                state=user.state,
+                city_id=city_id,
+                address=address,
+                pincode=pincode_obj,
+                delivery_charges=delivery_charges,
+            )
 
-    final_price = total_price + delivery_charges
-    final_amount = max(1, int(final_price * 100))
+            # Move cart items to order items
+            for item in cart.cartitem_set.select_related("product_variant", "product_batch").all():
+                Order_Item.objects.create(
+                    order=order,
+                    batch=item.product_batch,
+                    variant=item.product_variant,
+                    quantity=item.quantity,
+                    price=item.total_price,
+                )
 
-    if delivery_charges > 0:
-        line_items.append({
-            'price_data': {
-                "currency": "inr",
-                'product_data': {'name': "Delivery Charges"},
-                "unit_amount": int(delivery_charges * 100),
-            },
-            'quantity': 1,
-        })
+                # Reduce stock
+                inventory = Inventory.objects.filter(batch=item.product_batch).first()
+                if inventory and inventory.quantity >= item.quantity:
+                    inventory.quantity -= item.quantity
+                    inventory.save()
+                else:
+                    messages.error(request, f"Not enough stock for {item.product_variant}.")
+                    return redirect("Ecommerce:cart_view")
 
-    try:
-        session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=line_items,
-            mode='payment',
-            success_url='http://127.0.0.1:8000/payment/success/',
-            cancel_url='http://127.0.0.1:8000/payment/cancel/',
-            metadata={"final_total": str(final_price)},
-             billing_address_collection="required",
-        shipping_address_collection={"allowed_countries": ["IN"]},
+            # Initialize Razorpay Client
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
             
-        )
-        return redirect(session.url)
-    except stripe.error.StripeError as e:
-        return JsonResponse({"error": f"Stripe error: {str(e)}"}, status=500)
+            # Create Razorpay Order
+            razorpay_order = client.order.create(
+                {
+                    "amount": int(final_total * 100),  # Convert to paisa
+                    "currency": "INR",
+                    "payment_capture": 1,  # Auto capture payment
+                }
+            )
+
+            # Store Razorpay Order ID in Payment Model
+            payment = Payment.objects.create(
+                order=order,
+                total_price=final_total,
+                payment_mode="razorpay",
+                payment_status="pending",
+                razorpay_order_id=razorpay_order["id"],  # Store Razorpay Order ID
+            )
+
+            # Clear the cart after order creation
+            cart.cartitem_set.all().delete()
+
+        context = {
+            "cart": cart,
+            "total_price": total_price,
+            "discount_amount": discount_amount,
+            "final_total": final_total,
+            "razorpay_order_id": razorpay_order["id"],  # Pass Order ID to frontend
+            "razorpay_key": settings.RAZORPAY_KEY_ID,
+        }
+
+        return render(request, "payment/razorpay_checkout.html", context)
+
+    return redirect("Ecommerce:checkout")
 
 
 @csrf_exempt
-def stripe_webhook(request):
-    payload = request.body
-    sig_header = request.headers.get("Stripe-Signature")
-    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
-
+def razorpay_webhook(request):
     try:
-        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
-    except (ValueError, stripe.error.SignatureVerificationError) as e:
-        logger.error(f"Webhook error: {e}")
-        return JsonResponse({"error": "Webhook validation failed"}, status=400)
+        data = json.loads(request.body)
+        event = data.get("event")
 
-    if event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
+        if event == "payment.captured":
+            order_id = data["payload"]["payment"]["entity"]["order_id"]
+            payment_id = data["payload"]["payment"]["entity"]["id"]
+            amount = Decimal(data["payload"]["payment"]["entity"]["amount"]) / 100  # Convert from paisa
 
-        customer_email = session.get("customer_email")
-        stripe_payment_id = session.get("payment_intent")
-        amount_total = session.get("amount_total")
+            # Check if payment exists in the database
+            try:
+                payment = Payment.objects.get(razorpay_order_id=order_id)
+                payment.payment_status = "completed"
+                payment.razorpay_payment_id = payment_id
+                payment.total_paid = amount  # Save the paid amount
+                payment.save()
 
-        if not all([customer_email, stripe_payment_id, amount_total]):
-            logger.error("Missing essential payment details")
-            return JsonResponse({"error": "Missing essential payment details"}, status=400)
+                # Update Order Status
+                order = payment.order
+                order.order_status = "confirmed"
+                order.save()
 
-        final_price = Decimal(amount_total) / 100
-        user = get_object_or_404(CustomUser, email=customer_email)
+                return JsonResponse({"status": "success"})
+            
+            except Payment.DoesNotExist:
+                return JsonResponse({"status": "failed", "message": "Payment record not found."}, status=400)
 
-        cart = Cart.objects.filter(user=user).first()
-        if not cart or not cart.cartitem_set.exists():
-            logger.error("Cart is empty or does not exist")
-            return JsonResponse({"error": "Cart not found or empty"}, status=400)
+        return JsonResponse({"status": "failed", "message": "Invalid event"}, status=400)
 
-        user_membership = User_membership.objects.filter(user=user, status=True, membership_end_date__gte=date.today()).first()
-        discount_rate = Decimal(user_membership.plan.discount_rate) if user_membership else Decimal(0)
-        discount_amount = final_price * (discount_rate / 100)
-        final_price -= discount_amount
-        delivery_charges = Decimal(0) if user_membership else Decimal(50)
+    except json.JSONDecodeError:
+        return JsonResponse({"status": "failed", "message": "Invalid JSON"}, status=400)
 
-        try:
-            with transaction.atomic():
-                order = Order.objects.create(
-                    user=user,
-                    customer_email=customer_email,
-                    total_price=final_price,
-                    discounted_price=discount_amount,
-                    order_status="Pending",
-                    state=user.state,
-                    city_id=user.city,
-                    address=user.address,
-                    pincode=user.pincode,
-                    delivery_charges=delivery_charges,
-                )
+# @csrf_exempt
+# def razorpay_payment_success(request):
+#     if request.method == "POST":
+#         data = json.loads(request.body)
+#         razorpay_order_id = data.get("razorpay_order_id")
+#         razorpay_payment_id = data.get("razorpay_payment_id")
+#         razorpay_signature = data.get("razorpay_signature")
 
-                for cart_item in cart.cartitem_set.all():
-                    inventory = Inventory.objects.filter(batch=cart_item.product_batch).first()
-                    if not inventory or inventory.quantity < cart_item.quantity:
-                        logger.error(f"Insufficient stock for {cart_item.product_variant}")
-                        return JsonResponse({"error": f"Insufficient stock for {cart_item.product_variant}"}, status=400)
+#         try:
+#             payment = Payment.objects.get(razorpay_order_id=razorpay_order_id)
+#             client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
 
-                    Order_Item.objects.create(
-                        order=order,
-                        batch=cart_item.product_batch,
-                        variant=cart_item.product_variant,
-                        quantity=cart_item.quantity,
-                        price=inventory.sales_price,
-                    )
+#             # Verify Payment Signature
+#             params_dict = {
+#                 "razorpay_order_id": razorpay_order_id,
+#                 "razorpay_payment_id": razorpay_payment_id,
+#                 "razorpay_signature": razorpay_signature,
+#             }
+#             result = client.utility.verify_payment_signature(params_dict)
+#             print("Signature Verification Result:", result)  # Debugging
 
-                    # Decrease inventory stock
-                    inventory.quantity -= cart_item.quantity
-                    inventory.save()
 
-                Payment.objects.create(
-                    order=order,
-                    total_price=final_price,
-                    payment_mode="online",
-                    payment_status="completed",
-                    transaction_id=str(stripe_payment_id),
-                )
+#             if result:
+#                 print("Updating payment status to completed.")  # Debugging
+#                 payment.payment_status = "completed"
+#                 payment.razorpay_payment_id = razorpay_payment_id
+#                 payment.save()
 
-                # Clear the cart after successful order
-                cart.cartitem_set.all().delete()
+#                 order = payment.order
+#                 order.order_status = "confirmed"
+#                 order.save()
 
-            return JsonResponse({"status": "success", "message": "Payment processed successfully!"}, status=200)
 
-        except Exception as e:
-            logger.error(f"Order processing error: {e}")
-            return JsonResponse({"error": "Error processing order"}, status=500)
+#                 return JsonResponse({"status": "success"})
+#             else:
+#                 return JsonResponse({"status": "failed", "message": "Payment verification failed!"})
 
-    return JsonResponse({"status": "ignored", "message": "Event not processed"}, status=200)
+#         except Payment.DoesNotExist:
+#             return JsonResponse({"status": "failed", "message": "Invalid Razorpay Order ID"})
 
+#     return JsonResponse({"status": "failed", "message": "Invalid Request"})

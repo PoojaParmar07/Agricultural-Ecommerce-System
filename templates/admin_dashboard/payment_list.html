@@ -25,8 +25,9 @@
                     <th>Payment Id</th>
                     <th>Payment Status</th>
                     <th>Payment Mode</th>
-                    <th>Transaction Id</th>
                     <th>Total Price</th>
+                    <th>Razorpay Order ID</th>
+                    <th>Razorpay Payment ID</th>
                     <th>Order Id</th>
                     <th>Membership Id</th>
                     <th>Actions</th>
@@ -35,21 +36,22 @@
             <tbody>
                 {% for obj in payments %}
                     <tr>
-                        <!-- Product Details (spanning over variants) -->
-                        <td >{{ obj.payment_id }}</td>
-                        <td >{{ obj.payment_status }}</td>
+                        <td>{{ obj.payment_id }}</td>
+                        <td>{{ obj.payment_status }}</td>
                         <td>{{ obj.payment_mode }}</td>
-                        <td >{{ obj.transaction_id }}</td>
-                        <td >{{ obj.total_price }}</td>
-                        <td >{{ obj.order.order_id }}</td>
-                        <td >{{ obj.membership.id }}</td>
-                       <td> <a href="{% url 'admin_dashboard:payment_view_details' obj.pk %}">View Details</a></td>
-
-                        </tr>
-                        
+                        <td>{{ obj.total_price }}</td>
+                        <td>{{ obj.razorpay_order_id|default:"-" }}</td>
+                        <td>{{ obj.razorpay_payment_id|default:"-" }}</td>
+                        <td>{{ obj.order.order_id|default:"-" }}</td>
+                        <td>{{ obj.membership.id|default:"-" }}</td>
+                        <td>
+                            <a href="{% url 'admin_dashboard:payment_view_details' obj.pk %}">View Details</a>
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
     </section>
+    
 </div>
 {% endblock %}

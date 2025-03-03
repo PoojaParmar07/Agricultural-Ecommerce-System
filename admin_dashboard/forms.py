@@ -183,12 +183,15 @@ class PaymentForm(forms.ModelForm):
         model = Payment
         fields = '__all__'
         widgets = {
-            'payment_mode': forms.Select(attrs={'class': 'form-control'}),
-            'payment_status': forms.Select(attrs={'class': 'form-select'}),
-            'transaction_id': forms.Select(attrs={'class': 'form-control'}),
-            'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'order': forms.Select(attrs={'class': 'form-select'}),
             'membership': forms.Select(attrs={'class': 'form-select'}),
+            'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'payment_mode': forms.Select(attrs={'class': 'form-select'}),
+            'payment_status': forms.Select(attrs={'class': 'form-select'}),
+            'razorpay_order_id': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
+            'razorpay_payment_id': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
+            'payment_date': forms.DateTimeInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
+            'create_at': forms.DateTimeInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
         }
 
     def clean(self):

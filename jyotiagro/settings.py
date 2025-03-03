@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'socialmedia',
     
     'django_extensions',
+    'payment',
     
 ]
 
@@ -170,4 +171,9 @@ AUTHENTICATION_BACKENDS = [
 # Payment keys
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='')
+
+
+# Razorpay
+RAZORPAY_KEY_ID=config('RAZORPAY_KEY_ID',default='')
+RAZORPAY_SECRET_KEY=config('RAZORPAY_SECRET_KEY',default='')
     
