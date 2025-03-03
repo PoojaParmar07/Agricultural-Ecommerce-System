@@ -1,8 +1,11 @@
 {% extends 'Ecommerce/base.html' %}
 {% block content %}
 {% load static %}
+<head>
 <title>Checkout - Jyoti Agro</title>
 <link rel="stylesheet" href="{% static 'css/checkout_page.css' %}">
+
+</head>
 <div class="checkout-container">
     <!-- Billing Information -->
     <div class="billing-info">
@@ -114,47 +117,45 @@
         </div>
         
         
-        <button type="submit" id="rzp-button1" name="placeOrder">Place Order</button>
+        <button id="rzp-button1">Pay Now</button>
+
     </form>
     </div>
 </div>
 
 {% comment %} <script src="{% static 'js/script.js' %}"></script> {% endcomment %}
-
+{% comment %} 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-var options = {
-    "key": "rzp_test_e0fikofmUjlObk", // Enter the Key ID generated from the Dashboard
-    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    "currency": "INR",
-    "name": "Jyoti Agro", //your business name
-    "description": "Purchase",
-    "image": "https://example.com/your_logo",
-    "order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    "handler": function (response){
-        alert(response.razorpay_payment_id);
-        alert(response.razorpay_order_id);
-        alert(response.razorpay_signature)
-    },
-    "theme": {
-        "color": "#3B823E"
-    }
-};
-var rzp1 = new Razorpay(options);
-rzp1.on('payment.failed', function (response){
-        alert(response.error.code);
-        alert(response.error.description);
-        alert(response.error.source);
-        alert(response.error.step);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
-});
-document.getElementById('rzp-button1').onclick = function(e){
-    rzp1.open();
-    e.preventDefault();
-}
-</script>
+    document.getElementById("rzp-button1").addEventListener("click", function () {
+        console.log("Button clicked! Initializing Razorpay...");
+        
+        var options = {
+            "key": "{{ razorpay_key }}",  // Ensure this is passed correctly from views
+            "amount": "{{ final_total }}",  // Amount in paisa (multiply by 100)
+            "currency": "INR",
+            "name": "Jyoti Agro",  // Change to your business name
+            "description": "Purchase from Jyoti Agro",
+            "order_id": "{{ razorpay_order_id }}",  // Razorpay Order ID
+            "handler": function (response) {
+                alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+                window.location.href = "/payment/success/?payment_id=" + response.razorpay_payment_id;
+            },
+            "prefill": {
+                "name": "{{ user.get_full_name }}",
+                "email": "{{ user.email }}",
+                "contact": "{{ user.profile.phone }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+    });
+</script> {% endcomment %}
+
 
 
 
@@ -242,6 +243,7 @@ document.getElementById('rzp-button1').onclick = function(e){
         let placeOrderBtn = document.getElementById("rzp-button1");
 
         placeOrderBtn.addEventListener("click", function (event) {
+            console.log("Button clicked! Initializing Razorpay...");
             event.preventDefault(); // Prevent default form submission
 
             let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;

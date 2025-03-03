@@ -168,12 +168,37 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-# Payment keys
-STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
-STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='')
+# # Payment keys
+# STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
+# STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='')
 
 
 # Razorpay
 RAZORPAY_KEY_ID=config('RAZORPAY_KEY_ID',default='')
 RAZORPAY_SECRET_KEY=config('RAZORPAY_SECRET_KEY',default='')
+RAZORPAY_WEBHOOK_SECRET=config('RAZORPAY_WEBHOOK_SECRET',default='')
     
+    
+    
+    
+    
+    
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "razorpay_webhook.log",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+ALLOWED_HOSTS = ['063c-1-22-104-49.ngrok-free.app', 'localhost', '127.0.0.1']
