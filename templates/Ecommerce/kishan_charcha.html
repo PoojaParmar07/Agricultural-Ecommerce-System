@@ -1,0 +1,118 @@
+ {% extends "Ecommerce/base.html" %}
+{% load static %}
+{% comment %}{%block content %}
+    <link rel="stylesheet" href="{% static 'Ecommerce/kishan_charcha.css' %}">
+    <div class="post-container">
+        <h2>My feed</h2>
+        <div class="feed-container">
+            <div class="user-post">
+                {% for post in posts %}
+                <div class="post">
+                    <div class="post-header">
+                        <img src="{{ user.image.url }}" alt="Profile" class="avatar">
+                        <div>
+                            <strong>{{ post.user.username }}</strong>
+                            <span>{{ post.created_at|timesince }} ago</span>
+                        </div>
+                    </div>
+                    <img src="{{ post.image.url }}" alt="Post Image" class="post-image">
+                    <div class="post-actions">
+                        <span><i class="bx bx-heart"></i> {{ post.likes }}</span>
+                        <span>💬 {{ post.comments_count }}</span>
+                        <span>🔗 Share</span>
+                    </div>
+                </div>
+                {% endfor %}
+               
+            </div>
+            
+            {% comment %} <div class="create-post">
+                <div class="post-header">
+                    <img src="profile3.jpg" alt="Profile" class="avatar">
+                    <div>
+                        <strong>Omkar Rahi</strong>
+                        <span>Create New Post</span>
+                    </div>
+                </div>
+                <textarea placeholder="Share something interesting..."></textarea>
+                <div class="post-footer">
+                    <input type="file" id="attach-image" hidden>
+                    <label for="attach-image">📎 Attach image</label>
+                    <button>Publish</button>
+                </div>
+            </div> 
+        </div>
+    </div>{% endblock %} {% endcomment %}
+
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'Ecommerce/kishan_charcha.css' %}">
+
+    <div class="post-container">
+        <h2>My Feed</h2>
+        <!-- Create Post Button -->
+        <a href="#" class="create-post-btn">+ Create New Post</a>
+        
+
+        <div class="feed-container">
+            {% for post in posts %}
+                <div class="post">
+                    <div class="post-header">
+                        <img src="{{ post.user.image.url }}" alt="Profile" class="avatar">
+                        <div>
+                            <strong>{{ post.user.username }}</strong>
+                            <span>{{ post.created_at|timesince }} ago</span>
+                        </div>
+                    </div>
+                    <img src="{{ post.image.url }}" alt="Post Image" class="post-image">
+                    <div class="post-actions">
+                        <span><i class="bx bx-heart"></i> {{ post.likes }}</span>
+                        <span>💬 {{ post.comments_count }}</span>
+                        <span>🔗 Share</span>
+                    </div>
+                    <!-- Add Your Comment Button -->
+                    <!-- Add Comment Section -->
+                    
+                    
+                    <!-- Comment Form -->
+                    <form action="{% url 'Ecommerce:add_comment' post.post_id %}" method="POST" class='comment-form'>
+                        {% csrf_token %}
+                        <input type="text" name="comment_text" placeholder="Write your comment" class="input-comment" required>
+                        <button type="submit"><box-icon name='send'></box-icon></button>
+                    </form>
+                    <a href="?show_comments={{ post.post_id }}" class="comments-btn">Show Comments</a>
+                    
+                    <!-- Display Comments -->
+                    <div class="comments-section">
+                        {% for comment in post.comments.all %}
+                            <div style="margin-left: {% if comment.parent_comment %}40px{% else %}0px{% endif %};">
+                                <p><strong>{{ comment.user.username }}</strong>: {{ comment.comment_text }}</p>
+                    
+                                <!-- Show Comments Button -->
+                            <a href="?show_comments={{ post.post_id }}" class="show-comments-btn">Show Comments</a>
+
+                            <!-- Comments Section: Initially Hidden -->
+                            {% if request.GET.show_comments|default:"0" == post.post_id|slugify %}
+                                <div class="comments-section">
+                                    {% for comment in post.comments.all %}
+                                        <p><strong>{{ comment.user.username }}</strong>: {{ comment.comment_text }}</p>
+
+                                        <!-- Reply Form for Each Comment -->
+                                        <form action="{% url 'Ecommerce:add_comment' post.post_id %}" method="POST" class='comment-form'>
+                                            {% csrf_token %}
+                                            <input type="hidden" name="parent_comment_id" value="{{ comment.comment_id }}">
+                                            <input type="text" name="comment_text" placeholder="Reply..." class="input-comment" required>
+                                            <button type="submit"><box-icon name='send'></box-icon></button>
+                                        </form>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}   
+        </div>
+    </div>
+{% endblock %}
+

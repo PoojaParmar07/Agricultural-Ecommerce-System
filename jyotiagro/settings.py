@@ -201,4 +201,4 @@ LOGGING = {
         },
     },
 }
-ALLOWED_HOSTS = ['db36-2409-4080-9395-9d0e-1117-af2a-168d-e55c.ngrok-free.app ', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['fb50-2409-4080-8310-c10a-3984-128e-c82-b8a.ngrok-free.app', 'localhost', '127.0.0.1']
