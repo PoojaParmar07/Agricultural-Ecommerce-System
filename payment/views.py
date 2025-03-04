@@ -217,10 +217,9 @@ def razorpay_checkout(request):
 
 
 
-
-
 @csrf_exempt
 def razorpay_webhook(request):
+    print("WEBHOOK")
     if request.method == "POST":
         try:
             print("\n🔹 Webhook Received")
@@ -241,7 +240,7 @@ def razorpay_webhook(request):
 
             event = received_data.get("event", "")
 
-            if event == "order.paid":
+            if event == "payment.captured":
                 payment_entity = received_data["payload"]["payment"]["entity"]
                 razorpay_payment_id = payment_entity["id"]
                 razorpay_order_id = payment_entity["order_id"]

@@ -178,7 +178,7 @@ environ.Env.read_env()
 # Razorpay
 RAZORPAY_KEY_ID=config('RAZORPAY_KEY_ID',default='')
 RAZORPAY_SECRET_KEY=config('RAZORPAY_SECRET_KEY',default='')
-RAZORPAY_WEBHOOK_SECRET = env('RAZORPAY_WEBHOOK_SECRET', default='')
+RAZORPAY_WEBHOOK_SECRET = config('RAZORPAY_WEBHOOK_SECRET', default='')
     
     
     
@@ -205,4 +205,14 @@ LOGGING = {
 }
 
 
-ALLOWED_HOSTS = ['6319-2402-a00-404-ca4f-4577-b761-5b19-57ba.ngrok-free.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "af2b-2402-a00-404-ca4f-e098-507b-d058-8b2b.ngrok-free.app"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://af2b-2402-a00-404-ca4f-e098-507b-d058-8b2b.ngrok-free.app"
+]
+
+
