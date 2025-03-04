@@ -11,3 +11,4 @@ urlpatterns = [
     path('razorpay_checkout/',razorpay_checkout,name='razorpay_checkout'),
     path("razorpay/webhook/", razorpay_webhook, name="razorpay_webhook"),
 ]
+

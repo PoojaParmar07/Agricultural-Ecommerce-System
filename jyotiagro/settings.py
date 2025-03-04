@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -172,11 +173,12 @@ AUTHENTICATION_BACKENDS = [
 # STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
 # STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='')
 
-
+env = environ.Env()
+environ.Env.read_env()
 # Razorpay
 RAZORPAY_KEY_ID=config('RAZORPAY_KEY_ID',default='')
 RAZORPAY_SECRET_KEY=config('RAZORPAY_SECRET_KEY',default='')
-RAZORPAY_WEBHOOK_SECRET=config('RAZORPAY_WEBHOOK_SECRET',default='')
+RAZORPAY_WEBHOOK_SECRET = env('RAZORPAY_WEBHOOK_SECRET', default='')
     
     
     
@@ -201,4 +203,6 @@ LOGGING = {
         },
     },
 }
-ALLOWED_HOSTS = ['063c-1-22-104-49.ngrok-free.app', 'localhost', '127.0.0.1']
+
+
+ALLOWED_HOSTS = ['6319-2402-a00-404-ca4f-4577-b761-5b19-57ba.ngrok-free.app', 'localhost', '127.0.0.1']
