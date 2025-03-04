@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect,get_object_or_404
 from django.conf import settings
 from .models import *
-from .form import *
+from .forms import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.http import Http404
@@ -107,5 +107,38 @@ def post_comment_add(request):
     context['form'] = form
     return render(request,'admin_dashboard/add_form.html',context)
 
-def post_comment_view_details(request):
-    pass
+def post_comment_view_details(request, pk):
+    context = {
+        'model_name':'PostComment',
+    }
+    
+    try:
+        # Fetch the category or raise Http404 if not found
+        postcomment = get_object_or_404(Post, pk=pk)
+    except Http404:
+        # Render the custom 404 page
+        return render(request, '404.html', status=404)
+
+    form = PostForm(instance=postcomment)
+
+    if request.method == 'POST':
+        if 'update' in request.POST:  # Update action
+            form = PostCommentForm(request.POST, instance=postcomment)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "comment updated successfully!")
+                return redirect('socialmedia:post_comment_list')
+            else:
+                messages.error(request, "comment update failed. Please correct the errors.")
+        if 'delete' in request.POST:  # Delete action
+            postcomment.delete()
+            messages.success(request, "Comment deleted successfully!")
+            return redirect('socialmedia:post_comment_list')
+
+        elif 'cancel' in request.POST:  # Cancel action
+            return redirect('socialmedia:post_comment_list')
+
+    context['form'] = form
+    context['postcomment'] = postcomment
+    return render(request, 'admin_dashboard/view_details.html', context)
+
