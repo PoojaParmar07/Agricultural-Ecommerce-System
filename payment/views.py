@@ -235,6 +235,7 @@ def razorpay_webhook(request):
 
             webhook_secret = settings.RAZORPAY_WEBHOOK_SECRET.encode()
             expected_signature = hmac.new(webhook_secret, raw_body.encode("utf-8"), hashlib.sha256).hexdigest()
+            
 
             if not hmac.compare_digest(provided_signature, expected_signature):
                 return JsonResponse({"error": "Invalid webhook signature"}, status=400)

@@ -173,7 +173,7 @@ h3 {
 }
 
 /* Button */
-button {
+.pay-btn {
     width: 100%;
     height: 50px;
     padding: 12px;

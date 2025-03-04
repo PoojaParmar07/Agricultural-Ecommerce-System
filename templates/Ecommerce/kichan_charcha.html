@@ -1,0 +1,69 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+{%block content %}
+    <link rel="stylesheet" href="{% static 'Ecommerce/kichan_charcha.css' %}">
+    <div class="container">
+        <h2>My feed</h2>
+        <div class="feed-container">
+            <div class="post">
+                <div class="post-header">
+                    <img src="profile1.jpg" alt="Profile" class="avatar">
+                    <div>
+                        <strong>Pooja Parmar</strong>
+                        <span>2 minutes ago</span>
+                    </div>
+                </div>
+                <img src="plant.jpg" alt="Post Image" class="post-image">
+                <div class="post-actions">
+                    <span>❤️ 25k</span>
+                    <span>💬 500</span>
+                    <span>🔗 Share</span>
+                </div>
+            </div>
+            <div class="post">
+                <div class="post-header">
+                    <img src="profile2.jpg" alt="Profile" class="avatar">
+                    <div>
+                        <strong>Pratha Patel</strong>
+                        <span>2 minutes ago</span>
+                    </div>
+                </div>
+                <img src="succulents.jpg" alt="Post Image" class="post-image">
+                <div class="post-actions">
+                    <span>❤️ 25k</span>
+                    <span>💬 500</span>
+                    <span>🔗 Share</span>
+                </div>
+            </div>
+            <div class="post">
+                <div class="post-header">
+                    <img src="profile2.jpg" alt="Profile" class="avatar">
+                    <div>
+                        <strong>Pratha Patel</strong>
+                        <span>2 minutes ago</span>
+                    </div>
+                </div>
+                <img src="succulents.jpg" alt="Post Image" class="post-image">
+                <div class="post-actions">
+                    <span>❤️ 25k</span>
+                    <span>💬 500</span>
+                    <span>🔗 Share</span>
+                </div>
+            </div>
+            <div class="create-post">
+                <div class="post-header">
+                    <img src="profile3.jpg" alt="Profile" class="avatar">
+                    <div>
+                        <strong>Omkar Rahi</strong>
+                        <span>Create New Post</span>
+                    </div>
+                </div>
+                <textarea placeholder="Share something interesting..."></textarea>
+                <div class="post-footer">
+                    <input type="file" id="attach-image" hidden>
+                    <label for="attach-image">📎 Attach image</label>
+                    <button>Publish</button>
+                </div>
+            </div>
+        </div>
+    </div>{% endblock %}
