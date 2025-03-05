@@ -1,8 +1,12 @@
 # custom_admin/views.py
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import Http404
+from django.template.loader import get_template
+from datetime import datetime
+from xhtml2pdf import pisa
 from django.contrib import messages
 from admin_dashboard.models import *
 from .forms import *
@@ -1047,3 +1051,56 @@ def pincode_view_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
+
+
+
+# REPORT LAYOUT CODE
+
+
+def generate_report(request):
+    products = ProductVariant.objects.all()
+    orders = None
+
+    if request.method == "GET":
+        product_id = request.GET.get("product")
+        start_date = request.GET.get("start_date")
+        end_date = request.GET.get("end_date")
+
+        if product_id and start_date and end_date:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+            orders = Order_Item.objects.filter(
+                variant_id=product_id, create_at__date__range=[start_date, end_date]
+            )
+
+    return render(request, "admin_dashboard/order_report.html", {"products": products, "orders": orders})
+
+
+def download_report_pdf(request):
+    product_id = request.GET.get("product")
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+
+    orders = None
+    if product_id and start_date and end_date:
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+        orders = Order_Item.objects.filter(
+            variant_id=product_id, create_at__date__range=[start_date, end_date]
+        )
+
+    template_path = "admin_dashboard/report_pdf.html"
+    context = {"orders": orders}
+    template = get_template(template_path)
+    html = template.render(context)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "attachment; filename=report.pdf"
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse("Error generating PDF", content_type="text/plain")
+
+    return response

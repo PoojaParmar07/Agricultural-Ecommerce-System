@@ -92,4 +92,9 @@ urlpatterns = [
     path('pincode_list/',pincode_list,name='pincode_list'),
     path('pincode_add/',pincode_add,name='pincode_add'),
     path('pincode_view_details/<int:pk>/',pincode_view_details,name='pincode_view_details'),
+    
+    
+    #Report
+    path("report/", generate_report, name="generate_report"),
+    path("report/download/", download_report_pdf, name="download_report_pdf"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

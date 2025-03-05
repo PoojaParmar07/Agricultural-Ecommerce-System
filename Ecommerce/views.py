@@ -17,8 +17,6 @@ from datetime import date
 from decimal import Decimal
 # from django.http import HttpResponse
 import json
-from django.template.loader import get_template
-from xhtml2pdf import pisa
 from account.models import *
 from account.form import *
 from django.core.paginator import Paginator
@@ -711,23 +709,23 @@ def get_pincode(request, city_id):
 
 
 
-def render_pdf_view(request):
-    users = CustomUser.objects.all()
-    template_path = 'admin_dashboard/userlist.html'
-    context = {'users': users}
+# def render_pdf_view(request):
+#     users = CustomUser.objects.all()
+#     template_path = 'admin_dashboard/userlist.html'
+#     context = {'users': users}
     
-    template = get_template(template_path)
-    html = template.render(context)
+#     template = get_template(template_path)
+#     html = template.render(context)
     
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="user_report.pdf"'
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="user_report.pdf"'
     
-    pisa_status = pisa.CreatePDF(html, dest=response)
+#     pisa_status = pisa.CreatePDF(html, dest=response)
     
-    if pisa_status.err:
-        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     if pisa_status.err:
+#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     
-    return response
+#     return response
 
 
 
@@ -918,3 +916,8 @@ def add_comment(request, post_id):
         return redirect("Ecommerce:kishan_charcha")  # Redirect back to post page
 
     return redirect("Ecommerce:homepage")
+
+
+
+
+

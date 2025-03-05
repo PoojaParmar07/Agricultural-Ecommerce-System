@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Report - Jyoti Agro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .header img {
+            width: 100px;
+            height: auto;
+        }
+        .header h2 {
+            margin: 5px 0;
+        }
+        .report-info {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        .table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="/static/logo.png" alt="Jyoti Agro Logo">
+        <h2>Order Report</h2>
+    </div>
+
+    <div class="report-info">
+        <p><strong>Date Range:</strong> {{ request.GET.start_date }} to {{ request.GET.end_date }}</p>
+    </div>
+
+    <div class="table-container">
+        <table class="table">
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Date</th>
+            </tr>
+            {% for order in orders %}
+                <tr>
+                    <td>#{{ order.order.order_id }}</td>
+                    <td>{{ order.variant }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>₹{{ order.price }}</td>
+                    <td>{{ order.create_at|date:"Y-m-d" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No orders found for the selected date range.</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="summary">
+        <p>Total Orders: {{ orders|length }}</p>
+    </div>
+
+    <div class="footer">
+        <p>Generated on {{ request.GET.end_date }} | © 2025 Jyoti Agro</p>
+    </div>
+
+</body>
+</html>
