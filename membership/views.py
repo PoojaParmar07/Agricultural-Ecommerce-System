@@ -9,6 +9,7 @@ from django.utils.timezone import now
 from django.urls import reverse
 from datetime import timedelta
 from account.models import CustomUser
+from django.core.paginator import Paginator
 
 
 def is_admin_user(user):
@@ -28,7 +29,12 @@ def home(request):
 @user_passes_test(is_admin_user) 
 def membership_plan_list(request):
     plans = Membership_plan.objects.all()
-    return render(request,'admin_dashboard/membership_plan_list.html', {'plans': plans})
+    paginator = Paginator(plans, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/membership_plan_list.html', {'page_obj': page_obj})
+
 
 
 
@@ -109,7 +115,12 @@ def membership_view_details(request, pk):
 @user_passes_test(is_admin_user) 
 def user_membership(request):
     memberships = User_membership.objects.all()
-    return render(request, 'admin_dashboard/user_membership.html', {'memberships':memberships})
+    paginator = Paginator(memberships, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/user_membership_list.html', {'page_obj': page_obj})
+
 
 
 

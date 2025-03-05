@@ -70,7 +70,7 @@
                        
                     </div>
                     <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
-                    {% comment %} <div class="rating-container">
+                     <div class="rating-container">
                         <span class="star-rating">
                             {% if product.rating %}
                                 {% for i in "12345" %}
@@ -88,7 +88,7 @@
                                 <span class="rating">(0/5)</span>
                             {% endif %}
                         </span>
-                    </div>  {% endcomment %}
+                    </div> 
 
                   {% if product.inventory_quantity > 0 %}
                     {% if product.product_id in cart_product_ids %}

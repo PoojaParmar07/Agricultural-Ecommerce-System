@@ -40,8 +40,7 @@ urlpatterns = [
     
     path("search-results/", ProductSearchView.as_view(), name="search_results"),
     
-    path("kishan_charcha/",kishan_charcha,name="kishan_charcha"),
-    path("add_comment/<int:post_id>/", add_comment, name="add_comment"),
+   
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

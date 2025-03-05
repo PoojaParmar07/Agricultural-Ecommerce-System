@@ -439,7 +439,7 @@ def update_variant(request, cart_item_id):
 
         if not variant_id:
             # Redirect if no variant selected
-            return redirect("Ecommerce:cart_view")
+            return redirect("Ecommerce:homepage")
 
         # Get the cart item
         cart_item = get_object_or_404(
@@ -464,7 +464,7 @@ def update_variant(request, cart_item_id):
             print("No inventory found for this variant")  # Debugging
 
     # Reload the cart page to reflect changes
-    return redirect("Ecommerce:cart_view")
+    return redirect("Ecommerce:homepage")
 
 
 
@@ -886,6 +886,9 @@ class ProductSearchView(ListView):
 
         return context
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 def kishan_charcha(request):
     
@@ -921,3 +924,9 @@ def add_comment(request, post_id):
 
 
 
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes

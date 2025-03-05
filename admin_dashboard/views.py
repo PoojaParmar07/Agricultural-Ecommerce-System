@@ -10,6 +10,7 @@ from xhtml2pdf import pisa
 from django.contrib import messages
 from admin_dashboard.models import *
 from .forms import *
+from django.core.paginator import Paginator
 
 # Check if the user is staff
 def is_admin_user(user):
@@ -34,7 +35,12 @@ def demo(request):
 
 def category_list(request):
     categories = Category.objects.all()
-    return render(request, 'admin_dashboard/category_list.html', {'categories': categories})
+    paginator = Paginator(categories, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/category_list.html', {'page_obj': page_obj})
+
 
 
 def category_add(request):
@@ -99,8 +105,12 @@ def category_view_details(request, pk):
 
 def list_brand(request):
     brand=Brand.objects.all()
-    return render(request, 'admin_dashboard/brand_list.html', {'brand':brand})
+     # Pagination
+    paginator = Paginator(brand, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
+    return render(request, 'admin_dashboard/brand_list.html', {'page_obj': page_obj})
 
 def add_brand(request):
     context={
@@ -162,8 +172,12 @@ def brand_view_details(request,pk):
 
 def product_list(request):
     products = Product.objects.all()
-    return render(request,'admin_dashboard/product_list.html', {'products':products})
+     # Pagination
+    paginator = Paginator(products, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
+    return render(request, 'admin_dashboard/product_list.html', {'page_obj': page_obj})
 
 
 def add_product(request):
@@ -225,7 +239,12 @@ def product_view_details(request,pk):
 
 def product_variant_list(request):
     product_variant=ProductVariant.objects.all()
-    return render(request,'admin_dashboard/product_variant_list.html',{'product_variant':product_variant})
+    paginator = Paginator(product_variant, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/product_variant_list.html', {'page_obj': page_obj})
+
 
 
 
@@ -282,7 +301,12 @@ def product_variant_view_details(request,pk):
 
 def productbatch_list(request):
     productbatchies = ProductBatch.objects.all()
-    return render(request, 'admin_dashboard/productbatch_list.html',{'productbatchies':productbatchies})
+    paginator = Paginator(productbatchies, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/productbatch_list.html', {'page_obj': page_obj})
+
 
 
 def productbatch_add(request):
@@ -349,7 +373,12 @@ def productbatch_view_details(request, pk):
  
 def inventory_list(request):
     inventory=Inventory.objects.all()
-    return render(request,'admin_dashboard/inventory_list.html',{'inventory':inventory})
+    paginator = Paginator(inventory, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/inventory_list.html', {'page_obj': page_obj})
+
 
 def inventory_add(request):
    context = {
@@ -408,9 +437,14 @@ def inventory_view_details(request,pk):
 # Order View
 
 def order_list(request):
-    orders=Order.objects.all()
-    return render(request,'admin_dashboard/order_list.html',{'orders':orders})
+    orders = Order.objects.all()  # Fetch orders and sort by latest ID
 
+    # Pagination (10 orders per page)
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/order_list.html', {'page_obj': page_obj})
 
 def order_add(request):
     context = {
@@ -474,7 +508,12 @@ def order_view_details(request, pk):
 
 def orderitem_list(request):
     orderitems = Order_Item.objects.all()
-    return render(request,'admin_dashboard/orderitem_list.html',{'orderitems':orderitems})
+    paginator = Paginator(orderitems, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/orderitem_list.html', {'page_obj': page_obj})
+
 
 def orderitem_add(request):
     context ={
@@ -529,7 +568,12 @@ def orderitem_view_details(request, pk):
 
 def payment_list(request):
     payments=Payment.objects.all()
-    return render(request,'admin_dashboard/payment_list.html',{'payments':payments})
+    paginator = Paginator(payments, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/payment_list.html', {'page_obj': page_obj})
+
    
 
 def payment_add(request):
@@ -589,7 +633,12 @@ def payment_view_details(request,pk):
 
 def feedback_list(request):
     feedbacks = Feedback.objects.all()
-    return render(request,'admin_dashboard/feedback_list.html',{'feedbacks':feedbacks})
+    paginator = Paginator(feedbacks, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/feedback_list.html', {'page_obj': page_obj})
+
 
 def feedback_add(request):
     context={
@@ -644,7 +693,12 @@ def feedback_view_details(request, pk):
 
 def review_list(request):
     reviews = Review.objects.all()
-    return render(request,'admin_dashboard/review_list.html',{'reviews':reviews})
+    paginator = Paginator(reviews, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/reviews_list.html', {'page_obj': page_obj})
+
 
 def review_add(request):
     
@@ -706,7 +760,12 @@ def review_view_details(request, pk):
 
 def wishlist_list(request):
     wishlist=Wishlist.objects.all()
-    return render(request,'admin_dashboard/wishlist_list.html',{'wishlist':wishlist})
+    paginator = Paginator(wishlist, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/wishlist_list.html', {'page_obj': page_obj})
+
 
 def wishlist_add(request):
     context = {
@@ -763,7 +822,12 @@ def wishlist_view_details(request,pk):
 
 def wishlist_item_list(request):
     wishlist_item=WishlistItem.objects.all()
-    return render(request,'admin_dashboard/wishlist_item_list.html',{'wishlist_item':wishlist_item})
+    paginator = Paginator(wishlist_item, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/wishlist_item_list.html', {'page_obj': page_obj})
+
 
 def wishlist_item_add(request):
     context = {
@@ -821,7 +885,12 @@ def wishlist_item_view_details(request,pk):
 
 def cart_list(request):
     carts = Cart.objects.all()
-    return render(request,'admin_dashboard/cart_list.html',{'carts':carts})
+    paginator = Paginator(carts, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/cart_list.html', {'page_obj': page_obj})
+
 
 def add_cart(request):
 
@@ -881,7 +950,12 @@ def cart_view_details(request, pk):
 
 def cartitem_list(request):
     cartitems = CartItem.objects.all()
-    return render(request,'admin_dashboard/cartitem_list.html',{'cartitems':cartitems})
+    paginator = Paginator(cartitems, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/cartitem_list.html', {'page_obj': page_obj})
+
 
 def cartitem_add(request):
     context = {
@@ -939,7 +1013,12 @@ def cartitem_view_details(request, pk):
 
 def city_list(request):
     cities = City.objects.all()
-    return render(request,'admin_dashboard/city_list.html',{'cities':cities})
+    paginator = Paginator(cities, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/city_list.html', {'page_obj': page_obj})
+
 
 
 def add_city(request):
@@ -996,7 +1075,12 @@ def city_view_details(request, pk):
 
 def pincode_list(request):
     pincodes = Pincode.objects.all()
-    return render(request,'admin_dashboard/pincode_list.html',{'pincodes':pincodes})
+    paginator = Paginator(pincodes, 10)  # Show 10 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'admin_dashboard/pincode_list.html', {'page_obj': page_obj})
+
 
 def pincode_add(request):
     context = {
