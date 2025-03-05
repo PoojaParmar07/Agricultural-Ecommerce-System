@@ -888,6 +888,7 @@ class ProductSearchView(ListView):
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 def kishan_charcha(request):
     
@@ -923,6 +924,8 @@ def add_comment(request, post_id):
 
 
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
