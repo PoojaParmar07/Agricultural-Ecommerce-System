@@ -115,7 +115,7 @@
 
 {% comment %} <script src="https://checkout.razorpay.com/v1/checkout.js"></script> {% endcomment %}
 
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     document.getElementById('city').addEventListener('change', function() {
         let cityId = this.value;
@@ -177,30 +177,54 @@
     document.addEventListener("DOMContentLoaded", function () {
         let form = document.getElementById("checkout-form");
         let placeOrderBtn = document.getElementById("rzp-button1");
-
+    
         placeOrderBtn.addEventListener("click", function (event) {
-            console.log("Button clicked! Initializing Razorpay...");
             event.preventDefault(); // Prevent default form submission
-
+    
             let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;
-
+    
             if (selectedPaymentMethod === "COD") {
-                form.action = "{% url 'payment:cod_checkout' %}"; // COD view
+                form.action = "{% url 'payment:cod_checkout' %}"; // COD order submission
+                form.submit();
             } else {
-                form.action = "{% url 'payment:razorpay_checkout' %}"; // Stripe payment view 
+                // ✅ Use Razorpay Checkout
+                var options = {
+                    "key": "{{ razorpay_key }}",
+                    "amount": "{{ final_total|floatformat:2|floatformat:0 }}" * 100, // Convert to paisa
+                    "currency": "INR",
+                    "name": "Jyoti Agro",
+                    "description": "Order Payment",
+                    "order_id": "{{ razorpay_order_id }}",
+                    "prefill": {
+                        "name": "{{ user.username }}",
+                        "email": "{{ user.email }}",
+                        "contact": "{{ request.user.profile.mobile_number }}"
+                    },
+                    "theme": {
+                        "color": "#F37254"
+                    },
+                    "handler": function (response) {
+                        console.log("✅ Payment Success:", response);
+
+                        let paymentInput = document.createElement("input");
+                        paymentInput.type = "hidden";
+                        paymentInput.name = "razorpay_payment_id";
+                        paymentInput.value = response.razorpay_payment_id;
+                        form.appendChild(paymentInput);
+                        form.submit(); // Submit form after successful payment
+                    },
+                    "modal": {
+                        "ondismiss": function () {
+                            console.log("❌ Payment modal closed.");
+                        }
+                    }
+                };
+    
+                let rzp1 = new Razorpay(options);
+                rzp1.open(); // Open Razorpay modal
             }
-
-            // ✅ Ensure variant_id is included in the request
-            let variantIdInput = document.createElement("input");
-            variantIdInput.type = "hidden";
-            variantIdInput.name = "variant_id";
-            variantIdInput.value = "{{ cart_items.0.product_variant.variant_id }}";  // Assuming first item in cart
-            form.appendChild(variantIdInput);
-
-            form.submit(); // Submit form after updating action URL
         });
-    });
-     
+    });     
 </script>
 
 {% endblock %}
