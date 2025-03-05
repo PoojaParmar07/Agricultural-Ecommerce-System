@@ -883,4 +883,15 @@ class ProductSearchView(ListView):
 
         return context
 
+def aboutus(request):
+    return render(request, 'Ecommerce/aboutus.html') 
+
+def enquiry(request):
+    return render(request, 'Ecommerce/enquiry.html')   
+
+def crop_info(request):
+    return render(request, 'Ecommerce/crop_info.html')   
+
+def okra(request):
+    return render(request, 'Ecommerce/crop_detail/okra.html')
 

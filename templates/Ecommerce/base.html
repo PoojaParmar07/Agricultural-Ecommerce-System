@@ -69,6 +69,7 @@
               </button>
             </form>
             <a href="{% url 'account:profile' %}">Profile</a>
+            <a href="{% url 'account:profile' %}">Order detail</a>
             {% else %}
             <a href="{% url 'account:login' %}">Login</a>
             <a href="{% url 'account:registration' %}">Register</a>
@@ -100,7 +101,7 @@
           </ul>
         </li>
 
-        <li><a href="#">CROF-INFO.</a></li>
+        <li><a href="{% url 'Ecommerce:crop_info' %}">CROF-INFO.</a></li>
 
         <!-- ABOUT US Dropdown -->
         <li class="about-dropdown">
@@ -156,8 +157,8 @@
                   <h4>Quick Links</h4>
                   <ul>
                       <li><a href="{% url 'Ecommerce:homepage' %}">Home</a></li>
-                      <li><a href="#">About</a></li>
-                      <li><a href="#">Enquiry</a></li>
+                      <li><a href="{% url 'Ecommerce:aboutus' %}">About</a></li>
+                      <li><a href="{% url 'Ecommerce:enquiry' %}">Enquiry</a></li>
                   </ul>
               </div>
               <div class="column">

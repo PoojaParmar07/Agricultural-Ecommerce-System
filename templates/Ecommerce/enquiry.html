@@ -1,0 +1,62 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+<link rel="stylesheet" href="{% static 'Ecommerce/enquiry.css' %}">
+
+<div class="container">
+    <div class="contact">
+        <div class="image-overlay">
+            <h5>Home/Enquiry</h5>
+            <h1>Enquiry</h1>
+        </div>
+    </div>
+
+
+    <section class="cont">
+        <div class="contactinfo">
+            <h2>Contact Us</h2>
+            <div class="contact-wrapper">
+                <div class="contact-form">
+                    <h3>Send us a message</h3>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="name" placeholder="Your email">
+                        </div>
+                        <div class="form-group">
+                            <textarea type="textarea" name="name" placeholder="Your Message"></textarea>
+                        </div>
+                        <button type="submit">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                    <h4>Leave a Message</h4>
+                    <div class="content">
+                        <p>Lorem, dolorem obcaecati rem.
+                            Repellendus esse sit ea
+                            pariatur beatae nesciunt quasi, accusantium earum vel repudiandae dolores. Qui dolores
+                            commodi atque nulla. Lorem,
+                            ipsum dolor sit amet consectetur adipisicing elit. Beatae voluptas, vitae facilis sunt
+                            quaerat eveniet fugit iusto
+                            inventore saepe sed, illum distinctio explicabo, nesciunt atque. Eum iste hic iusto ut!
+                        </p>
+                    </div>
+                    <h3>Contact Information</h3>
+                    <p><i class="fa-solid fa-phone"></i> +91 123 456 789</p>
+                    <p><i class="fa-solid fa-envelope"></i>info@example.com</p>
+                    <p><i class="fa-solid fa-map-marker-alt"></i>123 street, city, Country</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+{% endblock %}

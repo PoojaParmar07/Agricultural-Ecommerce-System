@@ -1,0 +1,80 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+<link rel="stylesheet" href="{% static 'Ecommerce/aboutus.css' %}">
+
+<div class="cart-container">
+
+    <div class="container">
+        <div class="about">
+            <div class="image-overlay">
+                <h5>Home/About Us</h5>
+                <h1>OUR STORY</h1>
+            </div>
+        </div> 
+    </div>
+
+    <div class="container1">
+        <div class="block">
+            <div class="image-container">
+                <img src="/media/img1.jpg" alt="image1">
+            </div>
+            <div class="content">
+                <h3 class="underline">OUR HISTORY</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam officia obcaecati amet. Sunt velit
+                    tempore odit atque? Voluptate possimus, sapiente ullam maxime commodi magni, ab quod cupiditate
+                    architecto in omnis! Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam eligendi
+                    exercitationem, molestiae voluptates distinctio ducimus similique alias eos aut saepe a maxime velit
+                    quae perferendis libero ex repudiandae? Totam, voluptas.</p>
+            </div>
+        </div>
+
+        <div class="block1">
+            <div class="image-container1">
+                <img src="/media/img2.jpg" alt="" width="350px" height="300px">
+            </div>
+            <div class="content">
+                <h3 class="underline">OUR MISSION</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam officia obcaecati amet. Sunt velit
+                    tempore odit atque? Voluptate possimus, sapiente ullam maxime commodi magni, ab quod cupiditate
+                    architecto in omnis! Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam eligendi
+                    exercitationem, molestiae voluptates distinctio ducimus similique alias eos aut saepe a maxime velit
+                    quae perferendis libero ex repudiandae? Totam, voluptas.</p>
+            </div>
+        </div>
+    </div>    
+        <div class="con1">
+            <section class="why-choose-us">
+                <h2>Why choose us?</h2>
+                <div class="con">
+                    <div class="card">
+                        <i class="fa-solid fa-seedling"></i>
+                        <h3>Superior Quality Products</h3>
+                        <p>High-quality seeds and eco-friendly fertilizers for better yields.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-globe"></i>
+                        <h3>Sustainable Solutions</h3>
+                        <p>High-quality seeds and eco-friendly fertilizers for better yields.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-handshake"></i>
+                        <h3>Expert Guidance</h3>
+                        <p>Personalized support and advice tailored to your farming needs.</p>
+                    </div>
+                    <div class="card">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                        <h3>Affordable Prices</h3>
+                        <p>Top-quality products at competitive prices for every farmer.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+</div> 
+
+
+{% endblock %}
