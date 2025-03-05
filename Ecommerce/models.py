@@ -218,6 +218,7 @@ class Payment(models.Model):
     payment_status = models.CharField(max_length=100, choices=PAYMENT_STATUS_CHOICES, default='pending')
     razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)  # Add this field
     razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=255, null=True, blank=True)
     payment_date = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now=True)
 

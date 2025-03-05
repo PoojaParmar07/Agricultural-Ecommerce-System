@@ -7,7 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from Ecommerce.models import *
 from membership.models import *
+from socialmedia.models import *
 from .forms import *
+from socialmedia.forms import *
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Avg,F
 from django.db import transaction
@@ -15,13 +17,13 @@ from datetime import date
 from decimal import Decimal
 # from django.http import HttpResponse
 import json
-from django.template.loader import get_template
-from xhtml2pdf import pisa
 from account.models import *
 from account.form import *
 from django.core.paginator import Paginator
 from django.views.generic import ListView
 import razorpay
+
+RAZORPAY_SECRET = "settings.RAZORPAY_SECRET"
 
 def is_admin_user(user):
     return user.is_authenticated and user.is_staff  # Example function
@@ -437,7 +439,7 @@ def update_variant(request, cart_item_id):
 
         if not variant_id:
             # Redirect if no variant selected
-            return redirect("Ecommerce:cart_view")
+            return redirect("Ecommerce:homepage")
 
         # Get the cart item
         cart_item = get_object_or_404(
@@ -462,7 +464,7 @@ def update_variant(request, cart_item_id):
             print("No inventory found for this variant")  # Debugging
 
     # Reload the cart page to reflect changes
-    return redirect("Ecommerce:cart_view")
+    return redirect("Ecommerce:homepage")
 
 
 
@@ -524,6 +526,7 @@ def checkout(request):
     "selected_city_id": selected_city_id,
     "selected_pincode_id": selected_pincode_id,
     "delivery_charge": float(delivery_charge),  # Convert Decimal to float
+    "razorpay_key": settings.RAZORPAY_KEY_ID,
 }
 
     
@@ -706,23 +709,23 @@ def get_pincode(request, city_id):
 
 
 
-def render_pdf_view(request):
-    users = CustomUser.objects.all()
-    template_path = 'admin_dashboard/userlist.html'
-    context = {'users': users}
+# def render_pdf_view(request):
+#     users = CustomUser.objects.all()
+#     template_path = 'admin_dashboard/userlist.html'
+#     context = {'users': users}
     
-    template = get_template(template_path)
-    html = template.render(context)
+#     template = get_template(template_path)
+#     html = template.render(context)
     
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="user_report.pdf"'
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="user_report.pdf"'
     
-    pisa_status = pisa.CreatePDF(html, dest=response)
+#     pisa_status = pisa.CreatePDF(html, dest=response)
     
-    if pisa_status.err:
-        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+#     if pisa_status.err:
+#         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     
-    return response
+#     return response
 
 
 
@@ -894,4 +897,39 @@ def crop_info(request):
 
 def okra(request):
     return render(request, 'Ecommerce/crop_detail/okra.html')
+
+
+def kishan_charcha(request):
+    
+    posts = Post.objects.all().order_by('-created_at')
+    comment_form = PostCommentForm()
+    show_comments = request.GET.get("show_comments", None)
+    return render(request, "Ecommerce/kishan_charcha.html", {"posts": posts,"comment_form": comment_form, "show_comments": show_comments})
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id)
+    if request.method == "POST":
+        comment_text = request.POST.get("comment_text")
+        parent_comment_id = request.POST.get("parent_comment_id")  # Get parent comment ID (if replying)
+
+        if comment_text:
+            parent_comment = None
+            if parent_comment_id:
+                parent_comment = get_object_or_404(PostComment, comment_id=parent_comment_id)
+
+            PostComment.objects.create(
+                user=request.user,
+                post=post,
+                comment_text=comment_text,
+                parent_comment=parent_comment
+            )
+
+        return redirect("Ecommerce:kishan_charcha")  # Redirect back to post page
+
+    return redirect("Ecommerce:homepage")
+
+
+
+
 
