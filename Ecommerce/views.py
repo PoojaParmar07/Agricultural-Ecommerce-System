@@ -887,6 +887,7 @@ class ProductSearchView(ListView):
         return context
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 def kishan_charcha(request):
     
@@ -922,5 +923,7 @@ def add_comment(request, post_id):
 
 
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
