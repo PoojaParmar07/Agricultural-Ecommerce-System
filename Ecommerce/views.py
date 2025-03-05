@@ -25,6 +25,8 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView
 import razorpay
 
+RAZORPAY_SECRET = "settings.RAZORPAY_SECRET"
+
 def is_admin_user(user):
     return user.is_authenticated and user.is_staff  # Example function
 
@@ -526,6 +528,7 @@ def checkout(request):
     "selected_city_id": selected_city_id,
     "selected_pincode_id": selected_pincode_id,
     "delivery_charge": float(delivery_charge),  # Convert Decimal to float
+    "razorpay_key": settings.RAZORPAY_KEY_ID,
 }
 
     
