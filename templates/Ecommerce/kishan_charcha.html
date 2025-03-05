@@ -75,7 +75,7 @@
                     
                     
                     <!-- Comment Form -->
-                    <form action="{% url 'Ecommerce:add_comment' post.post_id %}" method="POST" class='comment-form'>
+                    <form action="{% url 'socialmedia:add_comment' post.post_id %}" method="POST" class='comment-form'>
                         {% csrf_token %}
                         <input type="text" name="comment_text" placeholder="Write your comment" class="input-comment" required>
                         <button type="submit"><box-icon name='send'></box-icon></button>
@@ -98,7 +98,7 @@
                                         <p><strong>{{ comment.user.username }}</strong>: {{ comment.comment_text }}</p>
 
                                         <!-- Reply Form for Each Comment -->
-                                        <form action="{% url 'Ecommerce:add_comment' post.post_id %}" method="POST" class='comment-form'>
+                                        <form action="{% url 'socialmedia:add_comment' post.post_id %}" method="POST" class='comment-form'>
                                             {% csrf_token %}
                                             <input type="hidden" name="parent_comment_id" value="{{ comment.comment_id }}">
                                             <input type="text" name="comment_text" placeholder="Reply..." class="input-comment" required>

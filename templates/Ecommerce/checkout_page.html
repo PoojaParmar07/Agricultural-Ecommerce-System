@@ -113,7 +113,7 @@
     </div>
 </div>
 
-{% comment %} <script src="https://checkout.razorpay.com/v1/checkout.js"></script> {% endcomment %}
+
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
@@ -190,7 +190,7 @@
                 // ✅ Use Razorpay Checkout
                 var options = {
                     "key": "{{ razorpay_key }}",
-                    "amount": "{{ final_total|floatformat:2|floatformat:0 }}" * 100, // Convert to paisa
+                    "amount": {{ final_total|floatformat:0 }} * 100
                     "currency": "INR",
                     "name": "Jyoti Agro",
                     "description": "Order Payment",

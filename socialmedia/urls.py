@@ -16,4 +16,7 @@ urlpatterns = [
     path('post_comment_add/',post_comment_add,name='post_comment_add'),
     path('post_comment_view_details/<int:pk>/',post_comment_view_details,name='post_comment_view_details'), 
     
+    
+     path("kishan_charcha/",kishan_charcha,name="kishan_charcha"),
+    path("add_comment/<int:post_id>/", add_comment, name="add_comment"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
