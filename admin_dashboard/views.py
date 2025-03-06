@@ -1075,7 +1075,7 @@ def city_view_details(request, pk):
 
 def pincode_list(request):
     pincodes = Pincode.objects.all()
-    paginator = Paginator(pincodes, 10)  # Show 10 products per page
+    paginator = Paginator(pincodes,5)  # Show 10 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

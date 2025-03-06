@@ -30,7 +30,7 @@ urlpatterns = [
     # path('cod_checkout/',cod_checkout,name='cod_checkout'),
     path('order_details/<int:order_id>/',order_details,name="order_details"),
     path('confirm_Order/',confirm_Order,name='confirm_Order'),
-    path('render_pdf_view',render_pdf_view,name="render_pdf_view"),
+    # path('render_pdf_view',render_pdf_view,name="render_pdf_view"),
     
     path('wishlist/', wishlist_view, name='wishlist'),
     path('add/<int:variant_id>/', add_to_wishlist, name='add_to_wishlist'),
