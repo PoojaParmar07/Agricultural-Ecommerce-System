@@ -1179,7 +1179,6 @@ def download_report_pdf(request):
     context = {"orders": orders}
     template = get_template(template_path)
     html = template.render(context)
-
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = "attachment; filename=report.pdf"
 
