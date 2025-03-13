@@ -1,0 +1,133 @@
+{% comment %} {% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="post-container">
+        <div class="post-card">
+            <h2 class="post-title">Create New Post</h2>
+
+            <form method="POST" enctype="multipart/form-data" class="post-form">
+                {% csrf_token %}
+
+                <div class="input-group">
+                    {{ form.image.label_tag }}
+                    {{ form.image }}
+                </div>
+
+                <div class="input-group">
+                    {{ form.caption.label_tag }}
+                    {{ form.caption }}
+                </div>
+
+                <button type="submit" class="post-btn">Post</button>
+            </form>
+
+            <div class="back-link">
+                <a href="{% url 'socialmedia:my_feed' %}">← Back to Feed</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+
+
+/* Main container */
+.post-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    background-color: #f0f2f5;
+}
+
+/* Card */
+.post-card {
+    width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title */
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Form */
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input Fields */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: #0095f6;
+    outline: none;
+}
+
+/* Post Button */
+.post-btn {
+    width: 100%;
+    background: #0095f6;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.post-btn:hover {
+    background: #0077cc;
+}
+
+/* Back Link */
+.back-link {
+    margin-top: 15px;
+}
+
+.back-link a {
+    color: #0095f6;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+
+    </style>
+{% endblock %} {% endcomment %}

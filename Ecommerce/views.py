@@ -886,47 +886,36 @@ class ProductSearchView(ListView):
 
         return context
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-def kishan_charcha(request):
+# def kishan_charcha(request):
     
-    posts = Post.objects.all().order_by('-created_at')
-    comment_form = PostCommentForm()
-    show_comments = request.GET.get("show_comments", None)
-    return render(request, "Ecommerce/kishan_charcha.html", {"posts": posts,"comment_form": comment_form, "show_comments": show_comments})
+#     posts = Post.objects.all().order_by('-created_at')
+#     comment_form = PostCommentForm()
+#     show_comments = request.GET.get("show_comments", None)
+#     return render(request, "Ecommerce/kishan_charcha.html", {"posts": posts,"comment_form": comment_form, "show_comments": show_comments})
 
-@login_required
-def add_comment(request, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
-    if request.method == "POST":
-        comment_text = request.POST.get("comment_text")
-        parent_comment_id = request.POST.get("parent_comment_id")  # Get parent comment ID (if replying)
+# @login_required
+# def add_comment(request, post_id):
+#     post = get_object_or_404(Post, post_id=post_id)
+#     if request.method == "POST":
+#         comment_text = request.POST.get("comment_text")
+#         parent_comment_id = request.POST.get("parent_comment_id")  # Get parent comment ID (if replying)
 
-        if comment_text:
-            parent_comment = None
-            if parent_comment_id:
-                parent_comment = get_object_or_404(PostComment, comment_id=parent_comment_id)
+#         if comment_text:
+#             parent_comment = None
+#             if parent_comment_id:
+#                 parent_comment = get_object_or_404(PostComment, comment_id=parent_comment_id)
 
-            PostComment.objects.create(
-                user=request.user,
-                post=post,
-                comment_text=comment_text,
-                parent_comment=parent_comment
-            )
+#             PostComment.objects.create(
+#                 user=request.user,
+#                 post=post,
+#                 comment_text=comment_text,
+#                 parent_comment=parent_comment
+#             )
 
-        return redirect("Ecommerce:kishan_charcha")  # Redirect back to post page
+#         return redirect("Ecommerce:kishan_charcha")  # Redirect back to post page
 
-    return redirect("Ecommerce:homepage")
-
-
+#     return redirect("Ecommerce:homepage")
 
 
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes

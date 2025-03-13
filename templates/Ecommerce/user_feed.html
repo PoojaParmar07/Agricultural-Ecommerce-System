@@ -1,0 +1,342 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'Ecommerce/profile.css' %}">
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-info">
+                <img src="{{ user.image.url }}" alt="Profile Picture" class="profile-avatar">
+                <div class="user-info">
+                    <h2>{{ user.username }}</h2>
+                    <p>{{ user.email }}</p>
+                    {% comment %} <p>Total Posts: {{ posts.count }}</p> {% endcomment %}
+                </div>
+            </div>
+            <button class="create-post-btn" onclick="openModal()">+ Create New Post</button>
+        </div>
+        
+               <!-- Modal for Create Post Form -->
+               <div id="createPostModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2 style="margin-bottom: 10px;color:#3B823E">Create New Post</h2>
+                    <form action="{% url 'socialmedia:create_post' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="post-image">Upload Image:</label>
+                        <input type="file" name="image" required>
+                        
+                        <label for="caption">Caption:</label>
+                        <textarea name="caption" rows="3" required></textarea>
+                        
+                        <button type="submit" class="submit-btn">Post</button>
+                    </form>
+                </div>
+            </div>
+
+        <div class="profile-posts">
+            <h3 style="margin: 40px 0;text-align: left;">My Posts</h3>
+            {% if posts %}
+                <div class="post-grid">
+                    {% for post in posts %}
+                        <div class="post-card">
+                            <img src="{{ post.image.url }}" alt="Post Image" class="post-image">
+                            <p class="caption">{{ post.caption }}</p>
+                            <span class="timestamp">{{ post.created_at|timesince }} ago</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-posts">You haven't posted anything yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal for Create Post Form -->
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="margin-bottom: 10px;color:#3B823E">Create New Post</h2>
+            <form action="{% url 'socialmedia:create_post' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="post-image">Upload Image:</label>
+                <input type="file" name="image" required>
+
+                <label for="caption">Caption:</label>
+                <textarea name="caption" rows="3" required></textarea>
+
+                <button type="submit" class="submit-btn">Post</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .profile-container {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+        
+        /* Profile Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            {% comment %} background: #f5f5f5; {% endcomment %}
+            border-radius: 10px;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            flex-wrap: wrap; /* Allows wrapping for smaller screens */
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #3B823E;
+        }
+        
+        .user-info h2, .user-info p {
+            margin: 0;
+            text-align: left;
+        }
+        
+        /* Create Post Button */
+        .create-post-btn {
+            padding: 10px 15px;
+            background: #3B823E;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .create-post-btn:hover {
+            background: #2c6b2e;
+        }
+        
+        /* Responsive Profile Posts */
+        .profile-posts {
+            margin-top: 20px;
+            margin-bottom: 90px;
+        }
+        
+        /* Responsive Grid for Posts */
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .post-card {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        
+        .post-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+        }
+        
+        .caption {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: gray;
+        }
+        
+        .no-posts {
+            font-size: 16px;
+            color: gray;
+        }
+        
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 40%;
+            text-align: left;
+        }
+        
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .submit-btn {
+            background: #3B823E;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background: #2c6b2e;
+        }
+        
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .profile-container {
+                width: 90%;
+            }
+        
+            .profile-header {
+                flex-direction: column; /* Stack items in a column */
+                text-align: center;
+            }
+        
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        
+            .create-post-btn {
+                margin-top: 15px;
+                width: 100%;
+            }
+        
+            .post-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        
+            .modal-content {
+                width: 90%; /* Make modal take more space on small screens */
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+            }
+        
+            .post-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        .modal {
+            display: none; /* Ensure it's hidden on page load */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Centered Modal Box */
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 30%;
+            height: 50%;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Close Button */
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 25px;
+            cursor: pointer;
+        }
+       
+        /* Submit Button */
+        .submit-btn {
+            background: #3B823E;
+            color: white;
+            border: none;
+            padding: 10px 50px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    
+        .submit-btn:hover {
+            background: #2C662F;
+        }
+    
+        /* Form Input Styling */
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+    </style>
+
+    <script>
+        function openModal() {
+            let modal = document.getElementById("createPostModal");
+            modal.style.display = "flex";  
+        }
+    
+        function closeModal() {
+            let modal = document.getElementById("createPostModal");
+            modal.style.display = "none";
+        }
+    
+        // Close modal when clicking outside the form
+        window.onclick = function(event) {
+            let modal = document.getElementById("createPostModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+{% endblock %}
