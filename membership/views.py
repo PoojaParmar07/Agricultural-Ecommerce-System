@@ -119,7 +119,7 @@ def user_membership(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'admin_dashboard/user_membership_list.html', {'page_obj': page_obj})
+    return render(request, 'admin_dashboard/user_membership.html', {'page_obj': page_obj})
 
 
 
@@ -130,7 +130,7 @@ def user_membership(request):
 def add_user_membership(request):
     context = {
         'model_name': "User Member",
-        'list': reverse('membership:user_membership'), 
+        'list':'membership:user_membership', 
     }
     
     if request.method == "POST" and 'plan' in request.POST:

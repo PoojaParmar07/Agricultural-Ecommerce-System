@@ -1,0 +1,139 @@
+{% block content %}
+<div class="container">
+    <h2>Membership Report</h2>
+
+    <form method="GET">
+        <div>
+            <label for="plan">Select Membership Plan:</label>
+            <select name="plan" id="plan" onchange="this.form.submit()">
+                <option value="">-- Choose Plan --</option>
+                {% for plan in plans %}
+                <option value="{{ plan.plan_id }}" {% if plan.plan_id|stringformat:"s" == selected_plan %}selected{% endif %}>
+                    {{ plan.plan_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    {% if selected_plan %}
+        <h3>Membership Details</h3>
+        <table class="report-table">
+            <tr>
+                <th>User</th>
+                <th>Plan</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+            </tr>
+            {% for member in members %}
+            <tr>
+                <td>{{ member.user.username }}</td>
+                <td>{{ member.plan.plan_name }}</td>
+                <td>{{ member.membership_start_date }}</td>
+                <td>{{ member.membership_end_date }}</td>
+                <td class="{% if member.status %}status-active{% else %}status-inactive{% endif %}">
+                    {{ member.status|yesno:"Active,Inactive" }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="no-data">No memberships found.</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <a href="{% url 'admin_dashboard:download_membership_report_pdf' %}?plan={{ selected_plan }}" class="download-btn">
+            Download PDF
+        </a>
+    {% else %}
+        <p class="no-data">Please select a plan to view the report.</p>
+    {% endif %}
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    label {
+        font-weight: bold;
+    }
+    select, input, button {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        background-color: #3B823E;
+        color: white;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #3B823E;
+    }
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .report-table th, .report-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+    .report-table th {
+        background-color: #3B823E;
+        color: white;
+    }
+    .download-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 15px;
+        background-color: #3B823E;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    .download-btn:hover {
+        background-color: #c82333;
+    }
+    .status-active {
+        color: green;
+        font-weight: bold;
+    }
+    .status-inactive {
+        color: red;
+        font-weight: bold;
+    }
+    .no-data {
+        text-align: center;
+        color: #999;
+        font-style: italic;
+        margin-top: 20px;
+    }
+</style>
+
+{% endblock %}

@@ -11,6 +11,8 @@ from django.contrib import messages
 from admin_dashboard.models import *
 from .forms import *
 from django.core.paginator import Paginator
+from membership .models import *
+from account.models import *
 
 # Check if the user is staff
 def is_admin_user(user):
@@ -1187,3 +1189,41 @@ def download_report_pdf(request):
         return HttpResponse("Error generating PDF", content_type="text/plain")
 
     return response
+
+
+
+def membership_report(request):
+    plans = Membership_plan.objects.all()
+    selected_plan = request.GET.get('plan')
+    
+    members = User_membership.objects.select_related('user', 'plan')
+    if selected_plan:
+        members = members.filter(plan_id=selected_plan)
+    
+    context = {
+        'plans': plans,
+        'members': members,
+        'selected_plan': selected_plan
+    }
+    return render(request, 'admin_dashboard/membership_report.html', context)
+
+
+def download_membership_report_pdf(request):
+    selected_plan = request.GET.get('plan')
+    members = User_membership.objects.select_related('user', 'plan')
+    if selected_plan:
+        members = members.filter(plan_id=selected_plan)
+    
+    template_path = "admin_dashboard/membership_report_pdf.html"
+    context = {"members": members}
+    template = get_template(template_path)
+    html = template.render(context)
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "attachment; filename=membership_report.pdf"
+    
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse("Error generating PDF", content_type="text/plain")
+    
+    return response
+
