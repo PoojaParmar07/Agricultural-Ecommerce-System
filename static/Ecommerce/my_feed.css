@@ -1,0 +1,213 @@
+/* General Page Styling */
+body {
+    background-color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Container */
+.post-container {
+    max-width: 800px;
+    margin: 40px auto;
+    /* background-color: #ffffff; */
+    padding: 20px;
+    border-radius: 10px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+/* Align My Feed and Button in One Line */
+.feed-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    /* border-bottom: 2px solid #ddd; */
+}
+
+/* Button Styling */
+.create-post-btn {
+    background: #3B823E;
+    color: white;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    border: 1px solid #3B823E;
+}
+
+.create-post-btn:hover {
+    background: #3B823E;
+}
+
+
+/* Centered Layout */
+.feed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 80px;
+}
+
+/* Post Styling */
+.post {
+    background: white;
+    border-radius: 10px;
+    padding: 0 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin-top: 50px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    gap: 10px; /* Space between avatar and text */
+    padding: 10px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Circular image */
+    object-fit: cover;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.timestamp {
+    font-size: 0.6em;
+    color: gray;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #000000;
+    font-weight: bold;
+}
+
+.like-btn:hover {
+    color: #c0392b;
+}
+
+/* Post Image */
+.post-image {
+    width: 100%;
+    border-radius: 10px;
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Post Actions */
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+
+.add-comment-btn {
+    display: block;
+    width: 200px;
+    text-align: left;
+    padding: 12px 0;
+    /* background: #2e7d32; */
+    color: rgba(88, 88, 88, 0.526);
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 20px 0;
+    transition: 0.3s;
+}
+
+.comment-form{
+    display: flex;
+}
+
+.input-comment{
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    border: none;
+}
+
+.input-comment:hover{
+    border: none;
+}
+
+.comment-form button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style the box-icon */
+.comment-form button box-icon {
+    width: 20px;  /* Adjust size */
+    height: 20px; /* Adjust size */
+    fill: #333;   /* Change icon color */
+    transition: fill 0.3s ease;
+}
+
+/* Hover effect */
+.comment-form button:hover box-icon {
+    fill: #2e7d32; /* Green color on hover */
+}
+
+
+.create-post-btn:hover {
+    background: #246a29;
+}
+
+
+
+.comments-section {
+    display: block;  /* Hidden by default */
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+.show-comments-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.show-comments-btn:hover {
+    background: #218838;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .post-container {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .post {
+        width: 90%;
+    }
+}
+
+
+
