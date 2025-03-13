@@ -39,8 +39,12 @@ urlpatterns = [
 
     
     path("search-results/", ProductSearchView.as_view(), name="search_results"),
-    
-   
+
+    path('aboutus/',aboutus,name="aboutus"),
+    path('enquiry/',enquiry,name="enquiry"),
+    path('crop_info/',crop_info,name="crop_info"),
+    path('okra/',okra,name="okra"),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

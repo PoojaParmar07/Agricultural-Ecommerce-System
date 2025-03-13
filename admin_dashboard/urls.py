@@ -95,6 +95,8 @@ urlpatterns = [
     
     
     #Report
-    path("report/", generate_report, name="generate_report"),
-    path("report/download/", download_report_pdf, name="download_report_pdf"),
+    path("report/", order_report, name="order_report"),
+    path("report/download/", order_report_pdf, name="order_report_pdf"),
+     path('membership-report/', membership_report, name='membership_report'),
+    path('download-membership-report-pdf/', download_membership_report_pdf, name='download_membership_report_pdf'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
