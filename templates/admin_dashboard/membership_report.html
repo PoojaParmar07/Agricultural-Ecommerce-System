@@ -1,24 +1,96 @@
+{% extends 'admin_dashboard/index.html' %}
 {% block content %}
-<div class="container">
+
+<style>
+    .module {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .module h2 {
+        color: #3B823E;
+        margin-bottom: 15px;
+    }
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .form-row > div {
+        flex: 1;
+        min-width: 200px;
+    }
+    .form-row label {
+        font-weight: bold;
+    }
+    .form-row select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .button {
+        background-color: #3B823E;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .button:hover {
+        background-color: #2F662F;
+    }
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .results-table th, .results-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+    .results-table th {
+        background-color: #3B823E;
+        color: white;
+    }
+    .download-btn {
+        margin-top: 15px;
+        display: inline-block;
+        padding: 8px 12px;
+        background-color: #3B823E;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .download-btn:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="module">
     <h2>Membership Report</h2>
 
-    <form method="GET">
-        <div>
-            <label for="plan">Select Membership Plan:</label>
-            <select name="plan" id="plan" onchange="this.form.submit()">
-                <option value="">-- Choose Plan --</option>
-                {% for plan in plans %}
-                <option value="{{ plan.plan_id }}" {% if plan.plan_id|stringformat:"s" == selected_plan %}selected{% endif %}>
-                    {{ plan.plan_name }}
-                </option>
-                {% endfor %}
-            </select>
+    <form method="GET" action="">
+        <div class="form-row">
+            <div>
+                <label for="plan">Select Membership Plan:</label>
+                <select name="plan" id="plan" onchange="this.form.submit()">
+                    <option value="">-- Choose Plan --</option>
+                    {% for plan in plans %}
+                        <option value="{{ plan.plan_id }}" {% if request.GET.plan == plan.plan_id|stringformat:"s" %}selected{% endif %}>
+                            {{ plan.plan_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
     </form>
 
-    {% if selected_plan %}
+    {% if members %}
         <h3>Membership Details</h3>
-        <table class="report-table">
+        <table class="results-table">
             <tr>
                 <th>User</th>
                 <th>Plan</th>
@@ -27,113 +99,22 @@
                 <th>Status</th>
             </tr>
             {% for member in members %}
-            <tr>
-                <td>{{ member.user.username }}</td>
-                <td>{{ member.plan.plan_name }}</td>
-                <td>{{ member.membership_start_date }}</td>
-                <td>{{ member.membership_end_date }}</td>
-                <td class="{% if member.status %}status-active{% else %}status-inactive{% endif %}">
-                    {{ member.status|yesno:"Active,Inactive" }}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="no-data">No memberships found.</td>
-            </tr>
+                <tr>
+                    <td>{{ member.user.username }}</td>
+                    <td>{{ member.plan.plan_name }}</td>
+                    <td>{{ member.membership_start_date }}</td>
+                    <td>{{ member.membership_end_date }}</td>
+                    <td class="{% if member.status %}status-active{% else %}status-inactive{% endif %}">
+                        {{ member.status|yesno:"Active,Inactive" }}
+                    </td>
+                </tr>
             {% endfor %}
         </table>
 
-        <a href="{% url 'admin_dashboard:download_membership_report_pdf' %}?plan={{ selected_plan }}" class="download-btn">
+        <a href="{% url 'admin_dashboard:download_membership_report_pdf' %}?plan={{ request.GET.plan }}" class="download-btn">
             Download PDF
         </a>
-    {% else %}
-        <p class="no-data">Please select a plan to view the report.</p>
     {% endif %}
 </div>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 40px;
-        background-color: #f4f4f4;
-    }
-    .container {
-        max-width: 900px;
-        margin: auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-        text-align: center;
-        color: #333;
-    }
-    form {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 10px;
-        background: #f9f9f9;
-        padding: 15px;
-        border-radius: 5px;
-    }
-    label {
-        font-weight: bold;
-    }
-    select, input, button {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-    button {
-        background-color: #3B823E;
-        color: white;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #3B823E;
-    }
-    .report-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    .report-table th, .report-table td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: left;
-    }
-    .report-table th {
-        background-color: #3B823E;
-        color: white;
-    }
-    .download-btn {
-        display: inline-block;
-        margin-top: 15px;
-        padding: 10px 15px;
-        background-color: #3B823E;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-    .download-btn:hover {
-        background-color: #c82333;
-    }
-    .status-active {
-        color: green;
-        font-weight: bold;
-    }
-    .status-inactive {
-        color: red;
-        font-weight: bold;
-    }
-    .no-data {
-        text-align: center;
-        color: #999;
-        font-style: italic;
-        margin-top: 20px;
-    }
-</style>
 
 {% endblock %}
