@@ -1,0 +1,99 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+<link rel="stylesheet" href="{% static 'Ecommerce/crop_info.css' %}">
+
+<div class="maincontainer1">
+    <div class="subcon1">
+        <div class="card">
+            <img src="/media/okra.png" class="img1">
+            <!-- <h2 class="font">Okara</h2> -->
+            <div class="card-body">
+                <p class="card-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, magni eligendi veniam iusto sapiente dolorem veritatis quas esse provident vero aperiam </p>
+                <button class="card-btn">
+                    <a href="{% url 'Ecommerce:okra' %}" target="_self" style="color:whitesmoke;">Read More &rarr;</a>
+                </button>
+            </div>
+        </div>
+        <h2>Okra</h2>
+    </div>
+
+    <div class="subcon1">
+        <div class="card">
+            <img src="/media/spinach.png" class="img1">
+                <div class="card-body" class="backdrop1">
+                    <p class="card-info">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+                    <button class="card-btn">
+                        <a href="spinach.html"target="_self" style="color:whitesmoke;">Read More &rarr;</a>
+                    </button>
+            </div>     
+        </div>   
+        <h2>Spinach</h2>                 
+    </div>
+
+    <div class="subcon1">
+        <div class="card">
+            <img src="/media/tomato.png" class="img1">
+                <div class="card-body">
+                    <p class="card-info">Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
+                    <button class="card-btn">
+                        <a href="tomato.html"target="_self" style="color:whitesmoke;">Read More &rarr;</a>
+                    </button>
+            </div>     
+        </div>   
+        <h2>Tomato</h2>                 
+    </div>
+
+
+    <div class="subcon1">
+        <div class="card">
+            <img src="/media/corainder.webp" class="img1">
+            <!-- <h2 class="font">Okara</h2> -->
+            <div class="card-body">
+                <p class="card-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, magni eligendi veniam iusto sapiente dolorem veritatis quas esse provident vero aperiam deleniti itaque facilis, earum sint ab assumenda sed? Nulla?lo</p>
+                <button class="card-btn">
+                    <a href="corainder.html"target="_self" style="color:whitesmoke;">Read More &rarr;</a>
+                </button>
+            </div>
+        </div>
+        <h2>corainder</h2>
+    </div>
+
+
+    <div class="subcon1">
+        <div class="card">
+            <img src="/media/potato.jpg" class="img1">
+            <!-- <h2 class="font">Okara</h2> -->
+            <div class="card-body">
+                <p class="card-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, magni eligendi veniam iusto sapiente dolorem veritatis quas esse provident vero aperiam deleniti itaque facilis, earum sint ab assumenda sed? Nulla?lo</p>
+                <button class="card-btn">
+                    <a href="potato.html"target="_self" style="color:whitesmoke;">Read More &rarr;</a>
+                </button>
+            </div>
+        </div>
+        <h2>Potato</h2>
+    </div>
+
+    <div class="subcon1">
+        <div class="card">
+            <img src="/media/peas.jpg" class="img1">
+            <!-- <h2 class="font">Okara</h2> -->
+            <div class="card-body">
+                <p class="card-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, magni eligendi veniam iusto sapiente dolorem veritatis quas esse provident vero aperiam deleniti itaque facilis, earum sint ab assumenda sed? Nulla?lo</p>
+                <button class="card-btn">
+                    <a href="peas.html"target="_self" style="color:whitesmoke;">Read More &rarr;</a>
+                </button>
+            </div>
+        </div>
+        <h2>Peas</h2>
+    </div>
+    </div>
+ </div>
+
+
+
+{% endblock %}
