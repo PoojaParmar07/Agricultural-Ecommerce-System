@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect,get_object_or_404
 from django.conf import settings
+from django.db.models import Count
 from .models import *
 from .forms import *
 from django.contrib import messages
@@ -156,12 +157,14 @@ def post_comment_view_details(request, pk):
 
 
 
-def kishan_charcha(request):
+def my_feed(request):
     
-    posts = Post.objects.all().order_by('-created_at')
+    # posts = Post.objects.all().order_by('-created_at')
     comment_form = PostCommentForm()
+    posts = Post.objects.annotate(comments_count=Count('comments'))
     show_comments = request.GET.get("show_comments", None)
-    return render(request, "Ecommerce/kishan_charcha.html", {"posts": posts,"comment_form": comment_form, "show_comments": show_comments})
+    
+    return render(request, "Ecommerce/my_feed.html", {"posts": posts,"comment_form": comment_form, "show_comments": show_comments})
 
 @login_required
 def add_comment(request, post_id):
@@ -182,6 +185,57 @@ def add_comment(request, post_id):
                 parent_comment=parent_comment
             )
 
-        return redirect("Ecommerce:kishan_charcha")  # Redirect back to post page
+        return redirect("socialmedia:my_feed")  # Redirect back to post page
 
     return redirect("Ecommerce:homepage")
+
+@login_required
+def create_post(request):
+    
+    form = PostForm()
+    
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_post = form.save(commit = False)
+            new_post.user = request.user
+            new_post.save()
+            return redirect('socialmedia:my_feed')
+        else:
+            form = PostForm()
+            
+    return render(request,"Ecommerce/create_post.html",{"form":form})
+
+
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, post_id=post_id)
+
+    # Increase like count
+    post.likes += 1
+    post.save()
+
+    # Redirect back to the feed (or previous page)
+    return redirect(request.META.get('HTTP_REFERER', 'socialmedia:my_feed'))
+
+@login_required
+def create_post(request):
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        caption = request.POST.get("caption")
+
+        if image and caption:  # Ensure both fields are filled
+            post = Post.objects.create(
+                user=request.user,  # Assign the logged-in user
+                image=image,
+                caption=caption
+            )
+            return redirect("socialmedia:my_feed")  # Redirect to the feed after posting
+
+    return redirect("socialmedia:my_feed")  # Redirect if the form is invalid
+
+@login_required
+def user_feed(request):
+    user_posts = Post.objects.filter(user=request.user).order_by("-created_at")  # Get only the logged-in user's posts
+    return render(request, "Ecommerce/user_feed.html", {"posts": user_posts})

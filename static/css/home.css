@@ -445,3 +445,95 @@ flex: 1;
     border-color: #ffeeba;
     margin:0px 20px;
 }
+
+
+
+
+/* Responsive Navbar */
+@media (max-width: 1024px) {
+    .navbar {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .nav-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-bar {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-bar input {
+        width: 100%;
+    }
+
+    .nav-icons {
+        margin-top: 5px;
+    }
+}
+
+/* Profile Section */
+@media (max-width: 768px) {
+    .profile-container {
+        width: 90%;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .create-post-btn {
+        width: 100%;
+    }
+
+    .post-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .post-image {
+        height: 200px;
+    }
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .column {
+        min-width: auto;
+    }
+}
+
+/* Responsive Messages */
+@media (max-width: 576px) {
+    .message {
+        font-size: 12px;
+        padding: 8px;
+        margin: 5px;
+    }
+}

@@ -110,7 +110,13 @@
             <li><a href="#">Membership</a></li>
           </ul>
         </li>
-        <li><a href="{% url 'socialmedia:kishan_charcha' %}">KISHAN CHARCHA</a></li>
+        <li class="about-dropdown">
+          <a href="{% url 'socialmedia:my_feed' %}">KISHAN CHARCHA</a>
+          <ul class="about-dropdown-menu">
+            <li><a href="{% url 'socialmedia:my_feed' %}">Post</a></li>
+            <li><a href="{% url 'socialmedia:user_feed' %}">My Post</a></li>
+          </ul>
+        </li>
       </ul>
     </nav>
 
