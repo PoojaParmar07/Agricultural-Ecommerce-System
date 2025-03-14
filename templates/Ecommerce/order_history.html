@@ -1,0 +1,141 @@
+{% extends "Ecommerce/base.html" %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 30px auto;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 14px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #444;
+    }
+
+    tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .status {
+        font-weight: bold;
+        color: #28a745; /* Green for positive statuses */
+    }
+
+    .details a, .download a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .details a:hover, .download a:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+    }
+
+    .pagination button {
+        border: 1px solid #ddd;
+        background: white;
+        color: #333;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+    .pagination button:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .pagination .active {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <h2>Order History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ORDER ID</th>
+                <th>DATE</th>
+                <th>TOTAL</th>
+                <th>STATUS</th>
+                <th>DETAIL</th>
+                <th>DOWNLOAD</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td>#{{ order.order_id }}</td>
+                <td>{{ order.create_at|date:"d M, Y" }}</td>
+                <td><b>${{ order.total_price }}</b> ({{ order.order_item_set.count }} Products)</td>
+                <td style="color: {% if order.order_status == 'delivered' %}green{% elif order.order_status == 'canceled' %}red{% else %}blue{% endif %};">
+                    {{ order.order_status|title }}
+                </td>
+                <td><a href="{% url 'Ecommerce:order_details' order_id=order.order_id %}" style="color: green; font-weight: bold; text-decoration: none;">View Details</a></td>
+                <td>Download</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">No orders found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        <button>&laquo;</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>&raquo;</button>
+    </div>
+</div>
+
+{% endblock %}

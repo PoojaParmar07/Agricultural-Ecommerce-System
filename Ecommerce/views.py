@@ -566,24 +566,7 @@ def get_delivery_charge_ajax(request, pincode_id):
 
 
 
-@login_required
-def order_details(request, order_id):
-    order = Order.objects.filter(order_id=order_id).first()
 
-    if not order:
-        return HttpResponse("Order not found in the database", status=404)
-
-    if order.user != request.user:
-        return HttpResponse("You do not have permission to view this order", status=403)
-
-    order_items = order.order_item_set.all()
-    total_products = sum(item.quantity for item in order_items)
-
-    return render(request, "Ecommerce/order_detail.html", {
-        "order": order,
-        "order_items": order_items,
-        "total_products": total_products,
-    })
 
 
 @login_required
@@ -929,7 +912,30 @@ def add_comment(request, post_id):
 
     return redirect("Ecommerce:homepage")
 
+@login_required
+def order_history(request):
+    orders=Order.objects.filter(user=request.user).order_by('-create_at')
+    return render(request,'Ecommerce/order_history.html',{'orders':orders})
 
+
+@login_required
+def order_details(request, order_id):
+    order = Order.objects.filter(order_id=order_id).first()
+
+    if not order:
+        return HttpResponse("Order not found in the database", status=404)
+
+    if order.user != request.user:
+        return HttpResponse("You do not have permission to view this order", status=403)
+
+    order_items = order.order_item_set.all()
+    total_products = sum(item.quantity for item in order_items)
+
+    return render(request, "Ecommerce/order_detail.html", {
+        "order": order,
+        "order_items": order_items,
+        "total_products": total_products,
+    })
 
 
 
