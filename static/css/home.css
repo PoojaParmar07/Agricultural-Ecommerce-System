@@ -230,7 +230,7 @@
   .category-dropdown-menu , .about-dropdown-menu{
     display: none;
     position: absolute;
-    top: 150%;
+    top: 100%;
     background-color: #FFFFFF;
     min-width: 160px;
     border-radius: 5px;
