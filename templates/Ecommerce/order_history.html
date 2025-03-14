@@ -120,9 +120,14 @@
                     {{ order.order_status|title }}
                 </td>
                 <td><a href="{% url 'Ecommerce:order_details' order_id=order.order_id %}" style="color: green; font-weight: bold; text-decoration: none;">View Details</a></td>
+<<<<<<< Updated upstream
                 <td> <a href="{% url 'Ecommerce:order_invoice' order_id=order.order_id %}" style="color: green; font-weight: bold; text-decoration: none;">Download</a></td>
              
                 
+=======
+                <td><a href="{% url 'Ecommerce:generate_invoice' order.order_id %}" class="download">Download<box-icon type='solid' name='download'></box-icon></a></td>
+
+>>>>>>> Stashed changes
             </tr>
             {% empty %}
             <tr>

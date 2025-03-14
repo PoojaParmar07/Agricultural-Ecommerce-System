@@ -15,8 +15,13 @@ from django.db.models import Avg,F
 from django.db import transaction
 from datetime import date
 from decimal import Decimal
+<<<<<<< Updated upstream
 from xhtml2pdf import pisa
 from django.template.loader import get_template
+=======
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+>>>>>>> Stashed changes
 # from django.http import HttpResponse
 import json
 from account.models import *
@@ -940,6 +945,7 @@ def order_details(request, order_id):
     })
     
     
+<<<<<<< Updated upstream
 def download_invoice_pdf(request, order_id):
     # Fetch the order details
     order = get_object_or_404(Order, pk=order_id)
@@ -968,11 +974,35 @@ def download_invoice_pdf(request, order_id):
     response["Content-Disposition"] = f"attachment; filename=invoice_{order_id}.pdf"
 
     # Generate PDF from HTML
+=======
+@login_required
+def generate_invoice(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id)
+    order_items = Order_Item.objects.filter(order=order)
+    payment = Payment.objects.filter(order=order).first()
+
+    template_path = "Ecommerce/invoice_template.html"
+    context = {
+        "order": order,
+        "order_items": order_items,
+        "payment": payment
+    }
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="invoice_{order_id}.pdf"'
+
+>>>>>>> Stashed changes
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
         return HttpResponse("Error generating PDF", content_type="text/plain")
 
     return response
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 
