@@ -120,7 +120,9 @@
                     {{ order.order_status|title }}
                 </td>
                 <td><a href="{% url 'Ecommerce:order_details' order_id=order.order_id %}" style="color: green; font-weight: bold; text-decoration: none;">View Details</a></td>
-                <td>Download</td>
+                <td> <a href="{% url 'Ecommerce:order_invoice' order_id=order.order_id %}" style="color: green; font-weight: bold; text-decoration: none;">Download</a></td>
+             
+                
             </tr>
             {% empty %}
             <tr>

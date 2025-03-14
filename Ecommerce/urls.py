@@ -30,6 +30,7 @@ urlpatterns = [
     # path('cod_checkout/',cod_checkout,name='cod_checkout'),
     path('order_history/',order_history,name='order_history'),
     path('order_details/<int:order_id>/',order_details,name="order_details"),
+    path('order_invoice/<int:order_id>/',download_invoice_pdf,name='order_invoice'),
     path('confirm_Order/',confirm_Order,name='confirm_Order'),
     # path('render_pdf_view',render_pdf_view,name="render_pdf_view"),
     

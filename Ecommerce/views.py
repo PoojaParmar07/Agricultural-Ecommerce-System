@@ -15,6 +15,8 @@ from django.db.models import Avg,F
 from django.db import transaction
 from datetime import date
 from decimal import Decimal
+from xhtml2pdf import pisa
+from django.template.loader import get_template
 # from django.http import HttpResponse
 import json
 from account.models import *
@@ -936,6 +938,41 @@ def order_details(request, order_id):
         "order_items": order_items,
         "total_products": total_products,
     })
+    
+    
+def download_invoice_pdf(request, order_id):
+    # Fetch the order details
+    order = get_object_or_404(Order, pk=order_id)
+    order_items = Order_Item.objects.filter(order=order)
+    payment = Payment.objects.filter(order=order).first()
+
+    # Ensure we handle cases where payment may not exist
+    payment_total = payment.total_price if payment else 0.00
+    payment_status = payment.payment_status if payment else "Pending"
+
+    # Prepare the template context
+    context = {
+        "order": order,
+        "order_items": order_items,
+        "payment_total": payment_total,
+        "payment_status": payment_status,
+    }
+
+    # Load template and render to HTML
+    template_path = "Ecommerce/download_invoice.html"
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Create a PDF response
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f"attachment; filename=invoice_{order_id}.pdf"
+
+    # Generate PDF from HTML
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse("Error generating PDF", content_type="text/plain")
+
+    return response
 
 
 
