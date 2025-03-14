@@ -239,3 +239,4 @@ def create_post(request):
 def user_feed(request):
     user_posts = Post.objects.filter(user=request.user).order_by("-created_at")  # Get only the logged-in user's posts
     return render(request, "Ecommerce/user_feed.html", {"posts": user_posts})
+

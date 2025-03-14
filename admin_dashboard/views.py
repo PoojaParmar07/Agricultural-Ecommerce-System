@@ -1077,11 +1077,12 @@ def city_view_details(request, pk):
 
 def pincode_list(request):
     pincodes = Pincode.objects.all()
-    paginator = Paginator(pincodes,5)  # Show 10 products per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # paginator = Paginator(pincodes,5)  # Show 10 products per page
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
 
-    return render(request, 'admin_dashboard/pincode_list.html', {'page_obj': page_obj})
+    # return render(request, 'admin_dashboard/pincode_list.html', {'page_obj': page_obj})
+    return render(request, 'admin_dashboard/pincode_list.html', {'pincodes': pincodes})
 
 
 def pincode_add(request):

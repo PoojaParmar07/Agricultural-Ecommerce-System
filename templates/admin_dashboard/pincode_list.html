@@ -30,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for pincode in page_obj %}
+                {% for pincode in pincodes %}
                 <tr>
                     <td>{{ pincode.pincode_id }}</td>
                     <td>{{ pincode.area_pincode }}</td>
@@ -43,9 +43,10 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pagination">
+        {% comment %} <a href="?page=1">First</a> {% endcomment %}
+        {% comment %} <a href="?page={{ page_obj.paginator.num_pages }}">Last</a> {% endcomment %}
+        {% comment %} <div class="pagination">
             {% if page_obj.has_previous %}
-                {% comment %} <a href="?page=1">First</a> {% endcomment %}
                 <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
             {% endif %}
         
@@ -53,13 +54,12 @@
         
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                {% comment %} <a href="?page={{ page_obj.paginator.num_pages }}">Last</a> {% endcomment %}
             {% endif %}
-        </div>
+        </div> {% endcomment %}
     </section>
 </div>
 
-<style>
+{% comment %} <style>
     .pagination {
         display: flex;
         justify-content: center;
@@ -91,7 +91,7 @@
         margin: 0 5px;
         font-weight: bold;
         color: #333;
-    }
+    } 
     
-</style>
+</style> {% endcomment %}
 {% endblock %}

@@ -37,7 +37,7 @@
         <!-- Search Bar -->
         <div class="search-bar">
           <form method="GET" action="{% url 'Ecommerce:search_results' %}">
-            <input type="search" name="product_name" placeholder="Search products..." value="{{ search_query }}">
+            <input type="seach" name="product_name" placeholder="Search products..." value="{{ search_query }}">
             <button type="submit"><box-icon name='search-alt'></box-icon></button>
           </form>
         </div>
@@ -62,14 +62,15 @@
                   background: none;
                   color: black;
                   cursor: pointer;
+                  position: relative;
+                  left: -7%;
                 "
               >
                 <a>Logout</a>
               </button>
             </form>
             <a href="{% url 'account:profile' %}">Profile</a>
-            <a href="{% url 'Ecommerce:order_history' %}">Order History</a>
-            {% comment %}  {% endcomment %}
+            <a href="{% url 'account:profile' %}" style="margin-bottom:10px ;">Order detail</a>
             {% else %}
             <a href="{% url 'account:login' %}">Login</a>
             <a href="{% url 'account:registration' %}">Register</a>
