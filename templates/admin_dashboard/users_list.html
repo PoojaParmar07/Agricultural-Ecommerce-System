@@ -34,8 +34,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for user in page_obj %}
-                <tr>
+                {% for user in users v \ %}                <tr>
                     <td>{{ user.pk }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
@@ -59,19 +58,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-                {% comment %} <a href="?page=1">First</a> {% endcomment %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            {% endif %}
         
-            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                {% comment %} <a href="?page={{ page_obj.paginator.num_pages }}">Last</a> {% endcomment %}
-            {% endif %}
-        </div>
     </section>
 </div>
 
