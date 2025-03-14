@@ -16,8 +16,13 @@ from django.db import transaction
 from datetime import date
 from decimal import Decimal
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 from xhtml2pdf import pisa
 from django.template.loader import get_template
+=======
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+>>>>>>> Stashed changes
 =======
 from django.template.loader import get_template
 from xhtml2pdf import pisa
@@ -946,6 +951,7 @@ def order_details(request, order_id):
     
     
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 def download_invoice_pdf(request, order_id):
     # Fetch the order details
     order = get_object_or_404(Order, pk=order_id)
@@ -975,6 +981,8 @@ def download_invoice_pdf(request, order_id):
 
     # Generate PDF from HTML
 =======
+=======
+>>>>>>> Stashed changes
 @login_required
 def generate_invoice(request, order_id):
     order = get_object_or_404(Order, order_id=order_id)
@@ -994,6 +1002,9 @@ def generate_invoice(request, order_id):
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="invoice_{order_id}.pdf"'
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
@@ -1001,7 +1012,10 @@ def generate_invoice(request, order_id):
 
     return response
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 

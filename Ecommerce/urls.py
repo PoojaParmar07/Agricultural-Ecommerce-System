@@ -31,7 +31,11 @@ urlpatterns = [
     path('order_history/',order_history,name='order_history'),
     path('order_details/<int:order_id>/',order_details,name="order_details"),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     path('order_invoice/<int:order_id>/',download_invoice_pdf,name='order_invoice'),
+=======
+    path('invoice/<int:order_id>/', generate_invoice, name='generate_invoice'),
+>>>>>>> Stashed changes
 =======
     path('invoice/<int:order_id>/', generate_invoice, name='generate_invoice'),
 >>>>>>> Stashed changes
