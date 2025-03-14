@@ -6,6 +6,7 @@ from .views import *
 app_name = 'Ecommerce'
 
 urlpatterns = [
+    
     path('home/',home,name='home'),
 
     path('',homepage,name='homepage'),
@@ -19,9 +20,6 @@ urlpatterns = [
     path('Ecommerce/decrease_quantity/', decrease_quantity, name='decrease_quantity'),
     path('Ecommerce/update_variant/<int:cart_item_id>/', update_variant, name='update_variant'),
     path("cart/count/", get_cart_count, name="cart_count"), 
-    
-    
-   
     path('checkout/',checkout,name='checkout'),
      path('get-delivery-charge/<int:pincode_id>/',
          get_delivery_charge_ajax, name='get_delivery_charge'),
@@ -30,6 +28,8 @@ urlpatterns = [
     # path('cod_checkout/',cod_checkout,name='cod_checkout'),
     path('order_history/',order_history,name='order_history'),
     path('order_details/<int:order_id>/',order_details,name="order_details"),
+    path('order_invoice/<int:order_id>/',download_invoice_pdf,name='order_invoice'),
+    path('invoice/<int:order_id>/', generate_invoice, name='generate_invoice'),
     path('confirm_Order/',confirm_Order,name='confirm_Order'),
     # path('render_pdf_view',render_pdf_view,name="render_pdf_view"),
     
