@@ -43,14 +43,17 @@
 
         /* Individual Card */
         .membership-card {
-            /* background-color:rgba(255, 255, 255, 0.76); */
             background-color: white;
-            width: 300px;
-            padding: 70px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            margin-top: 120px;
+    width: 300px;
+    padding: 40px; /* Reduced padding for better alignment */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-top: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensures even spacing */
+    height: 350px; 
         }
 
         .card-title {
@@ -71,6 +74,7 @@
             list-style: none;
             padding: 0;
             margin-bottom: 15px;
+            flex-grow: 1; 
         }
 
         .benefit-item {
@@ -98,6 +102,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease-in-out;
+            margin-top: auto; 
         }
 
         .cta-button:hover {
