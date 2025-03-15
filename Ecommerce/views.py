@@ -86,8 +86,8 @@ def home(request):
     # return render(request, 'Ecommerce/base.html')
 
 
-def checkout(request):
-    return render(request, 'Ecommerce/checkout_page.html')
+# def checkout(request):
+#     return render(request, 'Ecommerce/checkout_page.html')
 
 
 def homepage(request):
@@ -529,7 +529,7 @@ def checkout(request):
     "selected_city_id": selected_city_id,
     "selected_pincode_id": selected_pincode_id,
     "delivery_charge": float(delivery_charge),  # Convert Decimal to float
-    "razorpay_key": settings.RAZORPAY_KEY_ID,
+    # "razorpay_key": settings.RAZORPAY_KEY_ID,
 }
 
     
