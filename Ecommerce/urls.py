@@ -45,6 +45,8 @@ urlpatterns = [
     path('enquiry/',enquiry,name="enquiry"),
     path('crop_info/',crop_info,name="crop_info"),
     path('okra/',okra,name="okra"),
+    
+    
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
