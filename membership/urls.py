@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import membership_plan_list, membership_plan_add, membership_view_details, user_membership, add_user_membership, user_membership_details
+from .views import *
 
 app_name ='membership'
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('user_membership/', user_membership,name='user_membership'),
     path('add_user_membership/', add_user_membership,name='add_user_membership'),
     path('user_membership_details/<int:pk>/', user_membership_details,name='user_membership_details'),
+    path('membership_gold/', show_membership_gold,name='membership_gold'),
 ]

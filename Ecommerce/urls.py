@@ -21,7 +21,7 @@ urlpatterns = [
     path('Ecommerce/update_variant/<int:cart_item_id>/', update_variant, name='update_variant'),
     path("cart/count/", get_cart_count, name="cart_count"), 
     path('checkout/',checkout,name='checkout'),
-     path('get-delivery-charge/<int:pincode_id>/',
+    path('get-delivery-charge/<int:pincode_id>/',
          get_delivery_charge_ajax, name='get_delivery_charge'),
     path('checkout/', checkout, name='checkout'),
     path('get_pincode/<int:city_id>/', get_pincode, name='get_pincode'),
@@ -36,7 +36,6 @@ urlpatterns = [
     path('wishlist/', wishlist_view, name='wishlist'),
     path('add/<int:variant_id>/', add_to_wishlist, name='add_to_wishlist'),
     path('remove/<int:item_id>/',remove_from_wishlist, name='remove_from_wishlist'),
-    #  path("reports/sales-purchase/", sales_purchase_report, name="sales_purchase_report"),
 
     
     path("search-results/", ProductSearchView.as_view(), name="search_results"),
@@ -46,8 +45,6 @@ urlpatterns = [
     path('crop_info/',crop_info,name="crop_info"),
     path('okra/',okra,name="okra"),
     
-    
-
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -12,7 +12,7 @@
             <p>Your order has been placed successfully.</p>
             <div class="button-container">  
                 {% if order and order.order_id %}
-    {% comment %} <a href="{% url 'order_details' order.order_id %}" class="order-button">View Order</a> {% endcomment %}
+    <a href="{% url 'Ecommerce:order_details' order.order_id %}" class="order-button">View Order</a>
 {% else %}
     <p>No Order Found</p>
 {% endif %}

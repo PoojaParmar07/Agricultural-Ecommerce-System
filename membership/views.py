@@ -200,4 +200,7 @@ def user_membership_details(request, pk):
     return render(request, 'admin_dashboard/view_details.html', context)
 
 
+def show_membership_gold(request):
+    return render(request, "Ecommerce/membership/membership.html")
+  
         
