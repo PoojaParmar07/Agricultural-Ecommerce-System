@@ -25,7 +25,8 @@
                     <select id="city" name="city" required>
                         <option value="">Select City</option>
                         {% for city in cities %}
-                            <option value="{{ city.city_id }}" >
+                           <option value="{{ city.city_id }}" {% if request.user.profile.city == city.city_id %}selected{% endif %}>
+
                                 {{ city.city_name }}
                             </option>
                         {% endfor %}
@@ -119,12 +120,16 @@
 <script>
     document.getElementById('city').addEventListener('change', function() {
         let cityId = this.value;
+        console.log("City selected:", cityId);  // Debugging: Check if event fires
+    
         let pincodeDropdown = document.getElementById('pincode');
     
         if (cityId) {
             fetch("{% url 'Ecommerce:get_pincode' 0 %}".replace('0', cityId))  
             .then(response => response.json())
             .then(data => {
+                console.log("Response received:", data); // Debugging: Check API response
+    
                 pincodeDropdown.innerHTML = '<option value="">Select Pincode</option>';
                 data.pincodes.forEach(pincode => {
                     let option = document.createElement("option");
@@ -132,9 +137,11 @@
                     option.textContent = pincode.area_pincode;
                     pincodeDropdown.appendChild(option);
                 });
-            });
+            })
+            .catch(error => console.error("Error fetching pincodes:", error));
         }
     });
+    
 
     
 
@@ -190,7 +197,7 @@
                 // ✅ Use Razorpay Checkout
                 var options = {
                     "key": "{{ razorpay_key }}",
-                    "amount": {{ final_total|floatformat:0 }} * 100
+                    "amount": {{ final_total|floatformat:0 }} * 100,
                     "currency": "INR",
                     "name": "Jyoti Agro",
                     "description": "Order Payment",

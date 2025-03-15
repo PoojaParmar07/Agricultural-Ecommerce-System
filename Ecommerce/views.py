@@ -589,7 +589,6 @@ def get_pincode(request, city_id):
     city = get_object_or_404(City, pk=city_id)  # Ensures the city exists
     # Using related_name for clarity
     pincodes = city.pincode_set.values("pincode_id", "area_pincode")
-
     return JsonResponse({"pincodes": list(pincodes)})
 
 
