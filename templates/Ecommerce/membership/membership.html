@@ -1,38 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Membership Plans</title>
+{% extends 'Ecommerce/base.html' %}
+{% load static %}
+
+{% block content %}
+
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
-        /* Reset & General Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
 
+        .membership-container{
+            height: 60%;
+        }
+        
         /* Page Container */
-        .membership-container {
+        .membership-subcontainer {
             background: #3B823E;
             padding: 60px 20px;
             text-align: center;
-            height: 400px;
             background-image : url("/media/membership-page1.jpg");
             background-repeat: no-repeat; /* Prevents image repetition */
-    background-position: center center; /* Centers the image */
-    background-size: cover; /* Ensures the image covers the full screen */
-    background-attachment: fixed; /* Keeps the image fixed when scrolling */
+            height: 400px;
+            background-position: center center; /* Centers the image */
+            background-size: cover; /* Ensures the image covers the full screen */
+            background-attachment: fixed; /* Keeps the image fixed when scrolling */
+            position: relative;
+        }
+        
+        .membership-mini-container{
+            height: 400px;
+            width: 100%;
+            opacity: 0.59;
+            position: absolute;
+            top: 18 %;
+            left: 0;
+            background-color: #2e6430;
+            background-size: max(100px, 100vw);
+            padding: 30px 20px;
+            z-index: 30;
         }
 
         .membership-title {
             font-size: 32px;
             color: white;
             margin-bottom: 20px;
+            text-align: left;
+            margin-left: 50px;
+            margin: 60px 0 20px 50px;
+            position: relative;
+            z-index: 40;
         }
-
+        
+        .membership-subtitle {
+            font-size: 15px;
+            color:rgba(255, 255, 255, 0.82);
+            margin-bottom: 20px;
+            text-align: left;
+            margin-left: 50px;
+            margin: 0 0 20px 50px;
+            position: relative;
+            z-index: 40;
+        }
+        
         /* Card Container */
         .membership-cards {
             display: flex;
@@ -40,54 +66,64 @@
             gap: 20px;
             flex-wrap: wrap;
         }
-
+        
         /* Individual Card */
         .membership-card {
             /* background-color:rgba(255, 255, 255, 0.76); */
             background-color: white;
-            width: 300px;
-            padding: 70px;
+            width: 350px;
+            padding: 50px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            margin-top: 120px;
+            
+            margin-top: 80px;
+            margin-bottom: 40px;
         }
-
+        
         .card-title {
             font-size: 24px;
             font-weight: bold;
-            color: #333;
+            color: black;
             margin-bottom: 10px;
+            text-align: center;
         }
-
+        
         .membership-price {
+            text-align: center;
             font-size: 20px;
-            color: #3B823E;
+            color:rgb(0, 0, 0);
             font-weight: bold;
             margin-bottom: 15px;
         }
 
+        .membership-price span{
+            color:#3B823E;
+        }
+        
         .membership-benefits {
             list-style: none;
-            padding: 0;
+            padding: 20px 0;
             margin-bottom: 15px;
         }
-
+        
         .benefit-item {
             font-size: 16px;
             margin-bottom: 8px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
+            align-items: left;
+            justify-content: left;
+            font-weight: 500;
+            color:black;
         }
-
+        
         .check {
             color: #3B823E;
             font-size: 18px;
             margin-right: 8px;
+            display: flex;
+            justify-content: left;
         }
-
+        
         .cta-button {
             display: inline-block;
             background: #3B823E;
@@ -99,23 +135,23 @@
             cursor: pointer;
             transition: all 0.3s ease-in-out;
         }
-
+        
         .cta-button:hover {
             background: #218c54;
             transform: scale(1.05);
         }
-
+        
         /* Image Section */
         .membership-image {
             margin-top: 40px;
         }
-
+        
         .membership-image img {
             width: 100%;
             max-width: 600px;
             border-radius: 10px;
         }
-
+        
         .back {
             position: absolute;
             top: 20px;
@@ -131,18 +167,43 @@
             font-size: 25px;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 40;
         }
+
+        .membership-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            text-align: center;
+            height: 80px; 
+            margin-top: 40px;
+            padding: 5px;
+        }
+        
     </style>
-</head>
-<body>
+
+
     <div class="membership-container">
-        <a href="{% url "Ecommerce:homepage" %}" class="back"><box-icon name='arrow-back'></box-icon> </a>
-        <h1 class="membership-title">Unlock premium features with our Gold Plan!</h1>
+        <div class="membership-mini-container"></div>
+        <div class="membership-subcontainer">
+            {% comment %} <a href="{% url "Ecommerce:homepage" %}" class="back"><box-icon name='arrow-back'></box-icon> </a> {% endcomment %}
+            <h1 class="membership-title">Unlock premium features with our Gold Plan!</h1>
+            <h4 class="membership-subtitle">Join our exclusive membership program and enjoy premium benefits, special <br> discounts, and unique experiances tailored just for you.</h4>
+        </div>
+
+        <div class="membership-header">
+            {% comment %} <a href="{% url "Ecommerce:homepage" %}" class="back"><box-icon name='arrow-back'></box-icon> </a> {% endcomment %}
+            <h1>Gold Plan</h1>
+            <h4>Select a plan that first you needs and enjoying exclusive benefits today</h4>
+        </div>
+
         <div class="membership-cards">
             <!-- Card 1 -->
             <div class="membership-card">
                 <h3 class="card-title">Bronze Membership</h3>
-                <p class="membership-price">₹2,000 / Year</p>
+                <p class="membership-price">₹2,000  <span>/ Year</span></p>
                 <ul class="membership-benefits">
                     <li class="benefit-item"><span class="check">✔</span> 5% Discount</li>
                     <li class="benefit-item"><span class="check">✔</span> Free Shipping</li>
@@ -152,7 +213,7 @@
             <!-- Card 2 -->
             <div class="membership-card">
                 <h3 class="card-title">Silver Membership</h3>
-                <p class="membership-price">₹5,000 / Year</p>
+                <p class="membership-price">₹5,000 <span>/ Year</span></p>
                 <ul class="membership-benefits">
                     <li class="benefit-item"><span class="check">✔</span> 10% Discount</li>
                     <li class="benefit-item"><span class="check">✔</span> Free Shipping</li>
@@ -163,7 +224,7 @@
             <!-- Card 3 -->
             <div class="membership-card">
                 <h3 class="card-title">Gold Membership</h3>
-                <p class="membership-price">₹8,000 / Year</p>
+                <p class="membership-price">₹8,000  <span>/ Year</span></p>
                 <ul class="membership-benefits">
                     <li class="benefit-item"><span class="check">✔</span> 15% Discount</li>
                     <li class="benefit-item"><span class="check">✔</span> Free Shipping</li>
@@ -173,9 +234,7 @@
                 <button class="cta-button">Join Now</button>
             </div>
         </div>
-        <div class="membership-image">
-            {% comment %} <img src="/media/membership-page.jpg" alt="Membership Benefits"> {% endcomment %}
-        </div>
+       
     </div>
-</body>
-</html>
+
+{% endblock %}
