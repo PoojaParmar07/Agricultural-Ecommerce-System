@@ -108,7 +108,7 @@
         <li class="about-dropdown">
           <a href="#">ABOUT US</a>
           <ul class="about-dropdown-menu">
-            <li><a href="#">Enquiry</a></li>
+            <li><a href="{% url "Ecommerce:enquiry_view" %}">Enquiry</a></li>
             <li><a href="{% url "membership:membership_gold" %}">Membership</a></li>
           </ul>
         </li>
@@ -145,7 +145,7 @@
               <h1>Become a <strong>Premium Member</strong></h1>
               {% comment %} <p>Get special discounts</p> {% endcomment %}
               <div class="newsletter-input">
-                  <button>Join Now</button>
+                <a href="{% url "membership:membership_gold" %}"><button>Join Now</button></a>
               </div>
           </div>
 
