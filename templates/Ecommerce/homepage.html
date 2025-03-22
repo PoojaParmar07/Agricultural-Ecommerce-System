@@ -4,7 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'Ecommerce/homepage.css' %}" >
-
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <section class="hero">
     <div class="sub-hero"></div>
     <div class="sub-cont">
@@ -20,27 +20,46 @@
     </div>
 </section>
 
+
+
+
 <section class="categories">
     <h2 class="category-title">Category</h2>
-    <div class="category-list">
-        {% for category in categories %}
-        <div class="category-item">
-            <a href="{% url 'Ecommerce:product_list' category.category_id %}">
-                {% if category.category_image %}
-
-                <img src="{{ category.category_image }}" alt="{{ category.category_name }}">
-                <h4>{{ category.category_name }}</h4>
-                {% else %}
-                    <img src="/static/images/default-image.jpg" alt="Default Image" />
-                    <h4>{{ category.category_name }}</h4>
-                {% endif %}
-            </a>
+    <div class="category-container">
+      {% for category in categories %}
+        <div class="category-box">
+          <a href="{% url 'Ecommerce:product_list' category.category_id %}">
+            {% if category.category_image %}
+                  <img src="{{ category.category_image }}" alt="{{ category.category_name }}">
+            {% else %}
+                  <img src="/static/images/default-image.jpg" alt="Default Image">
+            {% endif %}
+            <h3>{{ category.category_name }}</h3>
+            
+          </a>
         </div>
-        {% empty %}
+      {% empty %}
         <p>No categories available.</p>
-        {% endfor %}
+      {% endfor %}
+  </div>
+  
+  {% comment %} 
+    <div class="category-box">
+        <img src="uiux-icon.png" alt="UI/UX Design">
+        <h3>UI/UX Design</h3>
+        <p>Mobile App, Website Design</p>
     </div>
+    
+    <div class="category-box">
+        <img src="sound-icon.png" alt="Sound Design">
+        <h3>Sound Design</h3>
+        <p>Voice Over, Beat Making</p>
+    </div> 
+  {% endcomment %}
 </section>
+
+
+
 
 
 <section class="product-list">
@@ -163,7 +182,7 @@
     </div>
     <div class="answer">Yes, once your order is placed. you can check it from order detail section</div>
     
-    <div class="box" onclick="toggleFAQ(this)">
+    {% comment %} <div class="box" onclick="toggleFAQ(this)">
       <span>Are your seeds and fertilizers organic?</span>
       <box-icon name='chevron-down'></box-icon>
     </div>
@@ -172,7 +191,7 @@
     <div class="box" onclick="toggleFAQ(this)">
         <span>How can I contact customer support?</span>
         <box-icon name='chevron-down'></box-icon>
-    </div>
+    </div> {% endcomment %}
     <div class="answer">You can reach us via:
       📧 Email: support@jyotiagro.com
       📞 Phone: +91 XXXXXXXXXX</div>

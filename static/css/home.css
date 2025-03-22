@@ -15,6 +15,7 @@
     align-items: center;
     background-color: #FFFFFF;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    
     height: 90px;
 }
 
@@ -26,6 +27,7 @@
 
 .logo img {
     height: 80px;
+    filter: brightness(1.0);
 }
 
 /* Search Bar */
@@ -35,10 +37,12 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
+    height: 45px;
+    width: 600px;
 }
 
 .search-bar select {
-    padding: 10px;
+    padding: 5px;
     border: none;
     background: #FFFFFF;
     font-size: 14px;
@@ -55,24 +59,30 @@
 }
 
 .search-bar input {
-    padding: 14px 10px;
+    padding: 14px 11px;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: 16px;
     width: 250px;
 }
 
 .search-bar button {
-    background: none;
+    background: #3B823E;
     border: none;
     padding: 10px;
     cursor: pointer;
     font-size: 16px;
-    color: #333;
-    fill: #5b5b5b;
-    position: sticky;
-    right: 0%;
-    top: 6%;
+    color: #FFFFFF;
+    /* fill: #5b5b5b; */
+    font-weight: 500;
+    position: absolute;
+    right: 43.4%;
+    top: 2.7%;
+    width: 100px;
+    height: 45px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+
 }
 
 /* Navbar Items */
@@ -90,14 +100,14 @@
 }
 
 .nav-icons a {
-    color: #333;
+    color: #515151;
     font-size: 18px;
     transition: 0.3s;
     margin: 0 10px;
 }
 
 .nav-icons i{
-    font-size: 25px;
+    font-size: 30px;
 
 }
 
@@ -111,7 +121,7 @@
     display: inline-block;
     margin-left: 93%;
     margin-top: 2px;
-    color: #333;
+    color: #515151;
 }
 
 /* User Icon Styling */
@@ -136,6 +146,7 @@
     border-radius: 5px;
     z-index: 1000;
     min-width: 150px;
+    
 }
 
 /* Dropdown Menu Links */
@@ -166,6 +177,7 @@
 .cart-icon {
     position: relative;
     display: inline-block;
+    color: #515151;
 }
 
 .cart-counter {
@@ -191,7 +203,7 @@
     padding: 10px 30px;
     border-top: 1px solid #ddd;
     height: 60px;
-    padding: 17px 15%;
+    padding: 17px 11%;
 }
 
 .sub-navbar .sub-nav {
