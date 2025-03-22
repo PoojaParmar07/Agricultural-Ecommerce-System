@@ -1,8 +1,3 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 20px;
-}
 
 .maincontainer {
     max-width: auto;
@@ -136,7 +131,7 @@ table td {
     /* Optional: Space between items */
 }
 
-ul {
+.content ul {
     padding-inline-start: 31px;
     padding-top: 0px;
     margin: 0px;
