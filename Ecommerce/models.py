@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from account.models import CustomUser
 
 # Create your models here.
 
@@ -340,6 +341,16 @@ class WishlistItem(models.Model):
         
     def __str__(self):
         return f"WishlistItem: {str(self.product_variant)}"
+    
+class Enquiry(models.Model):
+    enquiry_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
+    email = models.EmailField(max_length=255) 
+    message = models.TextField(max_length=255)  
+    created_at = models.DateTimeField(auto_now_add=True)  
+
+    def __str__(self):
+        return f"Enquiry {self.enquiry_id} by {self.email}"
     
     
       

@@ -21,3 +21,14 @@ class CartItemForm(forms.Form):
     class Meta:
         model = CartItem
         fields = ['variant_id', 'quantity','sales_price']
+        
+class EnquiryForm(forms.ModelForm):
+    class Meta:
+        model = Enquiry
+        fields = ['email', 'message'] 
+
+        widgets = {
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
+

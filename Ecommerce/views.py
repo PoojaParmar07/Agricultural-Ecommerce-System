@@ -995,4 +995,19 @@ def generate_invoice(request, order_id):
     return response
 
 
+def enquiry_view(request):
+    if request.method == 'POST':
+        form = EnquiryForm(request.POST)
+        if form.is_valid():
+            enquiry = form.save(commit=False)
+            enquiry.user = request.user  
+            enquiry.save()
+            return redirect('Ecommerce:homepage')  
+    else:
+        form = EnquiryForm()
+
+    return render(request, 'Ecommerce/enquiry.html', {'form': form})
+        
+
+
 
