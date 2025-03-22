@@ -142,19 +142,19 @@ nav ul li a {
     background-repeat: no-repeat;
     background-size: cover;
     background-size: max(100px, 100vw);
-    height: 540px;
+    height: 500px;
     margin: 40px 90px;
     border-radius: 15px;
 }
 
 .sub-hero {
-    height: 540px;
+    height: 500px;
     width: 100%;
     opacity: 0.79;
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #2e6430c2;
+    background-color: #2e6430;
     background-size: max(100px, 100vw);
     padding: 30px 20px;
     border-radius: 15px;
