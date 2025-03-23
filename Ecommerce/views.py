@@ -15,9 +15,13 @@ from django.db.models import Avg, F
 from django.db import transaction
 from datetime import date
 from decimal import Decimal
-
 from xhtml2pdf import pisa
-from django.template.loader import get_template
+import io
+from PIL import Image   
+# # from xhtml2pdf import pisa
+# from weasyprint import HTML
+# import tempfile
+from django.template.loader import get_template,render_to_string
 # from django.http import HttpResponse
 import json
 from account.models import *
@@ -929,27 +933,79 @@ def order_history(request):
     return render(request, 'Ecommerce/order_history.html', {'orders': orders})
 
 @login_required
-def order_invoice(request,order_id ):
-    return render(request,'Ecommerce/order_invoice.html')
+def order_invoice(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id)
+    order_items = order.order_item_set.all()
+
+    
+    subtotal = sum(Decimal(item.price) * item.quantity for item in order_items)
+    discount = Decimal(order.discounted_price) if order.discounted_price else Decimal(0)
+    shipping = Decimal(order.delivery_charges) if order.delivery_charges else Decimal(0)
+    grand_total = subtotal - discount + shipping
+    grand_total = subtotal - discount + shipping
+    for item in order_items:
+        item.total_price = item.price * item.quantity
+
+    # Calculate total order price
+    total_price = sum(item.total_price for item in order_items)
+    
+    html_string = render_to_string('Ecommerce/order_invoice.html', {
+        'order': order,
+        'order_items': order_items,
+        'total_products': sum(item.quantity for item in order_items),
+        "request": request,
+        "subtotal": float(subtotal),
+        "discount": float(discount),
+        "shipping": float(shipping),
+        "grand_total": float(grand_total),
+		'total_price': total_price,
+    })
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{order.order_id}.pdf"'
+
+    pdf = io.BytesIO()
+    pdf_status = pisa.CreatePDF(html_string, dest=pdf)
+
+    if pdf_status.err:
+        return HttpResponse("Error generating PDF", status=500)
+
+    response.write(pdf.getvalue())
+    return response
+    
 
 @login_required
 def order_details(request, order_id):
-    order = Order.objects.filter(order_id=order_id).first()
-
-    if not order:
-        return HttpResponse("Order not found in the database", status=404)
+    order = get_object_or_404(Order, order_id=order_id)
 
     if order.user != request.user:
         return HttpResponse("You do not have permission to view this order", status=403)
 
     order_items = order.order_item_set.all()
-    total_products = sum(item.quantity for item in order_items)
+    
+    # Extract values
+    subtotal = sum(Decimal(item.price) * item.quantity for item in order_items)
+    discount = Decimal(order.discounted_price) if order.discounted_price else Decimal(0)
+    shipping = Decimal(order.delivery_charges) if order.delivery_charges else Decimal(0)
+    grand_total = subtotal - discount + shipping
+    for item in order_items:
+        item.total_price = item.price * item.quantity
+
+    # Calculate total order price
+    total_price = sum(item.total_price for item in order_items)
 
     return render(request, "Ecommerce/order_detail.html", {
         "order": order,
         "order_items": order_items,
-        "total_products": total_products,
+        "total_products": sum(item.quantity for item in order_items),
+        "subtotal": float(subtotal),
+        "discount": float(discount),
+        "shipping": float(shipping),
+        "grand_total": float(grand_total),
+        'total_price': total_price  
+       
     })
+
 
 
 @login_required

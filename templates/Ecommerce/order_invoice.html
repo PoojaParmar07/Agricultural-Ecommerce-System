@@ -1,308 +1,168 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-       <style>
-        *,
-*::after,
-*::before{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            padding: 10px;
+            color: #333;
+        }
 
-:root{
-    --blue-color: #0c2f54;
-    --dark-color: #535b61;
-    --white-color: #fff;
-}
+        .invoice-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Light shadow for better visibility */
+        }
 
-ul{
-    list-style-type: none;
-}
-ul li{
-    margin: 2px 0;
-}
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-/* text colors */
-.text-dark{
-    color: var(--dark-color);
-}
-.text-blue{
-    color: var(--blue-color);
-}
-.text-end{
-    text-align: right;
-}
-.text-center{
-    text-align: center;
-}
-.text-start{
-    text-align: left;
-}
-.text-bold{
-    font-weight: 700;
-}
-/* hr line */
-.hr{
-    height: 1px;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-/* border-bottom */
-.border-bottom{
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
+        h1 {
+            color: #5D6975;
+            border-bottom: 2px solid #5D6975;
+            padding-bottom: 5px;
+        }
 
-body{
-    font-family: 'Poppins', sans-serif;
-    color: var(--dark-color);
-    font-size: 14px;
-}
-.invoice-wrapper{
-    min-height: 100vh;
-    background-color: rgba(0, 0, 0, 0.1);
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-.invoice{
-    max-width: 850px;
-    margin-right: auto;
-    margin-left: auto;
-    background-color: var(--white-color);
-    padding: 70px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    min-height: 920px;
-}
-.invoice-head-top-left img{
-    width: 130px;
-}
-.invoice-head-top-right h3{
-    font-weight: 500;
-    font-size: 27px;
-    color: var(--blue-color);
-}
-.invoice-head-middle, .invoice-head-bottom{
-    padding: 16px 0;
-}
-.invoice-body{
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-}
-.invoice-body table{
-    border-collapse: collapse;
-    border-radius: 4px;
-    width: 100%;
-}
-.invoice-body table td, .invoice-body table th{
-    padding: 12px;
-}
-.invoice-body table tr{
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-.invoice-body table thead{
-    background-color: rgba(0, 0, 0, 0.02);
-}
-.invoice-body-info-item{
-    display: grid;
-    grid-template-columns: 80% 20%;
-}
-.invoice-body-info-item .info-item-td{
-    padding: 12px;
-    background-color: rgba(0, 0, 0, 0.02);
-}
-.invoice-foot{
-    padding: 30px 0;
-}
-.invoice-foot p{
-    font-size: 12px;
-}
-.invoice-btns{
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-}
-.invoice-btn{
-    padding: 3px 9px;
-    color: var(--dark-color);
-    font-family: inherit;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-}
+        .info-section {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.invoice-head-top, .invoice-head-middle, .invoice-head-bottom{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    padding-bottom: 10px;
-}
+        .info-box {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
 
-@media screen and (max-width: 992px){
-    .invoice{
-        padding: 40px;
-    }
-}
+        .info-box h3 {
+            margin-bottom: 2px;
+            color: #5D6975;
+            font-size: 11px;
+        }
 
-@media screen and (max-width: 576px){
-    .invoice-head-top, .invoice-head-middle, .invoice-head-bottom{
-        grid-template-columns: repeat(1, 1fr);
-    }
-    .invoice-head-bottom-right{
-        margin-top: 12px;
-        margin-bottom: 12px;
-    }
-    .invoice *{
-        text-align: left;
-    }
-    .invoice{
-        padding: 28px;
-    }
-}
+        .info-box p {
+            margin: 2px 0;
+            font-size: 10px;
+        }
 
-.overflow-view{
-    overflow-x: scroll;
-}
-.invoice-body{
-    min-width: 600px;
-}
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px;
+        }
 
-@media print{
-    .print-area{
-        visibility: visible;
-        width: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        overflow: hidden;
-    }
+        .invoice-table th, .invoice-table td {
+            padding: 4px;
+            border: 1px solid #ddd; /* Light gray border */
+            text-align: center;
+            word-wrap: break-word;
+            white-space: normal;
+        }
 
-    .overflow-view{
-        overflow-x: hidden;
-    }
+        .invoice-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #5D6975;
+        }
 
-    .invoice-btns{
-        display: none;
-    }
-}
-       </style>
-    </head>
-    <body>
+        /* Prevent Page Break Issues */
+        tr {
+            page-break-inside: avoid;
+        }
 
-        <div class = "invoice-wrapper" id = "print-area">
-            <div class = "invoice">
-                <div class = "invoice-container">
-                    <div class = "invoice-head">
-                        <div class = "invoice-head-top">
-                            <div class = "invoice-head-top-left text-start">
-                                <img src = "images/logo.png">
-                            </div>
-                            <div class = "invoice-head-top-right text-end">
-                                <h3>Invoice</h3>
-                            </div>
-                        </div>
-                        <div class = "hr"></div>
-                        <div class = "invoice-head-middle">
-                            <div class = "invoice-head-middle-left text-start">
-                                <p><span class = "text-bold">Date</span>: 05/12/2020</p>
-                            </div>
-                            <div class = "invoice-head-middle-right text-end">
-                                <p><spanf class = "text-bold">Invoice No:</span>16789</p>
-                            </div>
-                        </div>
-                        <div class = "hr"></div>
-                        <div class = "invoice-head-bottom">
-                            <div class = "invoice-head-bottom-left">
-                                <ul>
-                                    <li class = 'text-bold'>Invoiced To:</li>
-                                    <li>Smith Rhodes</li>
-                                    <li>15 Hodges Mews, High Wycombe</li>
-                                    <li>HP12 3JL</li>
-                                    <li>United Kingdom</li>
-                                </ul>
-                            </div>
-                            <div class = "invoice-head-bottom-right">
-                                <ul class = "text-end">
-                                    <li class = 'text-bold'>Pay To:</li>
-                                    <li>Koice Inc.</li>
-                                    <li>2705 N. Enterprise</li>
-                                    <li>Orange, CA 89438</li>
-                                    <li>contact@koiceinc.com</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class = "overflow-view">
-                        <div class = "invoice-body">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td class = "text-bold">Service</td>
-                                        <td class = "text-bold">Description</td>
-                                        <td class = "text-bold">Rate</td>
-                                        <td class = "text-bold">QTY</td>
-                                        <td class = "text-bold">Amount</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Design</td>
-                                        <td>Creating a website design</td>
-                                        <td>$50.00</td>
-                                        <td>10</td>
-                                        <td class = "text-end">$500.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Development</td>
-                                        <td>Website Development</td>
-                                        <td>$50.00</td>
-                                        <td>10</td>
-                                        <td class = "text-end">$500.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>SEO</td>
-                                        <td>Optimize the site for search engines (SEO)</td>
-                                        <td>$50.00</td>
-                                        <td>10</td>
-                                        <td class = "text-end">$500.00</td>
-                                    </tr>
-                                    <!-- <tr>
-                                        <td colspan="4">10</td>
-                                        <td>$500.00</td>
-                                    </tr> -->
-                                </tbody>
-                            </table>
-                            <div class = "invoice-body-bottom">
-                                <div class = "invoice-body-info-item border-bottom">
-                                    <div class = "info-item-td text-end text-bold">Sub Total:</div>
-                                    <div class = "info-item-td text-end">$2150.00</div>
-                                </div>
-                                <div class = "invoice-body-info-item border-bottom">
-                                    <div class = "info-item-td text-end text-bold">Tax:</div>
-                                    <div class = "info-item-td text-end">$215.00</div>
-                                </div>
-                                <div class = "invoice-body-info-item">
-                                    <div class = "info-item-td text-end text-bold">Total:</div>
-                                    <div class = "info-item-td text-end">$21365.00</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class = "invoice-foot text-center">
-                        <p><span class = "text-bold text-center">NOTE:&nbsp;</span>This is computer generated receipt and does not require physical signature.</p>
+        .total-section {
+            text-align: right;
+            font-size: 11px;
+            margin-top: 10px;
+        }
 
-                      
-                    </div>
-                </div>
-            </div>
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 9px;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <h1>Bill</h1>
         </div>
 
-    </body>
+        <table class="info-section">
+            <tr>
+                <td class="info-box">
+                    <h3>BILL TO:</h3>
+                    <p><strong>{{ order.user.username|capfirst }}</strong></p>
+                    <p>{{ order.address }}, {{ order.city }}, {{ order.state }}</p>
+                    <p><strong>EMAIL:</strong> {{ order.user.email }}</p>
+                </td>
+                <td class="info-box">
+                    <h3>SHIP TO:</h3>
+                    <p><strong>{{ order.user.username|capfirst }}</strong></p>
+                    <p>{{ order.address }}, {{ order.city }}, {{ order.state }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="info-section">
+            <tr>
+                <td class="info-box">
+                    <p><strong>Order Number:</strong> {{ order.order_id }}</p>
+                    <p><strong>Order Date:</strong> {{ order.create_at }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>SN.</th>
+                    <th>PRODUCT</th>
+                    <th>PRICE</th>
+                    <th>QUANTITY</th>
+                    <th>SUBTOTAL</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    
+                    <td>   
+                    {{ item.variant.product.product_name  }}
+                    </td>
+                    <td>{{ item.price }}</td>
+                    <td>x{{ item.quantity }}</td>
+                    <td>₹{{ item.total_price|floatformat:2 }}</td>
+                
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <p><strong>Subtotal:</strong> <span>₹{{ subtotal|floatformat:2 }}</span></p>
+                <p><strong>Discount:</strong> <span>- ₹{{ order.discounted_price|floatformat:2 }}</span></p>
+                <p><strong>Shipping:</strong> <span>{% if order.delivery_charges == 0 %} Free {% else %} ₹{{ order.delivery_charges|floatformat:2 }} {% endif %}</span></p>
+                <p class="total"><strong>Total:</strong> <span>₹{{grand_total}}</span></p>
+        </div>
+
+        <div class="footer">
+            <p>This invoice was generated automatically and is valid without a signature.</p>
+        </div>
+    </div>
+
+</body>
 </html>
