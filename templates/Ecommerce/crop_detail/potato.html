@@ -1,0 +1,136 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'Ecommerce/style_detail.css' %}">
+
+ <!--Detail page for corainder-->
+
+ <div class="maincontainer">
+
+    <div class="container1">
+        <div class="image-container">
+            <div class="img-cont">
+                <img src="/media/potato.jpg" alt="Tomato Plant" height="340px">
+            </div>
+
+        </div>
+        <div class="content-container">
+            <p class="para">Scientific Name:</p>
+            <p class="content">Solanum tuberosum</p>
+
+            <p class="para">Growing Tips and Techniques</p>
+            <p class="content">
+            <ul>
+                <li class="square-list"><b>Watering:</b>In Gujarat's semi-arid climate, potatoes need consistent moisture, especially during tuber formation. Water deeply but avoid waterlogging, as excess moisture can cause rot and fungal diseases. Drip irrigation is beneficial for maintaining even soil moisture.</li>
+                <li class="square-list">Soil Enrichment:Prepare the soil with organic compost or well-rotted manure before planting to improve fertility and structure. Gujarat’s slightly alkaline soils can be balanced by adding organic matter, which enhances water retention and nutrient availability.</li>
+                
+
+
+            </ul>
+            </p>      
+        </div>       
+    </div>
+    <div class="more-content" id="moreContent">
+        <div class="left">
+            <table style="width: 100%; margin:auto; border-collapse: collapse;">
+                <tr>
+                    <td>
+                        <ul>
+                            <li class="square-list">Crop Rotation: Rotate potatoes with other non-nightshade crops each season to prevent soil depletion and minimize the risk of pests and diseases like blight and nematodes. Avoid planting potatoes after tomatoes, brinjals, or peppers.</li>
+                            <li class="square-list">Natural Pest Control: Intercropping with marigolds and garlic can help deter common potato pests such as aphids, potato beetles, and cutworms. Regularly inspect leaves for pest activity and manually remove any affected parts. Neem oil spray can also help control infestations naturally.</li>
+                        </ul>
+                        <p class="para">Ideal Growing Season:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">IIn Gujarat, plant potatoes from October to January, when cooler temperatures favor tuber development. Avoid planting during the hot summer months (March to June), as high temperatures hinder tuber formation and can cause premature sprouting.</li>
+                        </ul>
+                        </p>
+                        <p class="para">Uses:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Potatoes are a staple ingredient in Indian cuisine, used in dishes such as curries, samosas, aloo parathas, and chaats. They can be boiled, mashed, fried, or roasted. Nutritionally, potatoes are a rich source of carbohydrates, fiber, and essential vitamins like Vitamin C and B6.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Soil Requirements:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Potatoes grow best in well-drained, loose, sandy-loam soil enriched with organic matter. In Gujarat’s slightly sandy soils, adding compost or coco peat improves moisture retention and aeration.</li>
+                            <li class="square-list">Optimal pH: Maintain a pH between 5.5 and 6.5 for best growth. Since Gujarat soils tend to be alkaline, incorporating organic compost helps maintain a suitable pH balance.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Planting Tips:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Use disease-free, certified seed potatoes for best results. Cut larger seed potatoes into pieces with at least one "eye" and allow them to cure for a day before planting.</li>
+                            <li class="square-list">Plant seed potatoes 3-4 inches deep with a spacing of 12-15 inches between plants and 24-36 inches between rows.</li>
+                            <li class="square-list">Once plants reach about 6 inches in height, begin earthing up (hilling soil around the base) to encourage tuber formation and protect them from sunlight exposure.</li>
+                            <li class="square-list">Apply mulch like straw or dried leaves to conserve moisture, reduce weed growth, and maintain soil temperature.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Watering & Fertilizing:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Water regularly, keeping the soil evenly moist but not soggy, especially during tuber formation (30-60 days after planting).</li>
+                            <li class="square-list">Avoid overhead watering to reduce the risk of fungal infections.</li>
+                            <li class="square-list">Fertilize with a balanced fertilizer or compost tea every 2-3 weeks for healthy tuber formation.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Harvest Time:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Potatoes are ready for harvest 90-120 days after planting, depending on the variety.</li>
+                            <li class="square-list">Harvest when the foliage turns yellow and begins to die back. Gently dig around the plant to lift tubers without damaging them.</li>
+                            <li class="square-list">Cure harvested potatoes in a cool, dark place for 1-2 weeks to improve storage life.
+                            </li>
+                        </ul>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- <a href="https://youtu.be/d7tDPWWcBWo?si=kcX9cSHfiPh_mBCU" target="_blank">Video link</a> -->
+
+        <!-- Replace this in your more-content div -->
+        <div class="video-container">
+
+                <iframe id="spinachVideo" src="https://www.youtube.com/embed/P8NLb3MFSv0?si=vVE6f00zzkWrHVup"
+                frameborder="0" allowfullscreen></iframe>
+
+        </div>
+
+    </div>
+    <button class="btn" onclick="toggleContent()">Read More</button>
+</div>
+<script>
+    function toggleContent() {
+        var content = document.getElementById("moreContent");
+        var button = document.querySelector(".btn");
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            button.textContent = "Read Less";
+        } else {
+            content.style.display = "none";
+            button.textContent = "Read More";
+        }
+    }
+
+    document.querySelector('.video-container').addEventListener('click', function () {
+        var iframe = document.getElementById('spinachVideo');
+        if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+        } else if (iframe.mozRequestFullScreen) { /* Firefox */
+            iframe.mozRequestFullScreen();
+        } else if (iframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) { /* IE/Edge */
+            iframe.msRequestFullscreen();
+        }
+    });
+
+</script>
+{% endblock %}

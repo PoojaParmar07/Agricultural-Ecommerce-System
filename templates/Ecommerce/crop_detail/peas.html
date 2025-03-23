@@ -1,0 +1,138 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'Ecommerce/style_detail.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+    <!--Detail page for peas-->
+
+    <div class="maincontainer">
+
+        <div class="container1">
+            <div class="image-container">
+                <div class="img-cont">
+                    <img src="/media/peas.jpg" alt="Tomato Plant" height="360px">
+                </div>
+
+            </div>
+            <div class="content-container">
+                <p class="para">Scientific Name:</p>
+                <p class="content">Pisum sativum</p>
+
+                <p class="para">Growing Tips and Techniques</p>
+                <p class="content">
+                <ul>
+                    <li class="square-list"><b>Watering:</b>In Gujarat's semi-arid climate, water peas regularly to maintain even soil moisture, especially during dry spells.Avoid overwatering, as peas have shallow roots prone to rotting in waterlogged soil.</li>
+                    <li class="square-list">Soil Enrichment:Add organic compost or well-rotted manure before planting to improve soil fertility and texture.Peas benefit from nitrogen-fixing bacteria, so avoid excessive nitrogen fertilizers. </li>
+                    <li class="square-list">Crop Rotation:Rotate peas with other crops to maintain soil health and reduce disease risks.
+                        Avoid planting peas after legumes to prevent nutrient depletion.</li>
+                
+
+                </ul>
+                </p>      
+            </div>       
+        </div>
+        <div class="more-content" id="moreContent">
+            <div class="left">
+                <table style="width: 100%; margin:auto; border-collapse: collapse;">
+                    <tr>
+                        <td>
+                            <ul>
+                                <li class="square-list">Natural Pest Control: Companion planting with onions and garlic can help deter common pests like aphids and caterpillars. Regularly inspect plants for signs of leaf miners and aphids, removing affected leaves to prevent infestations.</li>
+                            </ul>
+                            <p class="para">Ideal Growing Season:</p>
+                            <p class="content">
+                            <ul>
+                                <li class="square-list">In Gujarat, plant peas from October to February, as they thrive in cooler temperatures.
+                                    Avoid the hot summer months (March to June) since high heat hinders flowering and pod formation.</li>
+                            </ul>
+                            </p>
+                            <p class="para">Uses:</p>
+                            <p class="content">
+                            <ul>
+                                <li class="square-list">Peas are used in curries, pulao, soups, and vegetable stir-fries, adding sweetness and texture to dishes.They are rich in protein, fiber, and essential vitamins, making them a nutritious addition to meals.</li>
+                            </ul>
+                            </p>
+
+                            <p class="para">Soil Requirements:</p>
+                            <p class="content">
+                            <ul>
+                                <li class="square-list">Peas prefer well-drained, loamy soil with good organic content for healthy growth.</li>
+                                <li class="square-list">Optimal pH: Maintain a pH between 6.0 and 7.0 for best nutrient absorption.</li>
+                            </ul>
+                            </p>
+
+                            <p class="para">Planting Tips:</p>
+                            <p class="content">
+                            <ul>
+                                <li class="square-list">Sow seeds 1 inch deep in rows spaced 18-24 inches apart for good air circulation.</li>
+                                <li class="square-list">Thin seedlings to 3-4 inches apart after germination to avoid overcrowding.</li>
+                                <li class="square-list">Apply mulch around plants to retain soil moisture, suppress weeds, and regulate soil temperature.</li>
+                            </ul>
+                            </p>
+
+                            <p class="para">Watering & Fertilizing:</p>
+                            <p class="content">
+                            <ul>
+                                <li class="square-list">Water regularly to keep soil moist but not waterlogged, especially in dry weather.</li>
+                                <li class="square-list">Fertilize with compost tea or balanced organic fertilizer every 2-3 weeks for steady growth.</li>
+                            </ul>
+                            </p>
+
+                            <p class="para">Harvest Time:</p>
+                            <p class="content">
+                            <ul>
+                                <li class="square-list">Peas are ready for harvest 50-70 days after sowing, depending on the variety.</li>
+                                <li class="square-list">Pick pods when they are full and firm but still tender for best flavor.</li>
+                                <li class="square-list">Regular harvesting encourages more pod production and prevents over-mature pods from turning tough.</li>
+                            </ul>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- <a href="https://youtu.be/d7tDPWWcBWo?si=kcX9cSHfiPh_mBCU" target="_blank">Video link</a> -->
+
+            <!-- Replace this in your more-content div -->
+            <div class="video-container">
+
+                    <iframe id="spinachVideo" src="https://www.youtube.com/embed/TMEKIuSzjtM?si=U-NLIoNlc_F568mT" "
+                    frameborder="0" allowfullscreen></iframe>
+
+            </div>
+
+        </div>
+        <button class="btn" onclick="toggleContent()">Read More</button>
+    </div>
+    <script>
+        function toggleContent() {
+            var content = document.getElementById("moreContent");
+            var button = document.querySelector(".btn");
+            if (content.style.display === "none" || content.style.display === "") {
+                content.style.display = "block";
+                button.textContent = "Read Less";
+            } else {
+                content.style.display = "none";
+                button.textContent = "Read More";
+            }
+        }
+
+        document.querySelector('.video-container').addEventListener('click', function () {
+            var iframe = document.getElementById('spinachVideo');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { /* Firefox */
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { /* IE/Edge */
+                iframe.msRequestFullscreen();
+            }
+        });
+
+    </script>
+
+{% endblock %}

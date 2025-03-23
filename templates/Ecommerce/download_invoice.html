@@ -149,15 +149,15 @@
 
         <!-- Summary Section -->
         <div class="summary">
-            <p><strong>Subtotal:</strong> ${{ order.total_price|floatformat:2 }}</p>
-            <p><strong>Discount:</strong> ${{ order.discounted_price|default:0|floatformat:2 }}</p>
-            <p><strong>Tax:</strong> ${{ order.tax|default:0|floatformat:2 }}</p>
-            <p><strong>Paid:</strong> {% if payment and payment.total_price %}${{ payment.total_price|floatformat:2 }}{% else %}N/A{% endif %}</p>
+            <p><strong>Subtotal:</strong> ₹{{ order.total_price|floatformat:2 }}</p>
+            <p><strong>Discount:</strong> ₹{{ order.discounted_price|default:0|floatformat:2 }}</p>
+            <p><strong>Tax:</strong> ₹{{ order.tax|default:0|floatformat:2 }}</p>
+            <p><strong>Paid:</strong> {% if payment and payment.total_price %}₹{{ payment.total_price|floatformat:2 }}{% else %}N/A{% endif %}</p>
         </div>
 
         <!-- Total -->
         <div class="total">
-            <strong>Total: ${{ order.total_price|default:0|floatformat:2|add:-order.discounted_price|default:0 }}</strong>
+            <strong>Total: ₹{{ order.total_price|default:0}}</strong>
         </div>
         
     </div>
