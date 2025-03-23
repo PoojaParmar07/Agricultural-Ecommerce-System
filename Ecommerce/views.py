@@ -928,6 +928,9 @@ def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-create_at')
     return render(request, 'Ecommerce/order_history.html', {'orders': orders})
 
+@login_required
+def order_invoice(request,order_id ):
+    return render(request,'Ecommerce/order_invoice.html')
 
 @login_required
 def order_details(request, order_id):

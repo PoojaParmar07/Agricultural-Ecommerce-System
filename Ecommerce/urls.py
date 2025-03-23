@@ -27,6 +27,7 @@ urlpatterns = [
     path('get_pincode/<int:city_id>/', get_pincode, name='get_pincode'),
     # path('cod_checkout/',cod_checkout,name='cod_checkout'),
     path('order_history/',order_history,name='order_history'),
+    path('order_invoice/<int:order_id>/',order_invoice,name="order_invoice"),
     path('order_details/<int:order_id>/',order_details,name="order_details"),
 
     path('confirm_Order/',confirm_Order,name='confirm_Order'),
