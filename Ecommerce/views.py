@@ -941,68 +941,12 @@ def order_details(request, order_id):
     })
     
     
-@login_required
-def download_invoice_pdf(request, order_id):
-    # Fetch the order details
-    order = get_object_or_404(Order, pk=order_id)
-    order_items = Order_Item.objects.filter(order=order)
-    payment = Payment.objects.filter(order=order).first()
 
-    # Ensure we handle cases where payment may not exist
-    payment_total = payment.total_price if payment else 0.00
-    payment_status = payment.payment_status if payment else "Pending"
 
-    # Prepare the template context
-    context = {
-        "order": order,
-        "order_items": order_items,
-        "payment_total": payment_total,
-        "payment_status": payment_status,
-    }
 
-    # Load template and render to HTML
-    template_path = "Ecommerce/download_invoice.html"
-    template = get_template(template_path)
-    html = template.render(context)
-    buffer = BytesIO()
-    pdf = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), buffer)
-
-    # Handle PDF generation errors
-    if pdf.err:
-        return HttpResponse("Error generating PDF", content_type="text/plain")
-
-    # Create a PDF response
-    response = HttpResponse(buffer.getvalue(), content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="invoice_{order_id}.pdf"'
-    return response
 
 
 @login_required
-def generate_invoice(request, order_id):
-    order = get_object_or_404(Order, order_id=order_id)
-    order_items = Order_Item.objects.filter(order=order)
-    payment = Payment.objects.filter(order=order).first()
-
-    template_path = "Ecommerce/invoice_template.html"
-    context = {
-        "order": order,
-        "order_items": order_items,
-        "payment": payment
-    }
-
-    template = get_template(template_path)
-    html = template.render(context)
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="invoice_{order_id}.pdf"'
-
-    pisa_status = pisa.CreatePDF(html, dest=response)
-    if pisa_status.err:
-        return HttpResponse("Error generating PDF", content_type="text/plain")
-
-    return response
-
-
 def enquiry_view(request):
     if request.method == 'POST':
         form = EnquiryForm(request.POST)
