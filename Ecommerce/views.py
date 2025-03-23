@@ -870,6 +870,9 @@ class ProductSearchView(ListView):
         context["wishlist_product_ids"] = list(wishlist_items)
 
         return context
+    
+    
+    
 
 def aboutus(request):
     return render(request, 'Ecommerce/aboutus.html') 
