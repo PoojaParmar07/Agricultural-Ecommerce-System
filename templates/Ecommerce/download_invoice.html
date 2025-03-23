@@ -2,51 +2,127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .invoice-box { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #eee; 
-                       box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); background-color: #fff; }
-        .header { display: flex; justify-content: space-between; align-items: center; }
-        .header h2 { margin: 0; color: #2A3F54; font-size: 20px; }
-        .invoice-title { background-color: #2A3F54; color: white; padding: 5px; font-size: 24px; text-align: right; width: 150px; }
-        .info { margin-top: 10px; }
-        .info p { margin: 2px 0; font-size: 14px; }
-        .bill-section { display: flex; justify-content: space-between; margin-top: 20px; font-size: 14px; }
-        .bill-section h3 { margin-bottom: 5px; font-size: 16px; }
-        .table-container { margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
-        th { background-color: #f4f4f4; text-transform: uppercase; }
-        .summary { text-align: right; margin-top: 20px; font-size: 14px; }
-        .summary p { margin: 5px 0; }
-        .total { background-color: #2A3F54; color: white; padding: 10px; font-size: 20px; text-align: right; margin-top: 10px; }
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #fff; /* White background for better PDF rendering */
+            font-size: 12px;
+        }
+        
+        .invoice-box { 
+            width: 100%; 
+            max-width: 800px; 
+            margin: auto; 
+            padding: 15px; 
+            border: 1px solid #ddd; 
+            background-color: #fff; 
+            border-radius: 5px;
+        }
+        
+        .header { 
+            text-align: center; 
+            font-size: 20px; 
+            font-weight: bold;
+            padding: 10px 0;
+            background-color: #2A3F54; 
+            color: white;
+        }
+        
+        .invoice-title { 
+            font-size: 18px; 
+            text-align: center; 
+            font-weight: bold;
+            padding: 10px; 
+            background: #2A3F54; 
+            color: white; 
+            border-radius: 3px; 
+        }
+        
+        .info, .bill-section, .summary, .total { 
+            margin-top: 15px; 
+            font-size: 14px;
+        }
+        
+        .bill-section { 
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        
+        .bill-section h3 { 
+            font-size: 14px;
+            color: #2A3F54;
+            margin-bottom: 5px;
+        }
+        
+        /* Table Styles */
+        .table-container { 
+            margin-top: 10px;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px;
+        }
+        
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left;
+            font-size: 12px;
+        }
+        
+        th { 
+            background-color: #2A3F54; 
+            color: white; 
+            font-size: 12px;
+        }
+        
+        /* Summary Section */
+        .summary { 
+            text-align: right;
+            font-size: 12px;
+        }
+        
+        .summary p { 
+            margin: 3px 0; 
+        }
+        
+        .total { 
+            background-color: #2A3F54; 
+            color: white; 
+            padding: 10px; 
+            font-size: 14px; 
+            text-align: right; 
+            border-radius: 3px;
+        }
+        
     </style>
 </head>
 <body>
     <div class="invoice-box">
         <!-- Header -->
-        <div class="header">
-            <div class="invoice-title">INVOICE</div>
-        </div>
+        <div class="header">INVOICE</div>
 
         <!-- Invoice Info -->
         <div class="info">
-            <p><strong>Invoice Number:</strong> {{ order.order_id }}</p>
+            <p><strong>Invoice Number:</strong> {{ order.order_id|stringformat:"s" }}</p>
             <p><strong>Date:</strong> {{ order.create_at|date:"Y-m-d" }}</p>
         </div>
 
         <!-- Billing Info -->
         <div class="bill-section">
-            <div>
-                <h3>Bill From:</h3>
-                <p>Company Name<br>Street Address, Zip Code<br>Phone Number</p>
-            </div>
-            <div>
-                <h3>Bill To:</h3>
-                <p>{{ order.user.username }}<br>{{ order.address }}, {{ order.city.name }}, {{ order.state }}<br>Pincode: {{ order.pincode.code }}</p>
-            </div>
+            <h3>Bill From:</h3>
+            <p>Company Name<br>Street Address, Zip Code<br>Phone Number</p>
+        </div>
+        <div class="bill-section">
+            <h3>Bill To:</h3>
+            <p>{{ order.user.username|default:"N/A" }}<br>
+            {{ order.address|default:"N/A" }}, {{ order.city.name|default:"N/A" }}, {{ order.state|default:"N/A" }}<br>
+            Pincode: {{ order.pincode.code|default:"N/A" }}</p>
         </div>
 
         <!-- Items Table -->
@@ -61,11 +137,11 @@
                 </tr>
                 {% for item in order_items %}
                 <tr>
-                    <td>{{ item.variant }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.price }}</td>
-                    <td>$0.00</td>
-                    <td>${{ item.total_price }}</td>
+                    <td>{{ item.variant|default:"N/A" }}</td>
+                    <td>{{ item.quantity|default:0 }}</td>
+                    <td>${{ item.price|floatformat:2 }}</td>
+                    <td>${{ item.tax|default:0|floatformat:2 }}</td>
+                    <td>${{ item.total_price|floatformat:2 }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -73,16 +149,17 @@
 
         <!-- Summary Section -->
         <div class="summary">
-            <p><strong>Subtotal:</strong> ${{ order.total_price }}</p>
-            <p><strong>Discount:</strong> ${{ order.discounted_price }}</p>
-            <p><strong>Tax:</strong> $0.00</p>
-            <p><strong>Paid:</strong> ${{ payment.total_price }}</p>
+            <p><strong>Subtotal:</strong> ${{ order.total_price|floatformat:2 }}</p>
+            <p><strong>Discount:</strong> ${{ order.discounted_price|default:0|floatformat:2 }}</p>
+            <p><strong>Tax:</strong> ${{ order.tax|default:0|floatformat:2 }}</p>
+            <p><strong>Paid:</strong> {% if payment and payment.total_price %}${{ payment.total_price|floatformat:2 }}{% else %}N/A{% endif %}</p>
         </div>
 
         <!-- Total -->
         <div class="total">
-            <strong>Total: ${{ order.total_price }}</strong>
+            <strong>Total: ${{ order.total_price|default:0|floatformat:2|add:-order.discounted_price|default:0 }}</strong>
         </div>
+        
     </div>
 </body>
 </html>

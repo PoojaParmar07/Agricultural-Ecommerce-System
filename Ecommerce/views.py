@@ -25,6 +25,7 @@ from account.form import *
 from django.core.paginator import Paginator
 from django.views.generic import ListView
 import razorpay
+from io import BytesIO
 
 RAZORPAY_SECRET = "settings.RAZORPAY_SECRET"
 
@@ -963,10 +964,17 @@ def download_invoice_pdf(request, order_id):
     template_path = "Ecommerce/download_invoice.html"
     template = get_template(template_path)
     html = template.render(context)
+    buffer = BytesIO()
+    pdf = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), buffer)
+
+    # Handle PDF generation errors
+    if pdf.err:
+        return HttpResponse("Error generating PDF", content_type="text/plain")
 
     # Create a PDF response
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f"attachment; filename=invoice_{order_id}.pdf"
+    response = HttpResponse(buffer.getvalue(), content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="invoice_{order_id}.pdf"'
+    return response
 
 
 @login_required
