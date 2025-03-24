@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            padding: 10px;
+            color: #333;
+        }
+
+        .invoice-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Light shadow for better visibility */
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #5D6975;
+            border-bottom: 2px solid #5D6975;
+            padding-bottom: 5px;
+        }
+
+        .info-section {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-box {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+
+        .info-box h3 {
+            margin-bottom: 2px;
+            color: #5D6975;
+            font-size: 11px;
+        }
+
+        .info-box p {
+            margin: 2px 0;
+            font-size: 10px;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px;
+        }
+
+        .invoice-table th, .invoice-table td {
+            padding: 4px;
+            border: 1px solid #ddd; /* Light gray border */
+            text-align: center;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .invoice-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #5D6975;
+        }
+
+        /* Prevent Page Break Issues */
+        tr {
+            page-break-inside: avoid;
+        }
+
+        .total-section {
+            text-align: right;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        .footer {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 9px;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <h1>Bill</h1>
+        </div>
+
+        <table class="info-section">
+            <tr>
+                <td class="info-box">
+                    <h3>BILL TO:</h3>
+                    <p><strong>{{ order.user.username|capfirst }}</strong></p>
+                    <p>{{ order.address }}, {{ order.city }}, {{ order.state }}</p>
+                    <p><strong>EMAIL:</strong> {{ order.user.email }}</p>
+                </td>
+                <td class="info-box">
+                    <h3>SHIP TO:</h3>
+                    <p><strong>{{ order.user.username|capfirst }}</strong></p>
+                    <p>{{ order.address }}, {{ order.city }}, {{ order.state }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="info-section">
+            <tr>
+                <td class="info-box">
+                    <p><strong>Order Number:</strong> {{ order.order_id }}</p>
+                    <p><strong>Order Date:</strong> {{ order.create_at }}</p>
+                </td>
+            </tr>
+        </table>
+
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>SN.</th>
+                    <th>PRODUCT</th>
+                    <th>PRICE</th>
+                    <th>QUANTITY</th>
+                    <th>SUBTOTAL</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    
+                    <td>   
+                    {{ item.variant.product.product_name  }}
+                    </td>
+                    <td>{{ item.price }}</td>
+                    <td>x{{ item.quantity }}</td>
+                    <td>₹{{ item.total_price|floatformat:2 }}</td>
+                
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <p><strong>Subtotal:</strong> <span>₹{{ subtotal|floatformat:2 }}</span></p>
+                <p><strong>Discount:</strong> <span>- ₹{{ order.discounted_price|floatformat:2 }}</span></p>
+                <p><strong>Shipping:</strong> <span>{% if order.delivery_charges == 0 %} Free {% else %} ₹{{ order.delivery_charges|floatformat:2 }} {% endif %}</span></p>
+                <p class="total"><strong>Total:</strong> <span>₹{{grand_total}}</span></p>
+        </div>
+
+        <div class="footer">
+            <p>This invoice was generated automatically and is valid without a signature.</p>
+        </div>
+    </div>
+
+</body>
+</html>

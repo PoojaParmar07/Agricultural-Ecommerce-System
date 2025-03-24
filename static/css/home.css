@@ -190,7 +190,7 @@
     font-weight: bold;
     border-radius: 50%;
     width: 20px;
-    height: 20px;
+    height: 17px;
     text-align: center;
     padding-top: 3px;
 }
@@ -200,11 +200,13 @@
 /* Sub Navbar */
 .sub-navbar {
     background-color: #FFFFFF;
-    padding: 10px 30px;
+    /* padding: 10px 30px; */
     border-top: 1px solid #ddd;
     /* border-bottom: 1px solid #ddd; */
-    height: 60px;
-    padding: 17px 11%;
+    height: 40px;
+    padding: 17px 11% 0 11%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
 }
 
 .sub-navbar .sub-nav {

@@ -57,25 +57,35 @@
             <div class="product-card">
                 <div class="product-image-container">
                     <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
-                    <a href="{% url 'Ecommerce:add_to_wishlist' product.variant.variant_id %}" class="wishlist-icon">
-                      <!-- Wishlist Icon -->
-                      {% if product.id in wishlist_product_ids %}
-                          <box-icon type='solid' name='heart' color='red'></box-icon>
-                      {% else %}
-                          <box-icon name='heart'></box-icon>
-                      {% endif %}
-                
-                  </a>
+                    {% if product.variant and product.variant.variant_id %}
+                        <a href="{% url 'Ecommerce:add_to_wishlist' product.variant.variant_id %}" class="wishlist-icon">
+                            {% if product.id in wishlist_product_ids %}
+                                <box-icon type='solid' name='heart' color='red'></box-icon>
+                            {% else %}
+                                <box-icon name='heart'></box-icon>
+                            {% endif %}
+                        </a>
+                    {% else %}
+                        <p>No variant available</p>  <!-- Debugging message -->
+                    {% endif %}
+
+
                   
                 </div>
                 <div class="product-details">
                     <div class="product-header">
                       <a href="{% url 'Ecommerce:product_view' product.product_id %}">
-                        <h3>{{ product.product_name }}</h3>
+                        <h4>{{ product.product_name }}</h4>
                     </a>
                        
                     </div>
-                    <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+                    <div>
+                      <p class="price">
+                          <span>₹{{ product.sales_price|default:"N/A" }}</span> | 
+                          <span>{{ product.units }}</span>
+                      </p>
+                  </div>
+                  
                      <div class="rating-container">
                         <span class="star-rating">
                             {% if product.rating %}

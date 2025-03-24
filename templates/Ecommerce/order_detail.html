@@ -38,14 +38,17 @@
 
             <p class="order-status"><strong>Order Status :</strong> <span>{{ order.order_status|title }}</span></p>
             <div class="price-details">
-                <p><strong>Subtotal:</strong> <span>₹{{ order.total_price }}</span></p>
-                <p><strong>Discount:</strong> <span>{{ order.discounted_price|floatformat:2 }}</span></p>
-                <p><strong>Shipping:</strong> <span>{% if order.delivery_charges == 0 %} Free {% else %} ₹{{ order.delivery_charges }} {% endif %}</span></p>
+                <p><strong>Subtotal:</strong> <span>₹{{ subtotal|floatformat:2 }}</span></p>
+                <p><strong>Discount:</strong> <span>- ₹{{ order.discounted_price|floatformat:2 }}</span></p>
+                <p><strong>Shipping:</strong> <span>{% if order.delivery_charges == 0 %} Free {% else %} ₹{{ order.delivery_charges|floatformat:2 }} {% endif %}</span></p>
             </div>
 
             <hr>
 
-            <p class="total"><strong>Total:</strong> <span>₹{{ order.total_price|floatformat:2 }}</span></p>
+            <p class="total"><strong>Total:</strong> 
+                <span>₹{{grand_total}}</span>
+            </p>
+            
         </div>
     </div>
 
@@ -64,12 +67,13 @@
                 <td>
                     <div class="product-info">
                         <img src="{{ item.variant.product.product_image.url }}" alt="{{ item.variant.product.product_name }}">
-                        <span>{{ item.variant.name }}</span>
+                        <span>{{ item.variant.product.product_name }}</span>
                     </div>
                 </td>
                 <td>₹{{ item.price }}</td>
                 <td>x{{ item.quantity }}</td>
-                <td>₹{{ item.price }}</td>
+                <td>₹{{ item.total_price|floatformat:2 }}</td>
+
             </tr>
             {% endfor %}
         </tbody>

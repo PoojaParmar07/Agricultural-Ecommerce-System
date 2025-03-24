@@ -11,13 +11,17 @@ from socialmedia.models import *
 from .forms import *
 from socialmedia.forms import *
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Avg,F
+from django.db.models import Avg, F
 from django.db import transaction
 from datetime import date
 from decimal import Decimal
-
 from xhtml2pdf import pisa
-from django.template.loader import get_template
+import io
+from PIL import Image   
+# # from xhtml2pdf import pisa
+# from weasyprint import HTML
+# import tempfile
+from django.template.loader import get_template,render_to_string
 # from django.http import HttpResponse
 import json
 from account.models import *
@@ -25,8 +29,10 @@ from account.form import *
 from django.core.paginator import Paginator
 from django.views.generic import ListView
 import razorpay
+from io import BytesIO
 
 RAZORPAY_SECRET = "settings.RAZORPAY_SECRET"
+
 
 def is_admin_user(user):
     return user.is_authenticated and user.is_staff  # Example function
@@ -44,7 +50,7 @@ def home(request):
     ]
 
     products = Product.objects.all()
-    
+
     cart_count = cart_items.values(
         "product_variant__product").distinct().count()
 
@@ -67,8 +73,6 @@ def home(request):
         rating = Review.objects.filter(product=product).aggregate(
             avg_rating=Avg('rating'))['avg_rating']
 
-    
-
         product_data.append({
             'product_id': product.product_id,
             'product_name': product.product_name,
@@ -76,7 +80,7 @@ def home(request):
             'sales_price': sales_price if sales_price is not None else "N/A",
             'rating': rating if rating is not None else 0
         })
-    
+
     return render(request, "Ecommerce/base.html", {
         'categories': category_data,
         'product_data': product_data,
@@ -88,8 +92,6 @@ def home(request):
 
 # def checkout(request):
 #     return render(request, 'Ecommerce/checkout_page.html')
-
-
 def homepage(request):
     categories = Category.objects.all()  # Get all categories
     category_data = [
@@ -107,9 +109,8 @@ def homepage(request):
     # Default empty cart_product_ids (for non-logged-in users)
     cart_product_ids = []
 
-
     # product_name = request.GET.get('product_name', '').strip()
-    
+
     # if product_name != '' and product_name is not None:
     #     products = products.filter(product_name__icontains = product_name)
 
@@ -125,7 +126,8 @@ def homepage(request):
 
     for product in products:
         variant = ProductVariant.objects.filter(product=product).first() if ProductVariant.objects.filter(product=product).exists() else None
-        inventory = Inventory.objects.filter(batch__variant=variant).first() if variant else None
+        inventory = Inventory.objects.filter(
+            batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
         inventory_quantity = inventory.quantity if inventory else 0
         rating = Review.objects.filter(product=product).aggregate(
@@ -136,6 +138,7 @@ def homepage(request):
         product_data.append({
             'product_id': product.product_id,
             'variant': variant,
+            'units': variant.units,
             'product_name': product.product_name,
             'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
             'sales_price': sales_price if sales_price else "N/A",
@@ -147,7 +150,7 @@ def homepage(request):
     return render(request, "Ecommerce/homepage.html", {
         'categories': category_data,
         'product_data': product_data,
-        'cart_product_ids': cart_product_ids,  #  Pass this to the template
+        'cart_product_ids': cart_product_ids,  # Pass this to the template
     })
 
 
@@ -157,8 +160,6 @@ def product_list(request, category_id):
 
     product_data = []
     cart_product_ids = []  # Default empty cart for unauthenticated users
-    
-    
 
     # Check if the user is logged in, then get cart details
     if request.user.is_authenticated:
@@ -172,7 +173,7 @@ def product_list(request, category_id):
         inventory = Inventory.objects.filter(
             batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
-        inventory_quantity = inventory.quantity if inventory else 0  #  Get stock quantity
+        inventory_quantity = inventory.quantity if inventory else 0  # Get stock quantity
 
         # Get average rating
         rating = Review.objects.filter(product=product).aggregate(
@@ -184,7 +185,7 @@ def product_list(request, category_id):
             'product_image': product.product_image.url if product.product_image else None,
             'sales_price': sales_price,
             'rating': rating,
-            'inventory_quantity': inventory_quantity,  #  Include quantity for stock check
+            'inventory_quantity': inventory_quantity,  # Include quantity for stock check
         })
 
     context = {
@@ -202,11 +203,14 @@ def product_view(request, product_id):
     print(f"Product ID: {product.product_id}")  # Debugging
 
     # Fetch variants and related brands
-    variants = list(ProductVariant.objects.filter(product=product).select_related('brand'))
+    variants = list(ProductVariant.objects.filter(
+        product=product).select_related('brand'))
 
     # Fetch inventory related to those variants
-    inventories = Inventory.objects.filter(batch__variant__in=variants).select_related('batch__variant')
-    inventory_quantity = sum(inventory.quantity for inventory in inventories) if inventories else 0
+    inventories = Inventory.objects.filter(
+        batch__variant__in=variants).select_related('batch__variant')
+    inventory_quantity = sum(
+        inventory.quantity for inventory in inventories) if inventories else 0
 
     # Build variant prices dictionary
     variant_prices = {
@@ -215,11 +219,14 @@ def product_view(request, product_id):
     }
 
     # Get the first available price, else "N/A"
-    first_price = next((price for price in variant_prices.values() if price is not None), "N/A")
+    first_price = next(
+        (price for price in variant_prices.values() if price is not None), "N/A")
 
     # Calculate average rating
-    rating_data = Review.objects.filter(product=product).aggregate(avg_rating=Avg('rating'))
-    rating = round(rating_data['avg_rating'], 1) if rating_data['avg_rating'] is not None else 0
+    rating_data = Review.objects.filter(
+        product=product).aggregate(avg_rating=Avg('rating'))
+    rating = round(rating_data['avg_rating'],
+                   1) if rating_data['avg_rating'] is not None else 0
 
     # Fetch reviews in descending order
     reviews = Review.objects.filter(product=product).order_by('-created_at')
@@ -229,10 +236,12 @@ def product_view(request, product_id):
     if request.user.is_authenticated:
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
-        cart_product_ids = list(cart_items.values_list("product_variant__product__product_id", flat=True))
+        cart_product_ids = list(cart_items.values_list(
+            "product_variant__product__product_id", flat=True))
 
         #  Check if the user has placed an order for this product
-        has_ordered = Order_Item.objects.filter(order__user=request.user, variant__product=product).exists()
+        has_ordered = Order_Item.objects.filter(
+            order__user=request.user, variant__product=product).exists()
 
     else:
         has_ordered = False
@@ -251,7 +260,8 @@ def product_view(request, product_id):
             )
             return redirect('Ecommerce:product_view', product_id=product.product_id)
     else:
-        messages.error(request," You can only review this product if you have placed an order.")
+        messages.error(
+            request, " You can only review this product if you have placed an order.")
 
     # Prepare product data
     product_data = {
@@ -263,7 +273,8 @@ def product_view(request, product_id):
         'first_price': first_price,
     }
 
-    print(" Variant Prices JSON:", json.dumps(variant_prices, ensure_ascii=False))
+    print(" Variant Prices JSON:", json.dumps(
+        variant_prices, ensure_ascii=False))
     print(f"Inventory: {inventory_quantity}")
 
     context = {
@@ -272,12 +283,11 @@ def product_view(request, product_id):
         'stars_range': range(1, 6),
         'reviews': reviews,
         'variants': variants,
-        'cart_product_ids': cart_product_ids,  #  Add cart products for button logic
-        'has_ordered': has_ordered,  #  Pass order status to template
+        'cart_product_ids': cart_product_ids,  # Add cart products for button logic
+        'has_ordered': has_ordered,  # Pass order status to template
     }
 
     return render(request, 'Ecommerce/product_view.html', {**context, 'variant_prices': json.dumps(variant_prices)})
-
 
 
 # View Cart
@@ -286,7 +296,7 @@ def product_view(request, product_id):
 def cart_view(request):
     cart, _ = Cart.objects.get_or_create(
         user=request.user)  # Get the user's cart
-    cart_items = CartItem.objects.filter(cart=cart).select_related(  #  Filter by user's cart
+    cart_items = CartItem.objects.filter(cart=cart).select_related(  # Filter by user's cart
         "product_variant", "product_variant__product", "product_batch"
     ).prefetch_related("product_batch__inventory_set")
 
@@ -315,8 +325,12 @@ def cart_view(request):
         item.variant_price = inventory.sales_price if inventory else 0
 
         # Get all variants of the same product
-        item.product_variants = ProductVariant.objects.filter(
-            product=item.product_variant.product)
+        # item.product_variants = ProductVariant.objects.filter(
+        #     product=item.product_variant.product)
+        
+        # Get the selected variant's units
+        item.variant_units = item.product_variant.units
+
 
         # Store prices for each variant
         for variant in item.product_variants:
@@ -470,7 +484,6 @@ def update_variant(request, cart_item_id):
     return redirect("Ecommerce:homepage")
 
 
-
 @login_required
 def checkout(request):
     cart = Cart.objects.get(user=request.user)
@@ -484,7 +497,8 @@ def checkout(request):
     selected_pincode_id = request.GET.get("pincode")
 
     # Filter pincodes based on selected city
-    pincodes = Pincode.objects.filter(city_id=selected_city_id) if selected_city_id else []
+    pincodes = Pincode.objects.filter(
+        city_id=selected_city_id) if selected_city_id else []
 
     # Check for active membership
     user_membership = User_membership.objects.filter(
@@ -494,11 +508,13 @@ def checkout(request):
     ).select_related('plan').first()
 
     is_member = bool(user_membership)
-    membership_discount = Decimal(user_membership.plan.discount_rate) if is_member else Decimal(0)
+    membership_discount = Decimal(
+        user_membership.plan.discount_rate) if is_member else Decimal(0)
 
     # Calculate grand total
     grand_total = sum(Decimal(item.total_price) for item in cart_items)
-    discount_amount = (grand_total * membership_discount / Decimal(100)) if is_member else Decimal(0)
+    discount_amount = (grand_total * membership_discount /
+                       Decimal(100)) if is_member else Decimal(0)
     total_after_discount = grand_total - discount_amount
 
     # Fetch delivery charge (default to 0)
@@ -508,42 +524,38 @@ def checkout(request):
         delivery_charge = Decimal(0)
     elif selected_pincode_id:
         try:
-                pincode_instance = Pincode.objects.get(area_pincode=selected_pincode_id)
-                delivery_charge = Decimal(pincode_instance.delivery_charges)
+            pincode_instance = Pincode.objects.get(
+                area_pincode=selected_pincode_id)
+            delivery_charge = Decimal(pincode_instance.delivery_charges)
         except Pincode.DoesNotExist:
-                delivery_charge = Decimal(0)  # Default to free shipping if not found
-
+            # Default to free shipping if not found
+            delivery_charge = Decimal(0)
 
     # Final total calculation
     final_total = total_after_discount + delivery_charge
-   
-    context = {
-    "cart_items": cart_items,
-    "grand_total": float(grand_total),  # Convert Decimal to float
-    "discount_amount": float(discount_amount),
-    "total_after_discount": float(total_after_discount),
-    "final_total": float(final_total),
-    "is_member": is_member,
-    "cities": cities,
-    "pincodes": pincodes,
-    "selected_city_id": selected_city_id,
-    "selected_pincode_id": selected_pincode_id,
-    "delivery_charge": float(delivery_charge),  # Convert Decimal to float
-    # "razorpay_key": settings.RAZORPAY_KEY_ID,
-}
 
-    
+    context = {
+        "cart_items": cart_items,
+        "grand_total": float(grand_total),  # Convert Decimal to float
+        "discount_amount": float(discount_amount),
+        "total_after_discount": float(total_after_discount),
+        "final_total": float(final_total),
+        "is_member": is_member,
+        "cities": cities,
+        "pincodes": pincodes,
+        "selected_city_id": selected_city_id,
+        "selected_pincode_id": selected_pincode_id,
+        "delivery_charge": float(delivery_charge),  # Convert Decimal to float
+        # "razorpay_key": settings.RAZORPAY_KEY_ID,
+    }
 
     return render(request, "Ecommerce/checkout_page.html", context)
-
-
-
 
 
 @login_required
 def get_delivery_charge_ajax(request, pincode_id):
     """AJAX view to fetch delivery charge based on pincode selection."""
-    
+
     # Check if user is a member
     is_member = User_membership.objects.filter(
         user=request.user,
@@ -554,22 +566,19 @@ def get_delivery_charge_ajax(request, pincode_id):
     # If user is a member, delivery is free
     if is_member:
         print(f"User {request.user} is a member. Delivery charge set to 0.")
-        return JsonResponse({"delivery_charge": 0.0})  # Convert Decimal to float
+        # Convert Decimal to float
+        return JsonResponse({"delivery_charge": 0.0})
 
     try:
         pincode_instance = Pincode.objects.get(area_pincode=str(pincode_id))
-        delivery_charge = float(pincode_instance.delivery_charges)  # Convert Decimal to float
+        # Convert Decimal to float
+        delivery_charge = float(pincode_instance.delivery_charges)
         print(f"Pincode: {pincode_id}, Delivery Charge: {delivery_charge}")
     except Pincode.DoesNotExist:
         delivery_charge = 0.0  # Default to 0 if pincode not found
         print(f"Pincode: {pincode_id} not found!")  # Debugging
 
     return JsonResponse({"delivery_charge": delivery_charge})
-
-
-
-
-
 
 
 @login_required
@@ -691,34 +700,30 @@ def get_pincode(request, city_id):
 #     return render(request, "checkout.html", {"cart": cart, "total_price": total_price, "discount_amount": discount_amount})
 
 
-
-
-
 # def render_pdf_view(request):
 #     users = CustomUser.objects.all()
 #     template_path = 'admin_dashboard/userlist.html'
 #     context = {'users': users}
-    
+
 #     template = get_template(template_path)
 #     html = template.render(context)
-    
+
 #     response = HttpResponse(content_type='application/pdf')
 #     response['Content-Disposition'] = 'attachment; filename="user_report.pdf"'
-    
+
 #     pisa_status = pisa.CreatePDF(html, dest=response)
-    
+
 #     if pisa_status.err:
 #         return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    
-#     return response
 
+#     return response
 
 
 @login_required
 def wishlist_view(request):
     wishlist, _ = Wishlist.objects.get_or_create(
         user=request.user)  # Get the user's cart
-    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist).select_related(  #  Filter by user's cart
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist).select_related(  # Filter by user's cart
         "product_variant", "product_variant__product", "product_batch"
     ).prefetch_related("product_batch__inventory_set")
 
@@ -733,10 +738,9 @@ def wishlist_view(request):
     # Calculate grand total
     # grand_total = sum(item.total_price for item in wishlist_items)
 
-
     for item in wishlist_items:
         if not item.product_variant or not item.product_variant.product:
-          print(f"❌ Missing product for item {item.id}")  # Debugging line
+            print(f"❌ Missing product for item {item.id}")  # Debugging line
 
         inventory = Inventory.objects.filter(batch=item.product_batch).first()
         item.product_variants = ProductVariant.objects.filter(
@@ -767,15 +771,14 @@ def wishlist_view(request):
     return render(request, "Ecommerce/wishlist_view.html", context)
 
 
-
 @login_required
 def add_to_wishlist(request, variant_id):
     # Get the product variant
     variant = get_object_or_404(ProductVariant, variant_id=variant_id)
-    
+
     # Get the first available batch of this variant
     batch = ProductBatch.objects.filter(variant=variant).first()
-    
+
     if not batch:
         return JsonResponse({"success": False, "message": "No available batch for this variant."})
 
@@ -802,7 +805,8 @@ def remove_from_wishlist(request, item_id):
     print(f"Trying to remove wishlist item: {item_id}")  # Debugging line
 
     wishlist_item = get_object_or_404(
-        WishlistItem, wishlist__user=request.user, id=item_id)  #  Use wishlist__user instead of cart__user
+        # Use wishlist__user instead of cart__user
+        WishlistItem, wishlist__user=request.user, id=item_id)
 
     wishlist_item.delete()
     print(f"Removed wishlist item: {item_id}")  # Debugging line
@@ -810,15 +814,14 @@ def remove_from_wishlist(request, item_id):
     return redirect('Ecommerce:wishlist')
 
 
-
 # class ProductSearchView(ListView):
 #     model = Product
 #     template_name = "Ecommerce/search.html"
 #     context_object_name = "products"
-    
+
 #     home = "Ecommerce:homepage"
 
-    
+
 #     def get_queryset(self):
 #         query = self.request.GET.get("product_name", "")
 #         if query:
@@ -827,7 +830,7 @@ def remove_from_wishlist(request, item_id):
 #                 return redirect("Ecommerce:homepage")
 #             return products
 #         return Product.objects.none()
-    
+
 #     def get_context_data(self, **kwargs):
 #         context = super().get_context_data(**kwargs)
 #         context["search_query"] = self.request.GET.get("product_name", "")
@@ -851,7 +854,8 @@ class ProductSearchView(ListView):
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         if not queryset.exists():
-            return redirect(reverse("Ecommerce:homepage"))  #  Redirects if no products found
+            # Redirects if no products found
+            return redirect(reverse("Ecommerce:homepage"))
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -860,51 +864,87 @@ class ProductSearchView(ListView):
         context["search_query"] = search_query
 
         if self.request.user.is_authenticated:
-            cart_items = CartItem.objects.filter(cart__user=self.request.user).values_list("product_batch__product_id", flat=True)
-            wishlist_items = WishlistItem.objects.filter(wishlist__user=self.request.user).values_list("product_batch__product_id", flat=True)
+            cart_items = CartItem.objects.filter(cart__user=self.request.user).values_list(
+                "product_batch__product_id", flat=True)
+            wishlist_items = WishlistItem.objects.filter(
+                wishlist__user=self.request.user).values_list("product_batch__product_id", flat=True)
         else:
             cart_items = []
             wishlist_items = []
 
+        product_data = []
+        products = Product.objects.all()
+
+        for product in products:
+            variants = ProductVariant.objects.filter(product=product)  # Returns a QuerySet
+            variant_data = []
+
+        for variant in variants:  # Loop through the QuerySet
+            inventory = Inventory.objects.filter(batch__variant=variant).first()
+            sales_price = inventory.sales_price if inventory else None
+            inventory_quantity = inventory.quantity if inventory else 0
+
+            variant_data.append({
+                "variant_id": variant.variant_id,
+                "units": variant.units,  # ✅ Now correctly fetching `unit`
+                "sales_price": sales_price if sales_price else "N/A",
+                "inventory_quantity": inventory_quantity,
+            })
+
+        product_data.append({
+            "product_id": product.product_id,
+            "product_name": product.product_name,
+            "product_image": product.product_image.url if product.product_image else "/static/images/default-product.jpg",
+            "variants": variant_data,  # Passing all variant details
+        })
+
         context["cart_product_ids"] = list(cart_items)
         context["wishlist_product_ids"] = list(wishlist_items)
+        context["product_data"] = product_data  # Adding product variants with units
 
         return context
     
     
     
 
+
 def aboutus(request):
-    return render(request, 'Ecommerce/aboutus.html') 
+    return render(request, 'Ecommerce/aboutus.html')
+
 
 def enquiry(request):
-    return render(request, 'Ecommerce/enquiry.html')   
+    return render(request, 'Ecommerce/enquiry.html')
+
 
 def crop_info(request):
-    return render(request, 'Ecommerce/crop_info.html')   
+    return render(request, 'Ecommerce/crop_info.html')
+
 
 def okra(request):
     return render(request, 'Ecommerce/crop_detail/okra.html')
 
 
 def kishan_charcha(request):
-    
+
     posts = Post.objects.all().order_by('-created_at')
     comment_form = PostCommentForm()
     show_comments = request.GET.get("show_comments", None)
-    return render(request, "Ecommerce/kishan_charcha.html", {"posts": posts,"comment_form": comment_form, "show_comments": show_comments})
+    return render(request, "Ecommerce/kishan_charcha.html", {"posts": posts, "comment_form": comment_form, "show_comments": show_comments})
+
 
 @login_required
 def add_comment(request, post_id):
     post = get_object_or_404(Post, post_id=post_id)
     if request.method == "POST":
         comment_text = request.POST.get("comment_text")
-        parent_comment_id = request.POST.get("parent_comment_id")  # Get parent comment ID (if replying)
+        # Get parent comment ID (if replying)
+        parent_comment_id = request.POST.get("parent_comment_id")
 
         if comment_text:
             parent_comment = None
             if parent_comment_id:
-                parent_comment = get_object_or_404(PostComment, comment_id=parent_comment_id)
+                parent_comment = get_object_or_404(
+                    PostComment, comment_id=parent_comment_id)
 
             PostComment.objects.create(
                 user=request.user,
@@ -913,104 +953,103 @@ def add_comment(request, post_id):
                 parent_comment=parent_comment
             )
 
-        return redirect("Ecommerce:kishan_charcha")  # Redirect back to post page
+        # Redirect back to post page
+        return redirect("Ecommerce:kishan_charcha")
 
     return redirect("Ecommerce:homepage")
 
+
 @login_required
 def order_history(request):
-    orders=Order.objects.filter(user=request.user).order_by('-create_at')
-    return render(request,'Ecommerce/order_history.html',{'orders':orders})
+    orders = Order.objects.filter(user=request.user).order_by('-create_at')
+    return render(request, 'Ecommerce/order_history.html', {'orders': orders})
 
+@login_required
+def order_invoice(request, order_id):
+    order = get_object_or_404(Order, order_id=order_id)
+    order_items = order.order_item_set.all()
+
+    
+    subtotal = sum(Decimal(item.price) * item.quantity for item in order_items)
+    discount = Decimal(order.discounted_price) if order.discounted_price else Decimal(0)
+    shipping = Decimal(order.delivery_charges) if order.delivery_charges else Decimal(0)
+    grand_total = subtotal - discount + shipping
+    grand_total = subtotal - discount + shipping
+    for item in order_items:
+        item.total_price = item.price * item.quantity
+
+    # Calculate total order price
+    total_price = sum(item.total_price for item in order_items)
+    
+    html_string = render_to_string('Ecommerce/order_invoice.html', {
+        'order': order,
+        'order_items': order_items,
+        'total_products': sum(item.quantity for item in order_items),
+        "request": request,
+        "subtotal": float(subtotal),
+        "discount": float(discount),
+        "shipping": float(shipping),
+        "grand_total": float(grand_total),
+		'total_price': total_price,
+    })
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{order.order_id}.pdf"'
+
+    pdf = io.BytesIO()
+    pdf_status = pisa.CreatePDF(html_string, dest=pdf)
+
+    if pdf_status.err:
+        return HttpResponse("Error generating PDF", status=500)
+
+    response.write(pdf.getvalue())
+    return response
+    
 
 @login_required
 def order_details(request, order_id):
-    order = Order.objects.filter(order_id=order_id).first()
-
-    if not order:
-        return HttpResponse("Order not found in the database", status=404)
+    order = get_object_or_404(Order, order_id=order_id)
 
     if order.user != request.user:
         return HttpResponse("You do not have permission to view this order", status=403)
 
     order_items = order.order_item_set.all()
-    total_products = sum(item.quantity for item in order_items)
+    
+    # Extract values
+    subtotal = sum(Decimal(item.price) * item.quantity for item in order_items)
+    discount = Decimal(order.discounted_price) if order.discounted_price else Decimal(0)
+    shipping = Decimal(order.delivery_charges) if order.delivery_charges else Decimal(0)
+    grand_total = subtotal - discount + shipping
+    for item in order_items:
+        item.total_price = item.price * item.quantity
+
+    # Calculate total order price
+    total_price = sum(item.total_price for item in order_items)
 
     return render(request, "Ecommerce/order_detail.html", {
         "order": order,
         "order_items": order_items,
-        "total_products": total_products,
+        "total_products": sum(item.quantity for item in order_items),
+        "subtotal": float(subtotal),
+        "discount": float(discount),
+        "shipping": float(shipping),
+        "grand_total": float(grand_total),
+        'total_price': total_price  
+       
     })
-    
-    
-@login_required
-def download_invoice_pdf(request, order_id):
-    # Fetch the order details
-    order = get_object_or_404(Order, pk=order_id)
-    order_items = Order_Item.objects.filter(order=order)
-    payment = Payment.objects.filter(order=order).first()
 
-    # Ensure we handle cases where payment may not exist
-    payment_total = payment.total_price if payment else 0.00
-    payment_status = payment.payment_status if payment else "Pending"
-
-    # Prepare the template context
-    context = {
-        "order": order,
-        "order_items": order_items,
-        "payment_total": payment_total,
-        "payment_status": payment_status,
-    }
-
-    # Load template and render to HTML
-    template_path = "Ecommerce/download_invoice.html"
-    template = get_template(template_path)
-    html = template.render(context)
-
-    # Create a PDF response
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f"attachment; filename=invoice_{order_id}.pdf"
 
 
 @login_required
-def generate_invoice(request, order_id):
-    order = get_object_or_404(Order, order_id=order_id)
-    order_items = Order_Item.objects.filter(order=order)
-    payment = Payment.objects.filter(order=order).first()
-
-    template_path = "Ecommerce/invoice_template.html"
-    context = {
-        "order": order,
-        "order_items": order_items,
-        "payment": payment
-    }
-
-    template = get_template(template_path)
-    html = template.render(context)
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="invoice_{order_id}.pdf"'
-
-    pisa_status = pisa.CreatePDF(html, dest=response)
-    if pisa_status.err:
-        return HttpResponse("Error generating PDF", content_type="text/plain")
-
-    return response
-
-
 def enquiry_view(request):
     if request.method == 'POST':
         form = EnquiryForm(request.POST)
         if form.is_valid():
             enquiry = form.save(commit=False)
-            enquiry.user = request.user  
+            enquiry.user = request.user
             enquiry.save()
-            return redirect('Ecommerce:homepage')  
+            return redirect('Ecommerce:homepage')
     else:
         form = EnquiryForm()
 
     return render(request, 'Ecommerce/enquiry.html', {'form': form})
-        
-
-
-

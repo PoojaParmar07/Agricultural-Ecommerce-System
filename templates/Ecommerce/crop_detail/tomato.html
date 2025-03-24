@@ -1,0 +1,140 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'Ecommerce/style_detail.css' %}">
+
+<div class="maincontainer">
+
+    <div class="container1">
+        <div class="image-container">
+            <div class="img-cont">
+                <img src="/media/tomato.png" alt="Tomato Plant" height="400px">
+            </div>
+
+        </div>
+        <div class="content-container">
+            <p class="para">Scientific Name:</p>
+            <p class="content">Solanum lycopersicum</p>
+
+            <p class="para">Growing Tips and Techniques</p>
+            <p class="content">
+            <ul>
+                <li class="square-list"><b>Watering:</b>In Gujarat's semi-arid climate, water tomatoes regularly to keep the soil consistently moist, especially during dry spells. Avoid overwatering to prevent fungal diseases and root rot.</li>
+                <li class="square-list"><b>Soil Enrichment:</b> Add organic compost or well-rotted manure before planting to enhance soil fertility and structure. This supports healthy plant growth, especially in Gujarat's slightly alkaline soils.</li>
+                <li class="square-list"><b>Crop Rotation:</b> Rotate tomatoes with other crops each season to maintain soil nutrients and reduce pest and disease risks. Avoid planting after other nightshade family vegetables to prevent soil depletion.</li>
+
+
+            </ul>
+            </p>      
+        </div>       
+    </div>
+    <div class="more-content" id="moreContent">
+        <div class="left">
+            <table style="width: 100%; margin:auto; border-collapse: collapse;">
+                <tr>
+                    <td>
+                        <ul>
+                            <li class="square-list">Natural Pests: Plant marigolds and basil nearby to naturally deter harmful insects common in Gujarat's warm climate. Regularly inspect for pests like aphids, whiteflies, and tomato hornworms, and remove affected leaves.</li>
+                        </ul>
+                        <p class="para">Ideal Growing Season:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">In Gujarat, plant tomatoes from October to February, as they thrive in cooler winter months. Avoid the hot summer months from March to June, when high temperatures can cause poor fruit set and sunscald.</li>
+                        </ul>
+                        </p>
+                        <p class="para">Uses:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Tomatoes are versatile and can be used in various dishes such as curries, chutneys, sauces, soups, and salads. Their tangy flavor enhances many recipes, making them a staple in Indian cuisine. Additionally, tomatoes are rich in vitamins and antioxidants, adding nutritional value to meals.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Soil Requirements:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Tomatoes prefer well-drained, loamy soil enriched with organic compost to support healthy growth. In Gujarat, slightly sandy soils can be improved with compost to retain moisture.</li>
+                            <li class="square-list">Optimal pH: Maintain a pH between 6.0 and 6.8 for optimal nutrient availability. Gujarat soils may lean towards alkaline, so adding compost helps balance the pH.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Planting Tips:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Sow seeds 1/2 inch deep in rows spaced 24-36 inches apart to give the plants enough room to grow. Lightly cover the seeds with soil and water gently to settle them in place.</li>
+                            <li class="square-list">Thin seedlings to 18-24 inches apart once they sprout to prevent overcrowding and improve air circulation.</li>
+                            <li class="square-list">Apply mulch around plants to retain soil moisture, suppress weeds, and regulate soil temperature. Organic mulch like straw or shredded leaves also adds nutrients to the soil as it breaks down.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Watering & Fertilizing:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Keep the soil moist but not soggy by watering regularly, especially during dry periods typical in Gujarat. Deep watering encourages strong root development, while shallow watering can lead to weak plants.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Harvest Time:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Tomatoes are ready for harvest 60-80 days after sowing, depending on the variety. Harvest fruits when they are fully colored and slightly firm to the touch</li>
+                            <li class="square-list">For continuous harvesting, pick tomatoes regularly to encourage further fruit production. Regular harvesting prevents overripe fruits from attracting pests.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Planting Tips:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Sow seeds 1/2 inch deep in rows 24-36 inches apart, ensuring even spacing for optimal growth.</li>
+                            <li class="square-list">Thin seedlings to 18-24 inches apart once they sprout to prevent overcrowding and improve air circulation.</li>
+                            <li class="square-list">Mulch to retain soil moisture, reduce weed growth, and maintain even soil temperature, which is essential for healthy tomato growth.</li>
+                        </ul>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- <a href="https://youtu.be/d7tDPWWcBWo?si=kcX9cSHfiPh_mBCU" target="_blank">Video link</a> -->
+
+        <!-- Replace this in your more-content div -->
+        <div class="video-container">
+
+                <iframe id="spinachVideo" src="https://www.youtube.com/embed/NJJErPfQ-W0?si=_ssSmFpaZ4lKhz49"
+                frameborder="0" allowfullscreen></iframe>
+
+        </div>
+
+    </div>
+    <button class="btn" onclick="toggleContent()">Read More</button>
+</div>
+<script>
+    function toggleContent() {
+        var content = document.getElementById("moreContent");
+        var button = document.querySelector(".btn");
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            button.textContent = "Read Less";
+        } else {
+            content.style.display = "none";
+            button.textContent = "Read More";
+        }
+    }
+
+    document.querySelector('.video-container').addEventListener('click', function () {
+        var iframe = document.getElementById('spinachVideo');
+        if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+        } else if (iframe.mozRequestFullScreen) { /* Firefox */
+            iframe.mozRequestFullScreen();
+        } else if (iframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) { /* IE/Edge */
+            iframe.msRequestFullscreen();
+        }
+    });
+
+</script>
+
+
+{% endblock %}

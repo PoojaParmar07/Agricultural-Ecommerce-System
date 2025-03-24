@@ -1,0 +1,173 @@
+{% extends "Ecommerce/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'Ecommerce/style_detail.css' %}">
+<div class="maincontainer">
+
+    <div class="container1">
+        <div class="image-container">
+            <div class="img-cont">
+                <img src="\media\spinach.png" alt="spinach Plant" height="auto">
+            </div>
+
+        </div>
+        <div class="content-container">
+            <p class="para">Scientific Name:</p>
+            <p class="content">Spinacia oleracea </p>
+
+            <p class="para">Growing Tips and Techniques</p>
+            <p class="content">
+            <ul>
+                <li class="square-list"><b>Watering:</b>In Gujarat's semi-arid climate, water spinach regularly to
+                    keep the soil moist, especially during dry spells. Avoid overwatering to prevent fungal diseases
+                    and root rot.</li>
+                <li class="square-list">Soil Enrichment: Add organic compost or well-rotted manure before planting
+                    to enhance soil fertility and structure. This supports healthy plant growth, especially in
+                    Gujarat's slightly alkaline soils.</li>
+                <li class="square-list">Crop Rotation:Rotate spinach with other crops each season to maintain soil
+                    nutrients and reduce pest and disease risks. Avoid planting after other leafy vegetables to
+                    prevent soil depletion.</li>
+
+
+            </ul>
+            </p>      
+        </div>       
+    </div>
+    <div class="more-content" id="moreContent">
+        <div class="left">
+            <table style="width: 100%; margin:auto; border-collapse: collapse;">
+                <tr>
+                    <td>
+                        <ul>
+                            <li class="square-list">Natural Pest Control: Plant marigolds and basil nearby to naturally deter
+                                harmful insects common in Gujarat's warm climate. Regularly inspect for pests like aphids and
+                                remove affected leaves.</li>
+                        </ul>
+                        <p class="para">Ideal Growing Season:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">In Gujarat, plant spinach from October to February, as it
+                                thrives in cooler winter months. Avoid the hot summer months from March to June,
+                                when high temperatures can cause bolting.</li>
+                        </ul>
+                        </p>
+                        <p class="para">Uses:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Spinach is versatile and can be used in various dishes such as
+                                palak paneer, curries, soups, smoothies, and salads. Its mild flavor blends well
+                                with other ingredients, making it a staple in Indian cuisine. Additionally, spinach
+                                is rich in vitamins and minerals, adding nutritional value to meals.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Soil Requirements:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Spinach prefers well-drained, loamy soil enriched with organic
+                                compost to support healthy growth. In Gujarat, slightly sandy soils can be improved
+                                with compost to retain moisture.</li>
+                            <li class="square-list">Optimal pH:Maintain a pH between 6.5 and 7.0 for optimal
+                                nutrient availability. Gujarat soils may lean towards alkaline, so adding compost
+                                helps balance the pH.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Planting Tips:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Sow seeds 1/2 inch deep in rows spaced 12-18 inches apart to
+                                give the plants enough room to grow. Lightly cover the seeds with soil and water
+                                gently to settle them in place.</li>
+                            <li class="square-list">Sow seeds 1/2 inch deep in rows spaced 12-18 inches apart to
+                                give the plants enough room to grow. Lightly cover the seeds with soil and water
+                                gently to settle them in place.</li>
+                            <li class="square-list">Apply mulch around plants to retain soil moisture, suppress
+                                weeds, and regulate soil temperature. Organic mulch like straw or shredded leaves
+                                also adds nutrients to the soil as it breaks down.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Watering & Fertilizing:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Keep the soil moist but not soggy by watering regularly,
+                                especially during dry periods typical in Gujarat. Deep watering encourages strong
+                                root development, while shallow watering can lead to weak plants.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Harvest Time:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Spinach is ready for harvest 35-45 days after sowing. Harvest
+                                leaves when they are large enough to eat, typically when they reach about 3-4 inches
+                                in length.</li>
+                            <li class="square-list">For continuous harvesting, pick the outer leaves first, allowing
+                                the inner leaves to continue growing. Alternatively, you can harvest the entire
+                                plant at once if desired. Regular harvesting encourages new growth and extends the
+                                season.</li>
+                        </ul>
+                        </p>
+
+                        <p class="para">Planting Tips:</p>
+                        <p class="content">
+                        <ul>
+                            <li class="square-list">Sow seeds 1/2 inch deep in rows 12-18 inches apart, ensuring
+                                even spacing for optimal growth.</li>
+                            <li class="square-list">Thin seedlings to 6 inches apart once they sprout to prevent
+                                overcrowding and improve air circulation.</li>
+                            <li class="square-list">Mulch to retain soil moisture, reduce weed growth, and maintain
+                                even soil temperature, which is essential for healthy spinach growth</li>
+                        </ul>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- <a href="https://youtu.be/d7tDPWWcBWo?si=kcX9cSHfiPh_mBCU" target="_blank">Video link</a> -->
+
+        <!-- Replace this in your more-content div -->
+        <div class="video-container">
+
+                <iframe id="spinachVideo" src="https://www.youtube.com/embed/d7tDPWWcBWo?si=kcX9cSHfiPh_mBCU"
+                frameborder="0" allowfullscreen></iframe>
+
+        </div>
+
+    </div>
+    <button class="btn" onclick="toggleContent()">Read More</button>
+</div>
+<script>
+    function toggleContent() {
+        var content = document.getElementById("moreContent");
+        var button = document.querySelector(".btn");
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            button.textContent = "Read Less";
+        } else {
+            content.style.display = "none";
+            button.textContent = "Read More";
+        }
+    }
+
+    document.querySelector('.video-container').addEventListener('click', function () {
+        var iframe = document.getElementById('spinachVideo');
+        if (iframe.requestFullscreen) {
+            iframe.requestFullscreen();
+        } else if (iframe.mozRequestFullScreen) { /* Firefox */
+            iframe.mozRequestFullScreen();
+        } else if (iframe.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            iframe.webkitRequestFullscreen();
+        } else if (iframe.msRequestFullscreen) { /* IE/Edge */
+            iframe.msRequestFullscreen();
+        }
+    });
+
+</script>
+
+{% endblock %}
+
+   
