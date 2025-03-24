@@ -8,6 +8,7 @@
         <p>Showing results for: <strong>{{ search_query }}</strong></p>
     {% endif %} {% endcomment %}
 
+
     <div class="products-container">
         {% for product in products %}
             <div class="product-card">
@@ -32,7 +33,13 @@
                         </a>
                     </div>
 
-                    <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
+                    <div>
+                        <p class="price">
+                            <span>₹{{ product.sales_price|default:"N/A" }}</span> | 
+                            <span>{{ product.units }}</span>
+                        </p>
+                    </div>
+                    
                     
 
                     <!-- Add to Cart Button -->
@@ -96,8 +103,8 @@
         box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        padding: 15px;
-        text-align: center;
+        padding: 35px 15px;
+        text-align: left;
         border: 1px solid #eee;
     }
     

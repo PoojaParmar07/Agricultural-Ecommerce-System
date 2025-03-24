@@ -92,8 +92,6 @@ def home(request):
 
 # def checkout(request):
 #     return render(request, 'Ecommerce/checkout_page.html')
-
-
 def homepage(request):
     categories = Category.objects.all()  # Get all categories
     category_data = [
@@ -127,8 +125,7 @@ def homepage(request):
             "product_variant__product__product_id", flat=True))
 
     for product in products:
-        variant = ProductVariant.objects.filter(product=product).first(
-        ) if ProductVariant.objects.filter(product=product).exists() else None
+        variant = ProductVariant.objects.filter(product=product).first() if ProductVariant.objects.filter(product=product).exists() else None
         inventory = Inventory.objects.filter(
             batch__variant=variant).first() if variant else None
         sales_price = inventory.sales_price if inventory else None
@@ -141,6 +138,7 @@ def homepage(request):
         product_data.append({
             'product_id': product.product_id,
             'variant': variant,
+            'units': variant.units,
             'product_name': product.product_name,
             'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
             'sales_price': sales_price if sales_price else "N/A",
@@ -327,8 +325,12 @@ def cart_view(request):
         item.variant_price = inventory.sales_price if inventory else 0
 
         # Get all variants of the same product
-        item.product_variants = ProductVariant.objects.filter(
-            product=item.product_variant.product)
+        # item.product_variants = ProductVariant.objects.filter(
+        #     product=item.product_variant.product)
+        
+        # Get the selected variant's units
+        item.variant_units = item.product_variant.units
+
 
         # Store prices for each variant
         for variant in item.product_variants:
@@ -870,10 +872,40 @@ class ProductSearchView(ListView):
             cart_items = []
             wishlist_items = []
 
+        product_data = []
+        products = Product.objects.all()
+
+        for product in products:
+            variants = ProductVariant.objects.filter(product=product)  # Returns a QuerySet
+            variant_data = []
+
+        for variant in variants:  # Loop through the QuerySet
+            inventory = Inventory.objects.filter(batch__variant=variant).first()
+            sales_price = inventory.sales_price if inventory else None
+            inventory_quantity = inventory.quantity if inventory else 0
+
+            variant_data.append({
+                "variant_id": variant.variant_id,
+                "units": variant.units,  # ✅ Now correctly fetching `unit`
+                "sales_price": sales_price if sales_price else "N/A",
+                "inventory_quantity": inventory_quantity,
+            })
+
+        product_data.append({
+            "product_id": product.product_id,
+            "product_name": product.product_name,
+            "product_image": product.product_image.url if product.product_image else "/static/images/default-product.jpg",
+            "variants": variant_data,  # Passing all variant details
+        })
+
         context["cart_product_ids"] = list(cart_items)
         context["wishlist_product_ids"] = list(wishlist_items)
+        context["product_data"] = product_data  # Adding product variants with units
 
         return context
+    
+    
+    
 
 
 def aboutus(request):

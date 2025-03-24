@@ -38,8 +38,8 @@
         <div class="search-bar">
           <form method="GET" action="{% url 'Ecommerce:search_results' %}">
             <input type="seach" name="product_name" placeholder="Search products..." value="{{ search_query }}">
-            <button type="submit">Search</button>
-            {% comment %} <button type="submit"><box-icon name='search-alt'></box-icon></button> {% endcomment %}
+            {% comment %} <button type="submit">Search</button> {% endcomment %}
+            <button type="submit"><box-icon name='search-alt'></box-icon></button>
           </form>
         </div>
       </div>
