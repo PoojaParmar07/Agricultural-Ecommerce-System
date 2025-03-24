@@ -121,36 +121,44 @@ def homepage(request):
     if request.user.is_authenticated:
         cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
-        cart_product_ids = list(cart_items.values_list(
-            "product_variant__product__product_id", flat=True))
+        cart_product_variant_ids = list(cart_items.values_list(
+    "product_variant__variant_id", flat=True))  # New (Tracks Variants)
+
 
     for product in products:
-        variant = ProductVariant.objects.filter(product=product).first() if ProductVariant.objects.filter(product=product).exists() else None
-        inventory = Inventory.objects.filter(
-            batch__variant=variant).first() if variant else None
-        sales_price = inventory.sales_price if inventory else None
-        inventory_quantity = inventory.quantity if inventory else 0
-        rating = Review.objects.filter(product=product).aggregate(
-            avg_rating=Avg('rating'))['avg_rating'] or 0
+        variants = ProductVariant.objects.filter(product=product)
+        # inventory = Inventory.objects.filter(
+        #     batch__variant=variant).first() if variant else None
+        # sales_price = inventory.sales_price if inventory else None
+        # inventory_quantity = inventory.quantity if inventory else 0
+        # rating = Review.objects.filter(product=product).aggregate(
+        #     avg_rating=Avg('rating'))['avg_rating'] or 0
 
         # print(f"Product: {product.product_name} | Variant: {variant} | Sales Price: {sales_price} | Inventory Quantity: {inventory_quantity}")
+        for variant in variants:  # Loop through all variants
+                inventory = Inventory.objects.filter(batch__variant=variant).first()
+                sales_price = inventory.sales_price if inventory else "N/A"
+                inventory_quantity = inventory.quantity if inventory else 0
 
-        product_data.append({
-            'product_id': product.product_id,
-            'variant': variant,
-            'units': variant.units,
-            'product_name': product.product_name,
-            'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
-            'sales_price': sales_price if sales_price else "N/A",
-            'rating': rating,
-            'inventory_quantity': inventory_quantity if inventory_quantity else 0,
-            # 'products' :products,
-        })
+                rating = Review.objects.filter(product=product).aggregate(
+                    avg_rating=Avg("rating")
+                )["avg_rating"] or 0
+                product_data.append({
+                    'product_id': product.product_id,
+                    'variant': variant,
+                    'units': variant.units,
+                    'product_name': product.product_name,
+                    'product_image': product.product_image.url if product.product_image else '/static/images/default-product.jpg',
+                    'sales_price': sales_price if sales_price else "N/A",
+                    'rating': rating,
+                    'inventory_quantity': inventory_quantity if inventory_quantity else 0,
+                    # 'products' :products,
+                })
 
     return render(request, "Ecommerce/homepage.html", {
         'categories': category_data,
         'product_data': product_data,
-        'cart_product_ids': cart_product_ids,  # Pass this to the template
+        'cart_product_variant_ids': cart_product_variant_ids,  # Pass this to the template
     })
 
 
@@ -845,16 +853,12 @@ class ProductSearchView(ListView):
     def get_queryset(self):
         query = self.request.GET.get("product_name", "").strip()
         if query:
-            products = Product.objects.filter(product_name__icontains=query).annotate(
-                sales_price=F("productbatch__inventory__sales_price")
-            )
-            return products
+            return Product.objects.filter(product_name__icontains=query)
         return Product.objects.none()
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         if not queryset.exists():
-            # Redirects if no products found
             return redirect(reverse("Ecommerce:homepage"))
         return super().get(request, *args, **kwargs)
 
@@ -865,46 +869,47 @@ class ProductSearchView(ListView):
 
         if self.request.user.is_authenticated:
             cart_items = CartItem.objects.filter(cart__user=self.request.user).values_list(
-                "product_batch__product_id", flat=True)
+                "product_batch__product_id", flat=True
+            )
             wishlist_items = WishlistItem.objects.filter(
-                wishlist__user=self.request.user).values_list("product_batch__product_id", flat=True)
+                wishlist__user=self.request.user
+            ).values_list("product_batch__product_id", flat=True)
         else:
             cart_items = []
             wishlist_items = []
 
         product_data = []
-        products = Product.objects.all()
+        products = self.get_queryset()
 
         for product in products:
-            variants = ProductVariant.objects.filter(product=product)  # Returns a QuerySet
-            variant_data = []
+            variants = ProductVariant.objects.filter(product=product)  # Fetch all variants
 
-        for variant in variants:  # Loop through the QuerySet
-            inventory = Inventory.objects.filter(batch__variant=variant).first()
-            sales_price = inventory.sales_price if inventory else None
-            inventory_quantity = inventory.quantity if inventory else 0
+            for variant in variants:  # Loop through all variants
+                inventory = Inventory.objects.filter(batch__variant=variant).first()
+                sales_price = inventory.sales_price if inventory else "N/A"
+                inventory_quantity = inventory.quantity if inventory else 0
 
-            variant_data.append({
-                "variant_id": variant.variant_id,
-                "units": variant.units,  # ✅ Now correctly fetching `unit`
-                "sales_price": sales_price if sales_price else "N/A",
-                "inventory_quantity": inventory_quantity,
-            })
+                rating = Review.objects.filter(product=product).aggregate(
+                    avg_rating=Avg("rating")
+                )["avg_rating"] or 0
 
-        product_data.append({
-            "product_id": product.product_id,
-            "product_name": product.product_name,
-            "product_image": product.product_image.url if product.product_image else "/static/images/default-product.jpg",
-            "variants": variant_data,  # Passing all variant details
-        })
+                product_data.append({
+                    "product_id": product.product_id,  # Product ID remains the same
+                    "product_name": product.product_name,
+                    "product_image": product.product_image.url if product.product_image else "/static/images/default-product.jpg",
+                    "variant_id": variant.variant_id,  # Unique Variant ID
+                    "units": variant.units,
+                    "sales_price": sales_price,
+                    "inventory_quantity": inventory_quantity,
+                    "rating": rating,
+                })
 
         context["cart_product_ids"] = list(cart_items)
         context["wishlist_product_ids"] = list(wishlist_items)
-        context["product_data"] = product_data  # Adding product variants with units
+        context["product_data"] = product_data  # Now includes all variants
 
         return context
-    
-    
+
     
 
 

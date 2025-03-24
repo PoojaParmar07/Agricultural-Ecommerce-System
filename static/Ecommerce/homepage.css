@@ -519,10 +519,10 @@ nav ul li a {
     justify-content: center;
 }
 
-.wishlist-icon:hover {
+/* .wishlist-icon:hover {
     background: rgba(162, 3, 67, 0.8);
     transform: scale(1.0);
-}
+} */
 
 .wishlist-icon box-icon {
     width: 22px;
@@ -530,7 +530,7 @@ nav ul li a {
 }
 
 .wishlist-icon:hover box-icon {
-    fill: white;
+    fill: #3B823E;
 }
 /* Product Details */
 .product-details {
