@@ -4,6 +4,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'Ecommerce/cart.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <div class="cart-container">
     <div class="cart-header">
@@ -13,6 +14,7 @@
                 <tr>
                     <th></th>
                     <th>Product</th>
+                    <th>Units</th>
                     <th>Price</th>
                     <th>Action</th>
                 </tr>
@@ -33,19 +35,22 @@
                         </a>
                     </td>
                     <td>
+                        <p class="price"><span class="price-display">{{ item.variant_units }}</span></p>
+                    </td>
+                    <td>
                         <p class="price">₹<span class="price-display">{{ item.variant_price }}</span></p>
                     </td>
                     <td>
                         <div class="button-container">
                             <a href="{% url 'Ecommerce:remove_from_wishlist' item.id %}">
                                 <button class="remove-wishlist">
-                                    <box-icon name="x"></box-icon> Remove
+                                    <i class="fa-solid fa-trash-can"></i> 
                                 </button>
                             </a>
                     
                             <a href="{% url 'Ecommerce:add_to_cart' item.product_variant.product.product_id %}">
                                 <button class="add-to-cart-btn">
-                                    <box-icon name='cart-alt'></box-icon> Add to Cart
+                                    <i class="fa-solid fa-cart-shopping"></i> 
                                 </button>
                             </a>
                         </div>

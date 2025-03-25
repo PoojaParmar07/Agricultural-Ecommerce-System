@@ -38,7 +38,7 @@
     border-radius: 5px;
     overflow: hidden;
     height: 45px;
-    width: 600px;
+    width: 400px;
 }
 
 .search-bar select {
@@ -54,7 +54,7 @@
     /* padding: 10px 0px 5px 10px; */
     position:absolute;
     top: 3%;
-    right: 57.5%;
+    right: 45.5%;
     fill: #5b5b5b;
 }
 
@@ -63,7 +63,7 @@
     border: none;
     outline: none;
     font-size: 16px;
-    width: 250px;
+    width: 400px;
 }
 
 .search-bar button {
@@ -76,7 +76,7 @@
     fill: #5b5b5b;
     font-weight: 500;
     position: absolute;
-    right: 42%;
+    right: 50.8%;
     top: 2.7%;
     width: 100px;
     height: 45px;
@@ -152,10 +152,11 @@
 /* Dropdown Menu Links */
 .dropdown-menu a, .dropdown-menu button {
     display: block;
-    padding: 10px;
+    padding: 8px 10px;
     text-decoration: none;
     color: black;
     font-size: 14px;
+    font-weight: 500;
     transition: background 0.3s;
     width: 100%;
     text-align: left;
@@ -180,7 +181,7 @@
     color: #515151;
 }
 
-.cart-counter {
+#cartcounter {
     position: absolute;
     top: -5px;
     left: 15px;
@@ -227,15 +228,19 @@
     transition: 0.3s;
 }
 
+.length-cat{
+    width: 200px;
+}
+
 .sub-navbar .sub-nav li a.active {
     background-color: #3B823E;
     color: #FFFFFF;
     border-radius: 5px;
 }
 
-.sub-navbar .sub-nav li a:hover {
+/* .sub-navbar .sub-nav li a:hover {
     color: #000000;
-}
+} */
 
 .category-dropdown, .about-dropdown {
     position: relative;
@@ -253,18 +258,24 @@
     z-index: 100;
   }
   
-  .category-dropdown-menu li a , .about-dropdown-menu li a{
-    color: black;
-    padding: 12px 16px;
+  .category-dropdown-menu a , .about-dropdown-menu a{
+    /* color: black; */
+    padding: 17px 16px;
     text-decoration: none;
     display: block;
+    width: auto;
   }
   
-  .category-dropdown-menu li a:hover , .about-dropdown-menu li a:hover{background-color: #ebebeb;}
+  .category-dropdown-menu li a:hover , .about-dropdown-menu li a:hover{color: #3B823E;}
   
   .category-dropdown:hover .category-dropdown-menu, .about-dropdown:hover .about-dropdown-menu {display: block;}
   
-
+.sub-a{
+    padding: 10px;
+    color: black;
+    font-size: 14px;
+    font-weight: 500;
+}
 
 /* Body */
 .container {
@@ -486,6 +497,7 @@ flex: 1;
     .search-bar input {
         width: 100%;
     }
+
 
     .nav-icons {
         margin-top: 5px;

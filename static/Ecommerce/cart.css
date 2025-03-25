@@ -141,8 +141,8 @@
     display: flex;
     align-items: center;
     gap: 6px; /* Space between icon and text */
-    background: #3B823E;
-    color: white;
+    /* background: #3B823E; */
+    color: #3B823E;
     padding: 8px 14px;
     text-decoration: none;
     border-radius: 4px;
@@ -153,12 +153,12 @@
 }
 
 .remove-wishlist:hover {
-    background: #218838;
+    /* background: #3B823E; */
 }
 
 /* Box Icon Styling */
 .remove-wishlist box-icon {
-    fill: white;
+    fill: #3B823E;
     width: 18px;
     height: 18px;
 }
@@ -168,8 +168,8 @@
     display: flex;
     align-items: center;
     gap: 6px; /* Space between icon and text */
-    background: #28a745;
-    color: white;
+    background: #3B823E;
+    color: #ffffff;
     padding: 8px 14px;
     text-decoration: none;
     border-radius: 4px;
@@ -179,8 +179,23 @@
     transition: background 0.3s ease;
 }
 
+
+/* Remove Button */
+.remove-wishlist {
+    display: inline-block;
+    /* background: #3B823E;  Same green background */
+    color: #3B823E;
+    padding: 10px 18px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+
 .add-to-cart-btn:hover {
-    background: #28a745;
+    /* background: #3B823E; */
 }
 .add-to-cart-btn box-icon
 {
@@ -198,7 +213,7 @@
 
 .back-btn .back {
     display: inline-block;
-    background: #28a745;
+    background: #3B823E;
     color: white;
     padding: 10px 18px;
     text-decoration: none;

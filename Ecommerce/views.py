@@ -49,22 +49,30 @@ def home(request):
         for category in categories
     ]
 
+   
     products = Product.objects.all()
 
-    cart_count = cart_items.values(
-        "product_variant__product").distinct().count()
 
     product_data = []
-
+    
+    
     # Default empty cart_product_ids (for non-logged-in users)
     cart_product_ids = []
 
     if request.user.is_authenticated:
         cart, _ = Cart.objects.get_or_create(user=request.user)
-        cart_items = CartItem.objects.filter(cart=cart)
+        # cart_items = CartItem.objects.filter(cart=cart)
+        cart_items = CartItem.objects.filter(cart=cart).select_related(  # Filter by user's cart
+        "product_variant", "product_variant_variant_id", "product_batch"
+    ).prefetch_related("product_batch__inventory_set")
+
         cart_product_ids = list(cart_items.values_list(
             "product_variant__product__product_id", flat=True))
 
+        cart_count = cart_items.values(
+            "product_variant").distinct().count()
+        print(cart_count)
+        
     for product in products:
         variant = ProductVariant.objects.filter(product=product).first()
         inventory = Inventory.objects.filter(
@@ -320,10 +328,15 @@ def cart_view(request):
     grand_total = sum(item.total_price for item in cart_items)
 
     #  Count unique products in cart
-    cart_count = cart_items.values(
-        "product_variant__product").distinct().count()
+    # cart_count = cart_items.values(
+    #     "product_variant__variant_id").distinct().count()
 
     for item in cart_items:
+        
+        if not item.product_variant or not item.product_variant.product:
+            print(f"❌ Missing product for item {item.id}")  # Debugging line
+
+        
         inventory = Inventory.objects.filter(batch=item.product_batch).first()
         item.product_variants = ProductVariant.objects.filter(
             product=item.product_variant.product)
@@ -339,7 +352,9 @@ def cart_view(request):
         # Get the selected variant's units
         item.variant_units = item.product_variant.units
 
-
+        item.product_variants = ProductVariant.objects.filter(
+            product=item.product_variant.product)
+        
         # Store prices for each variant
         for variant in item.product_variants:
             inventory_variant = Inventory.objects.filter(
@@ -352,7 +367,7 @@ def cart_view(request):
         "cart_product_ids": cart_product_ids,
         "variant_prices": variant_prices,
         "grand_total": grand_total,
-        "cart_count": cart_count,
+        # "cart_count": cart_count,
         'categories': categories,
     }
 
@@ -372,13 +387,12 @@ def get_cart_count(request):
 
 
 @login_required
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, product_id=product_id)
+def add_to_cart(request, variant_id):
+    # product = get_object_or_404(Product, product_id=product_id)
 
     # Get first available variant and batch
-    variant = ProductVariant.objects.filter(product=product).first()
-    batch = ProductBatch.objects.filter(
-        product=product, variant=variant).first()
+    variant = get_object_or_404(ProductVariant, variant_id=variant_id)
+    batch = ProductBatch.objects.filter(variant=variant).first()
 
     if not variant or not batch:
         return JsonResponse({"success": False, "message": "Product variant or batch not found"})
@@ -758,6 +772,7 @@ def wishlist_view(request):
         # Handle missing inventory
         item.variant_price = inventory.sales_price if inventory else 0
 
+        item.variant_units = item.product_variant.units
         # Get all variants of the same product
         item.product_variants = ProductVariant.objects.filter(
             product=item.product_variant.product)

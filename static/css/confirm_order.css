@@ -51,16 +51,16 @@ p {
     color: #000;
     border: 2px solid #dddddd;
     width: 134px;
-    height: 56px;
+    height: 25px;
 }
 .continue-button {
     background: #3B823E;
     color: white;
     width: 265px;
-    height: 56px;
+    height: 25px;
     display: flex;
-    align-item: center;
     justify-content: center;
+    border: 2px solid #dddddd;
 }
 .order-button:hover {
     background: #ddd;
