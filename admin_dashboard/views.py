@@ -13,7 +13,8 @@ from .forms import *
 from django.core.paginator import Paginator
 from membership .models import *
 from account.models import *
-
+from Ecommerce.models import *
+from Ecommerce.forms import *
 # Check if the user is staff
 def is_admin_user(user):
     return user.is_staff
@@ -50,6 +51,7 @@ def category_add(request):
         'model_name': 'Category',
         'list':'admin_dashboard:category_list'
     }
+    
     if request.method == 'POST':
         form = CategoryForm(request.POST,request.FILES)  
         if form.is_valid():
@@ -1231,4 +1233,44 @@ def download_membership_report_pdf(request):
         return HttpResponse("Error generating PDF", content_type="text/plain")
 
     return response
+
+
+
+def enquiry_list(request):
+    enquiries = Enquiry.objects.all()
+    return render(request,"admin_dashboard/enquiry_list.html",{'enquiries':enquiries})
+
+
+def enquiry_view_detail(request, enquiry_id):
+    context = {
+        'model_name': 'Enquiry',
+    }
+    
+    try:
+        enquiry = get_object_or_404(Enquiry, enquiry_id = enquiry_id)
+    except Http404:
+        return HttpResponse(request,"404.html", enquiry_id = enquiry_id)
+    
+    form = EnquiryForm(instance = enquiry)
+    
+    if request.method == 'POST':
+        if 'update' in request.POST:  # Update action
+            form = EnquiryForm(request.POST,request.FILES,instance=enquiry)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Enquiry updated successfully!")
+                return redirect('admin_dashboard:enquiry_list')
+            else:
+                messages.error(request, "Enquiry update failed. Please correct the errors.")
+
+        elif 'delete' in request.POST:  # Delete action
+            enquiry.delete()
+            messages.success(request, "Enquiry deleted successfully!")
+            return redirect('admin_dashboard:enquiry_list')
+
+        elif 'cancel' in request.POST:  # Cancel action
+            return redirect('admin_dashboard:enquiry_list')
+    context['form'] = form
+    context['enquiry']=enquiry
+    return render(request, 'admin_dashboard/view_details.html', context)
 

@@ -315,14 +315,14 @@
                 {% endif %}
                 <h3>{{ user.username }}</h3>
                 <p>{{ user.email }}</p>
-                <div class="form-group">
+                {% comment %} <div class="form-group">
                     <label>Upload Profile Image</label>
                     <input type="file" name="image" class="form-control">
-                </div>
+                </div> {% endcomment %}
             </div>
             
             <div class="form-section">
-                <h2>Profile Settings</h2>
+                <h2>Profile</h2>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="first-name">User Name</label>
@@ -359,7 +359,7 @@
                         <input type="text" value="{{ user.pincode }}" id="pincode" placeholder="pincode">
                     </div>
                 </div>
-                <button type="submit" class="save-btn">Save Profile</button>
+                {% comment %} <button type="submit" class="save-btn">Save Profile</button> {% endcomment %}
             </form>
             </div>
             <div class="experience-section">
@@ -376,6 +376,7 @@
                             {% csrf_token %}
                             <label for="post-image">Upload Image:</label>
                             <input type="file" name="image" required>
+                            
 
                             <label for="caption">Caption:</label>
                             <textarea name="caption" rows="3" required></textarea>
