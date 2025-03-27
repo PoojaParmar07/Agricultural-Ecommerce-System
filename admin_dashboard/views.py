@@ -701,7 +701,7 @@ def review_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'admin_dashboard/reviews_list.html', {'page_obj': page_obj})
+    return render(request, 'admin_dashboard/review_list.html', {'page_obj': page_obj})
 
 
 def review_add(request):

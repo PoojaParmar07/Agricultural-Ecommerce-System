@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 # Create your models here.
+
 class Membership_plan(models.Model):
     plan_id=models.AutoField(primary_key=True,null=None)
     

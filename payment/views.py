@@ -22,16 +22,9 @@ import hashlib
 import base64
 
 
-logger = logging.getLogger(__name__)
+
 
 RAZORPAY_SECRET = "settings.RAZORPAY_SECRET"
-
-
-
-
-
-
-
 
 @login_required
 
@@ -126,26 +119,31 @@ def cod_checkout(request):
 
 
 
-
-
+client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
 
 @login_required
-def razorpay_checkout(request):
+def razorpay_integrate(request):
     user = request.user
     cart = get_object_or_404(Cart, user=user)
 
+    # Check if cart is empty
     if not cart.cartitem_set.exists():
         messages.error(request, "Your cart is empty!")
         return redirect("Ecommerce:cart_view")
 
+    # Calculate total price
     total_price = sum(item.total_price for item in cart.cartitem_set.all())
+
+    # Check user membership for discount
     user_membership = User_membership.objects.filter(
         user=user, status=True, membership_end_date__gte=now().date()
     ).first()
 
-    discount_amount = (Decimal(user_membership.plan.discount_rate) / 100) * total_price \
+    discount_amount = Decimal(user_membership.plan.discount_rate) / 100 * total_price \
         if user_membership and user_membership.plan else Decimal(0)
     total_price -= discount_amount
+
+    delivery_charges = Decimal(0)  # Default to zero
 
     if request.method == "POST":
         address = request.POST.get("address", "").strip()
@@ -156,6 +154,7 @@ def razorpay_checkout(request):
             messages.error(request, "All fields (Address, City, and Pincode) are required!")
             return redirect("Ecommerce:checkout")
 
+        # Validate pincode
         try:
             pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
             delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges)
@@ -163,144 +162,253 @@ def razorpay_checkout(request):
             messages.error(request, "Invalid pincode. Please enter a valid one.")
             return redirect("Ecommerce:checkout")
 
+        # Validate city
         try:
             city_obj = City.objects.get(city_id=city_id)
         except City.DoesNotExist:
             messages.error(request, "Invalid city selection.")
             return redirect("Ecommerce:checkout")
 
+        # Calculate final total
         final_total = total_price + delivery_charges
 
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
-        razorpay_order = client.order.create({
-            "amount": int(final_total * 100),  # Convert to paise
-            "currency": "INR",
-            "payment_capture": 1,  # Auto capture payment
-        })
+        # Convert to paise for Razorpay
+        amount = int(final_total * 100)# Convert INR to paise
+        order_currency = "INR"
+        
+       
 
-        with transaction.atomic():
-            order = Order.objects.create(
-                user=user,
-                order_user_type="member" if user_membership else "non-member",
-                total_price=total_price,
-                discounted_price=discount_amount,
-                order_status="pending",
-                state=user.state,
-                city=city_obj,
-                address=address,
-                pincode=pincode_obj,
-                delivery_charges=delivery_charges,
-            )
+        # Create a Razorpay order
+        payment_order = client.order.create(dict(amount=amount, currency=order_currency, payment_capture=1))
+        payment_order_id = payment_order['id']
 
-            payment = Payment.objects.create(
-                order=order,
-                total_price=final_total,
-                payment_mode="Online",
-                payment_status="pending",
-                razorpay_order_id=razorpay_order["id"],
-            )
+        # Create Order
+        order = Order.objects.create(
+            user=user,
+            order_user_type="member" if user_membership else "non-member",
+            total_price=final_total,
+            discounted_price=discount_amount,
+            order_status="pending",
+            state=user.state,
+            city=city_obj,
+            address=address,
+            pincode=pincode_obj,
+            delivery_charges=delivery_charges,
+        )
+
+        # Store payment details
+        payment = Payment.objects.create(
+            order=order,
+            total_price=final_total,  # Store INR value
+            payment_mode="online",
+            payment_status="pending",
+            razorpay_order_id=payment_order_id
+        )
 
         context = {
-            "cart": cart,
-            "total_price": total_price,
-            "discount_amount": discount_amount,
-            "final_total": int(final_total * 100),
-            "razorpay_order_id": razorpay_order["id"],
+            "amount":final_total,  # Now correctly stored in paise
+            "razorpay_order_id": payment_order_id,
             "razorpay_key": settings.RAZORPAY_KEY_ID,
         }
 
-        return render(request, "payment/razorpay_checkout.html", context)
+        return render(request, 'Ecommerce/checkout_page.html', context)
 
     return redirect("Ecommerce:checkout")
 
 
 
-
-
 @csrf_exempt
-def razorpay_webhook(request):
-    print("WEBHOOK")
+def payment_success(request):
     if request.method == "POST":
+        data = request.POST
+        payment_id = data.get('razorpay_payment_id')
+        order_id = data.get('razorpay_order_id')
+
+        # Validate and update the payment status
         try:
-            print("\n🔹 Webhook Received")
+            payment = Payment.objects.get(order_id=order_id)
+            payment.payment_id = payment_id
+            payment.status = "paid"
+            payment.save()
+            return JsonResponse({"message": "Payment successful", "status": "success"})
+        except Payment.DoesNotExist:
+            return JsonResponse({"message": "Order ID not found", "status": "error"}, status=400)
 
-            # Read raw request body
-            raw_body = request.body.decode("utf-8").strip()
-            received_data = json.loads(raw_body)
-            provided_signature = request.headers.get("X-Razorpay-Signature")
+    return JsonResponse({"message": "Invalid request"}, status=400)
 
-            if not provided_signature:
-                return JsonResponse({"error": "Missing signature"}, status=400)
 
-            webhook_secret = settings.RAZORPAY_WEBHOOK_SECRET.encode()
-            expected_signature = hmac.new(webhook_secret, raw_body.encode("utf-8"), hashlib.sha256).hexdigest()
 
-            if not hmac.compare_digest(provided_signature, expected_signature):
-                return JsonResponse({"error": "Invalid webhook signature"}, status=400)
+# def razorpay_checkout(request):
+#     user = request.user
+#     cart = get_object_or_404(Cart, user=user)
 
-            event = received_data.get("event", "")
+#     if not cart.cartitem_set.exists():
+#         messages.error(request, "Your cart is empty!")
+#         return redirect("Ecommerce:cart_view")
 
-            if event == "payment.captured":
-                payment_entity = received_data["payload"]["payment"]["entity"]
-                razorpay_payment_id = payment_entity["id"]
-                razorpay_order_id = payment_entity["order_id"]
-                amount_paid = Decimal(payment_entity["amount"]) / 100  # Convert to INR
+#     total_price = sum(item.total_price for item in cart.cartitem_set.all())
+#     user_membership = User_membership.objects.filter(
+#         user=user, status=True, membership_end_date__gte=now().date()
+#     ).first()
 
-                try:
-                    with transaction.atomic():
-                        # ✅ Fetch payment and order
-                        payment = Payment.objects.get(razorpay_order_id=razorpay_order_id)
-                        order = payment.order
+#     discount_amount = (Decimal(user_membership.plan.discount_rate) / 100) * total_price \
+#         if user_membership and user_membership.plan else Decimal(0)
+#     total_price -= discount_amount
 
-                        # ✅ Update payment details
-                        payment.payment_status = "completed"
-                        payment.razorpay_payment_id = razorpay_payment_id
-                        payment.total_price = amount_paid
-                        payment.save()
+#     if request.method == "POST":
+#         address = request.POST.get("address", "").strip()
+#         city_id = request.POST.get("city", "").strip()
+#         pincode = request.POST.get("pincode", "").strip()
 
-                        # ✅ Update order status
-                        order.order_status = "confirmed"
-                        order.save()
+#         if not all([address, city_id, pincode]):
+#             messages.error(request, "All fields (Address, City, and Pincode) are required!")
+#             return redirect("Ecommerce:checkout")
 
-                        # ✅ Transfer cart items to order items
-                        cart = Cart.objects.get(user=order.user)
-                        cart_items = cart.cartitem_set.select_related("product_variant", "product_batch").all()
+#         try:
+#             pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
+#             delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges)
+#         except Pincode.DoesNotExist:
+#             messages.error(request, "Invalid pincode. Please enter a valid one.")
+#             return redirect("Ecommerce:checkout")
 
-                        for item in cart_items:
-                            Order_Item.objects.create(
-                                order=order,
-                                batch=item.product_batch,
-                                variant=item.product_variant,
-                                quantity=item.quantity,
-                                price=item.total_price,
-                            )
+#         try:
+#             city_obj = City.objects.get(city_id=city_id)
+#         except City.DoesNotExist:
+#             messages.error(request, "Invalid city selection.")
+#             return redirect("Ecommerce:checkout")
 
-                            # ✅ Reduce stock
-                            inventory = Inventory.objects.filter(batch=item.product_batch).first()
-                            if inventory and inventory.quantity >= item.quantity:
-                                inventory.quantity -= item.quantity
-                                inventory.save()
-                            else:
-                                print(f"⚠️ Not enough stock for {item.product_variant}")
+#         final_total = total_price + delivery_charges
 
-                        # ✅ Clear the cart
-                        cart_items.delete()
+#         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+#         razorpay_order = client.order.create({
+#             "amount": int(final_total * 100),  # Convert to paise
+#             "currency": "INR",
+#             "payment_capture": 1,  # Auto capture payment
+#         })
 
-                        print("✅ Order confirmed, items transferred, stock updated, and cart cleared.")
-                        return JsonResponse({"message": "Payment & order updated successfully"}, status=200)
+#         with transaction.atomic():
+#             order = Order.objects.create(
+#                 user=user,
+#                 order_user_type="member" if user_membership else "non-member",
+#                 total_price=total_price,
+#                 discounted_price=discount_amount,
+#                 order_status="pending",
+#                 state=user.state,
+#                 city=city_obj,
+#                 address=address,
+#                 pincode=pincode_obj,
+#                 delivery_charges=delivery_charges,
+#             )
 
-                except Payment.DoesNotExist:
-                    return JsonResponse({"error": "Payment not found"}, status=404)
+#             payment = Payment.objects.create(
+#                 order=order,
+#                 total_price=final_total,
+#                 payment_mode="Online",
+#                 payment_status="pending",
+#                 razorpay_order_id=razorpay_order["id"],
+#             )
 
-            return JsonResponse({"message": "Unhandled event"}, status=200)
+#         context = {
+#             "cart": cart,
+#             "total_price": total_price,
+#             "discount_amount": discount_amount,
+#             "final_total": int(final_total * 100),
+#             "razorpay_order_id": razorpay_order["id"],
+#             "razorpay_key": settings.RAZORPAY_KEY_ID,
+#         }
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+#         return render(request, "payment/razorpay_checkout.html", context)
 
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+#     return redirect("Ecommerce:checkout")
 
-    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+
+
+# # @csrf_exempt
+# # def razorpay_webhook(request):
+# #     print("WEBHOOK")
+# #     if request.method == "POST":
+# #         try:
+# #             print("\n🔹 Webhook Received")
+
+# #             # Read raw request body
+# #             raw_body = request.body.decode("utf-8").strip()
+# #             received_data = json.loads(raw_body)
+# #             provided_signature = request.headers.get("X-Razorpay-Signature")
+
+# #             if not provided_signature:
+# #                 return JsonResponse({"error": "Missing signature"}, status=400)
+
+# #             webhook_secret = settings.RAZORPAY_WEBHOOK_SECRET.encode()
+# #             expected_signature = hmac.new(webhook_secret, raw_body.encode("utf-8"), hashlib.sha256).hexdigest()
+
+# #             if not hmac.compare_digest(provided_signature, expected_signature):
+# #                 return JsonResponse({"error": "Invalid webhook signature"}, status=400)
+
+# #             event = received_data.get("event", "")
+
+# #             if event == "payment.captured":
+# #                 payment_entity = received_data["payload"]["payment"]["entity"]
+# #                 razorpay_payment_id = payment_entity["id"]
+# #                 razorpay_order_id = payment_entity["order_id"]
+# #                 amount_paid = Decimal(payment_entity["amount"]) / 100  # Convert to INR
+
+# #                 try:
+# #                     with transaction.atomic():
+# #                         # ✅ Fetch payment and order
+# #                         payment = Payment.objects.get(razorpay_order_id=razorpay_order_id)
+# #                         order = payment.order
+
+# #                         # ✅ Update payment details
+# #                         payment.payment_status = "completed"
+# #                         payment.razorpay_payment_id = razorpay_payment_id
+# #                         payment.total_price = amount_paid
+# #                         payment.save()
+
+# #                         # ✅ Update order status
+# #                         order.order_status = "confirmed"
+# #                         order.save()
+
+# #                         # ✅ Transfer cart items to order items
+# #                         cart = Cart.objects.get(user=order.user)
+# #                         cart_items = cart.cartitem_set.select_related("product_variant", "product_batch").all()
+
+# #                         for item in cart_items:
+# #                             Order_Item.objects.create(
+# #                                 order=order,
+# #                                 batch=item.product_batch,
+# #                                 variant=item.product_variant,
+# #                                 quantity=item.quantity,
+# #                                 price=item.total_price,
+# #                             )
+
+# #                             # ✅ Reduce stock
+# #                             inventory = Inventory.objects.filter(batch=item.product_batch).first()
+# #                             if inventory and inventory.quantity >= item.quantity:
+# #                                 inventory.quantity -= item.quantity
+# #                                 inventory.save()
+# #                             else:
+# #                                 print(f"⚠️ Not enough stock for {item.product_variant}")
+
+# #                         # ✅ Clear the cart
+# #                         cart_items.delete()
+
+# #                         print("✅ Order confirmed, items transferred, stock updated, and cart cleared.")
+# #                         return JsonResponse({"message": "Payment & order updated successfully"}, status=200)
+
+# #                 except Payment.DoesNotExist:
+# #                     return JsonResponse({"error": "Payment not found"}, status=404)
+
+# #             return JsonResponse({"message": "Unhandled event"}, status=200)
+
+# #         except json.JSONDecodeError:
+# #             return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+# #         except Exception as e:
+# #             return JsonResponse({"error": str(e)}, status=500)
+
+# #     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
 

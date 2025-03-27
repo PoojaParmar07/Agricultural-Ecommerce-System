@@ -211,8 +211,8 @@
                 <button class="cta-button">Join Now</button>
             </div> {% endcomment %}
             <!-- Card 2 -->
-            {% comment %} <div class="membership-card">
-                <h3 class="card-title">Silver Membership</h3>
+            <div class="membership-card">
+                <h3 class="card-title">Gold Membership</h3>
                 <p class="membership-price">₹5,000 <span>/ Year</span></p>
                 <ul class="membership-benefits">
                     <li class="benefit-item"><span class="check">✔</span> 10% Discount</li>
@@ -220,19 +220,23 @@
                     <li class="benefit-item"><span class="check">✔</span> Early Access</li>
                 </ul>
                 <button class="cta-button">Join Now</button>
-            </div> {% endcomment %}
+            </div> 
             <!-- Card 3 -->
-            <div class="membership-card">
-                <h3 class="card-title">Gold Membership</h3>
-                <p class="membership-price">₹8,000  <span>/ Year</span></p>
-                <ul class="membership-benefits">
-                    <li class="benefit-item"><span class="check">✔</span> 15% Discount</li>
-                    <li class="benefit-item"><span class="check">✔</span> Free Shipping</li>
-                    <li class="benefit-item"><span class="check">✔</span> Early Access</li>
-                    <li class="benefit-item"><span class="check">✔</span> Priority Support</li>
-                </ul>
-                <button class="cta-button">Join Now</button>
-            </div>
+            {% comment %} <div class="membership-cards">
+                {% for plan in membership_plans %}
+                <div class="membership-card">
+                    <h3 class="card-title">{{plan.plan_name}}</h3>
+                    <p class="membership-price">₹{{plan.annual_fees}} <span>/ Year</span></p>
+                    <ul class="membership-benefits">
+                        <li class="benefit-item"><span class="check">✔</span> {{plan.discount_rate}}% Discount</li>
+                        <li class="benefit-item"><span class="check">✔</span> {{plan.description}}</li>
+                    </ul>
+                    <button class="cta-button">Join Now</button>
+                </div>
+                {% comment %} {% empty %}
+                <p>No membership plans available.</p>  <!-- This will show if there are no records --> {% endcomment %}
+                {% comment %} {% endfor %}
+            </div> {% endcomment %}
         </div>
        
     </div>

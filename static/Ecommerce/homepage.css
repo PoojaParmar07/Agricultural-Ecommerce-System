@@ -263,9 +263,9 @@ nav ul li a {
     font-size: 28px;
     font-weight: bold;
     margin: 0 300px;
-    text-transform: uppercase;
+    text-transform:uppercase;
     position: relative;
-    text-align: left;
+    text-align:center;
 }
 
 .product-list h2::after {

@@ -91,7 +91,7 @@
             
             
 
-            <p class="total">Total: <span><b>₹{{ final_total }}</b></span></p>
+            <p class="total" id='total'>Total: <span><b>₹{{ final_total }}</b></span></p>
         </div>
         
         <h3>Payment Method</h3>
@@ -191,47 +191,54 @@
             let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;
     
             if (selectedPaymentMethod === "COD") {
-                form.action = "{% url 'payment:cod_checkout' %}"; // COD order submission
+                form.action = "{% url 'payment:cod_checkout' %}";
                 form.submit();
-            } else {
-                // ✅ Use Razorpay Checkout
+            } 
+            else {
+                // Retrieve the dynamically updated total value
+                let totalElement = document.querySelector("#total span b");
+                if (!totalElement) {
+                    console.error("❌ Total element not found!");
+                    return;
+                }
+    
+                let updatedTotal = parseFloat(totalElement.textContent.replace('₹', '')) || 0;
+                let finalAmount = updatedTotal*100;  // Convert to paise
+    
+                console.log("🚀 Final Amount (paise):", finalAmount);
+    
                 var options = {
                     "key": "{{ razorpay_key }}",
-                    "amount": {{ final_total|floatformat:0 }} * 100,
+                    "amount": finalAmount,  // ✅ Use paise (no division)
                     "currency": "INR",
-                    "name": "Jyoti Agro",
+                    "name": "Your Store",
                     "description": "Order Payment",
                     "order_id": "{{ razorpay_order_id }}",
-                    "prefill": {
-                        "name": "{{ user.username }}",
-                        "email": "{{ user.email }}",
-                        "contact": "{{ request.user.profile.mobile_number }}"
-                    },
-                    "theme": {
-                        "color": "#F37254"
-                    },
                     "handler": function (response) {
-                        console.log("✅ Payment Success:", response);
-
-                        let paymentInput = document.createElement("input");
-                        paymentInput.type = "hidden";
-                        paymentInput.name = "razorpay_payment_id";
-                        paymentInput.value = response.razorpay_payment_id;
-                        form.appendChild(paymentInput);
-                        form.submit(); // Submit form after successful payment
-                    },
-                    "modal": {
-                        "ondismiss": function () {
-                            console.log("❌ Payment modal closed.");
-                        }
+                        fetch("/payment-success/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            },
+                            body: new URLSearchParams({
+                                "razorpay_payment_id": response.razorpay_payment_id,
+                                "razorpay_order_id": response.razorpay_order_id
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => alert(data.message))
+                        .catch(error => console.error("Error:", error));
                     }
                 };
     
-                let rzp1 = new Razorpay(options);
-                rzp1.open(); // Open Razorpay modal
+                var rzp1 = new Razorpay(options);
+                rzp1.open(); 
             }
         });
-    });     
+    });
+    
+    
 </script>
 
 {% endblock %}

@@ -61,6 +61,7 @@
     color: #333;
     display: block;
     margin-bottom: 5px;
+    text-align: left;
 }
 
 .form-control {

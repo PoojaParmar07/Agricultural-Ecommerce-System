@@ -31,7 +31,7 @@ from django.views.generic import ListView
 import razorpay
 from io import BytesIO
 
-RAZORPAY_SECRET = "settings.RAZORPAY_SECRET"
+RAZORPAY_SECRET = "settings.RAZORPAY_SECRET_KEY"
 
 
 def is_admin_user(user):
@@ -115,7 +115,7 @@ def homepage(request):
     product_data = []
 
     # Default empty cart_product_ids (for non-logged-in users)
-    cart_product_ids = []
+    cart_product_variant_ids = []
 
     # product_name = request.GET.get('product_name', '').strip()
 
@@ -505,7 +505,7 @@ def update_variant(request, cart_item_id):
     # Reload the cart page to reflect changes
     return redirect("Ecommerce:homepage")
 
-
+client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
 @login_required
 def checkout(request):
     cart = Cart.objects.get(user=request.user)
@@ -555,6 +555,34 @@ def checkout(request):
 
     # Final total calculation
     final_total = total_after_discount + delivery_charge
+    # total=800
+    amount = int(final_total * 100)
+    order_currency = "INR"
+    payment_order = client.order.create(dict(amount=amount, currency=order_currency, payment_capture=1))
+    payment_order_id = payment_order['id']
+    # order = Order.objects.create(
+    #         user=user,
+    #         order_user_type="member" if user_membership else "non-member",
+    #         total_price=final_total,
+    #         discounted_price=discount_amount,
+    #         order_status="pending",
+    #         state=user.state,
+    #         city=city_obj,
+    #         address=address,
+    #         pincode=pincode_obj,
+    #         delivery_charges=delivery_charges,
+    #     )
+
+    #     # Store payment details
+    # payment = Payment.objects.create(
+    #         order=order,
+    #         total_price=final_total,  # Store INR value
+    #         payment_mode="online",
+    #         payment_status="pending",
+    #         razorpay_order_id=payment_order_id
+    #     )
+   
+
 
     context = {
         "cart_items": cart_items,
@@ -568,10 +596,13 @@ def checkout(request):
         "selected_city_id": selected_city_id,
         "selected_pincode_id": selected_pincode_id,
         "delivery_charge": float(delivery_charge),  # Convert Decimal to float
-        # "razorpay_key": settings.RAZORPAY_KEY_ID,
+        "razorpay_key": settings.RAZORPAY_KEY_ID,
+        "amount":final_total,  # Now correctly stored in paise
+        "razorpay_order_id": payment_order_id,
     }
 
     return render(request, "Ecommerce/checkout_page.html", context)
+
 
 
 @login_required
@@ -1073,3 +1104,9 @@ def enquiry_view(request):
         form = EnquiryForm()
 
     return render(request, 'Ecommerce/enquiry.html', {'form': form})
+
+def membership_plan(request):
+    membership_plans = Membership_plan.objects.all()
+    for plan in membership_plans:
+        print(plan.plan_name) 
+    return render(request, 'membership/membership.html', {'membership_plans': membership_plans})

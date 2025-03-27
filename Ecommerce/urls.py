@@ -32,6 +32,7 @@ urlpatterns = [
     path('get_pincode/<int:city_id>/', get_pincode, name='get_pincode'),
     
     
+    
     # path('cod_checkout/',cod_checkout,name='cod_checkout'),
     path('order_history/',order_history,name='order_history'),
     path('order_invoice/<int:order_id>/',order_invoice,name="order_invoice"),
@@ -53,6 +54,7 @@ urlpatterns = [
     path('okra/',okra,name="okra"),
     
     path('enquiry_view/',enquiry_view,name='enquiry_view'),
+    path('membership_plan/',membership_plan,name='membership_plan'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
