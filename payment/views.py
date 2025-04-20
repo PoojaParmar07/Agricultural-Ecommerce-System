@@ -27,7 +27,6 @@ import base64
 RAZORPAY_SECRET = "settings.RAZORPAY_SECRET"
 
 @login_required
-
 def cod_checkout(request):
     user = request.user
     try:
@@ -56,8 +55,8 @@ def cod_checkout(request):
         city_id = request.POST.get("city", "").strip()
         pincode = request.POST.get("pincode", "").strip()
 
-        if not all([address, city_id, pincode]):
-            messages.error(request, "All fields (Address, City, and Pincode) are required!")
+        if not address or not city_id or not pincode:
+            messages.error(request, "All fields are required!")
             return redirect("Ecommerce:checkout")
 
         try:
@@ -121,120 +120,120 @@ def cod_checkout(request):
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
 
-@login_required
-def razorpay_integrate(request):
-    user = request.user
-    cart = get_object_or_404(Cart, user=user)
+# @login_required
+# def razorpay_integrate(request):
+#     user = request.user
+#     cart = get_object_or_404(Cart, user=user)
 
-    # Check if cart is empty
-    if not cart.cartitem_set.exists():
-        messages.error(request, "Your cart is empty!")
-        return redirect("Ecommerce:cart_view")
+#     # Check if cart is empty
+#     if not cart.cartitem_set.exists():
+#         messages.error(request, "Your cart is empty!")
+#         return redirect("Ecommerce:cart_view")
 
-    # Calculate total price
-    total_price = sum(item.total_price for item in cart.cartitem_set.all())
+#     # Calculate total price
+#     total_price = sum(item.total_price for item in cart.cartitem_set.all())
 
-    # Check user membership for discount
-    user_membership = User_membership.objects.filter(
-        user=user, status=True, membership_end_date__gte=now().date()
-    ).first()
+#     # Check user membership for discount
+#     user_membership = User_membership.objects.filter(
+#         user=user, status=True, membership_end_date__gte=now().date()
+#     ).first()
 
-    discount_amount = Decimal(user_membership.plan.discount_rate) / 100 * total_price \
-        if user_membership and user_membership.plan else Decimal(0)
-    total_price -= discount_amount
+#     discount_amount = Decimal(user_membership.plan.discount_rate) / 100 * total_price \
+#         if user_membership and user_membership.plan else Decimal(0)
+#     total_price -= discount_amount
 
-    delivery_charges = Decimal(0)  # Default to zero
+#     delivery_charges = Decimal(0)  # Default to zero
 
-    if request.method == "POST":
-        address = request.POST.get("address", "").strip()
-        city_id = request.POST.get("city", "").strip()
-        pincode = request.POST.get("pincode", "").strip()
+#     if request.method == "POST":
+#         address = request.POST.get("address", "").strip()
+#         city_id = request.POST.get("city", "").strip()
+#         pincode = request.POST.get("pincode", "").strip()
 
-        if not all([address, city_id, pincode]):
-            messages.error(request, "All fields (Address, City, and Pincode) are required!")
-            return redirect("Ecommerce:checkout")
+#         if not all([address, city_id, pincode]):
+#             messages.error(request, "All fields (Address, City, and Pincode) are required!")
+#             return redirect("Ecommerce:checkout")
 
-        # Validate pincode
-        try:
-            pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
-            delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges)
-        except Pincode.DoesNotExist:
-            messages.error(request, "Invalid pincode. Please enter a valid one.")
-            return redirect("Ecommerce:checkout")
+#         # Validate pincode
+#         try:
+#             pincode_obj = Pincode.objects.get(area_pincode__iexact=pincode)
+#             delivery_charges = Decimal(0) if user_membership else Decimal(pincode_obj.delivery_charges)
+#         except Pincode.DoesNotExist:
+#             messages.error(request, "Invalid pincode. Please enter a valid one.")
+#             return redirect("Ecommerce:checkout")
 
-        # Validate city
-        try:
-            city_obj = City.objects.get(city_id=city_id)
-        except City.DoesNotExist:
-            messages.error(request, "Invalid city selection.")
-            return redirect("Ecommerce:checkout")
+#         # Validate city
+#         try:
+#             city_obj = City.objects.get(city_id=city_id)
+#         except City.DoesNotExist:
+#             messages.error(request, "Invalid city selection.")
+#             return redirect("Ecommerce:checkout")
 
-        # Calculate final total
-        final_total = total_price + delivery_charges
+#         # Calculate final total
+#         final_total = total_price + delivery_charges
 
-        # Convert to paise for Razorpay
-        amount = int(final_total * 100)# Convert INR to paise
-        order_currency = "INR"
+#         # Convert to paise for Razorpay
+#         amount = int(final_total * 100)# Convert INR to paise
+#         order_currency = "INR"
         
        
 
-        # Create a Razorpay order
-        payment_order = client.order.create(dict(amount=amount, currency=order_currency, payment_capture=1))
-        payment_order_id = payment_order['id']
+#         # Create a Razorpay order
+#         payment_order = client.order.create(dict(amount=amount, currency=order_currency, payment_capture=1))
+#         payment_order_id = payment_order['id']
 
-        # Create Order
-        order = Order.objects.create(
-            user=user,
-            order_user_type="member" if user_membership else "non-member",
-            total_price=final_total,
-            discounted_price=discount_amount,
-            order_status="pending",
-            state=user.state,
-            city=city_obj,
-            address=address,
-            pincode=pincode_obj,
-            delivery_charges=delivery_charges,
-        )
+#         # Create Order
+#         order = Order.objects.create(
+#             user=user,
+#             order_user_type="member" if user_membership else "non-member",
+#             total_price=final_total,
+#             discounted_price=discount_amount,
+#             order_status="pending",
+#             state=user.state,
+#             city=city_obj,
+#             address=address,
+#             pincode=pincode_obj,
+#             delivery_charges=delivery_charges,
+#         )
 
-        # Store payment details
-        payment = Payment.objects.create(
-            order=order,
-            total_price=final_total,  # Store INR value
-            payment_mode="online",
-            payment_status="pending",
-            razorpay_order_id=payment_order_id
-        )
+#         # Store payment details
+#         payment = Payment.objects.create(
+#             order=order,
+#             total_price=final_total,  # Store INR value
+#             payment_mode="online",
+#             payment_status="pending",
+#             razorpay_order_id=payment_order_id
+#         )
 
-        context = {
-            "amount":final_total,  # Now correctly stored in paise
-            "razorpay_order_id": payment_order_id,
-            "razorpay_key": settings.RAZORPAY_KEY_ID,
-        }
+#         context = {
+#             "amount":final_total,  # Now correctly stored in paise
+#             "razorpay_order_id": payment_order_id,
+#             "razorpay_key": settings.RAZORPAY_KEY_ID,
+#         }
 
-        return render(request, 'Ecommerce/checkout_page.html', context)
+#         return render(request, 'Ecommerce/checkout_page.html', context)
 
-    return redirect("Ecommerce:checkout")
+#     return redirect("Ecommerce:checkout")
 
 
 
-@csrf_exempt
-def payment_success(request):
-    if request.method == "POST":
-        data = request.POST
-        payment_id = data.get('razorpay_payment_id')
-        order_id = data.get('razorpay_order_id')
+# @csrf_exempt
+# def payment_success(request):
+#     if request.method == "POST":
+#         data = request.POST
+#         payment_id = data.get('razorpay_payment_id')
+#         order_id = data.get('razorpay_order_id')
 
-        # Validate and update the payment status
-        try:
-            payment = Payment.objects.get(order_id=order_id)
-            payment.payment_id = payment_id
-            payment.status = "paid"
-            payment.save()
-            return JsonResponse({"message": "Payment successful", "status": "success"})
-        except Payment.DoesNotExist:
-            return JsonResponse({"message": "Order ID not found", "status": "error"}, status=400)
+#         # Validate and update the payment status
+#         try:
+#             payment = Payment.objects.get(order_id=order_id)
+#             payment.payment_id = payment_id
+#             payment.status = "paid"
+#             payment.save()
+#             return JsonResponse({"message": "Payment successful", "status": "success"})
+#         except Payment.DoesNotExist:
+#             return JsonResponse({"message": "Order ID not found", "status": "error"}, status=400)
 
-    return JsonResponse({"message": "Invalid request"}, status=400)
+#     return JsonResponse({"message": "Invalid request"}, status=400)
 
 
 
@@ -409,6 +408,4 @@ def payment_success(request):
 # #             return JsonResponse({"error": str(e)}, status=500)
 
 # #     return JsonResponse({"error": "Invalid request"}, status=400)
-
-
 

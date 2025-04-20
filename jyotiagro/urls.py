@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView
 
+
 urlpatterns = [
     path('built-in_admin/', admin.site.urls),
     path('admin/dashboard/',include('admin_dashboard.urls')),

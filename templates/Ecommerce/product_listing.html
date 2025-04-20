@@ -1,0 +1,79 @@
+{% extends 'Ecommerce/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'Ecommerce/homepage.css' %}" >
+<section class="product-list">
+    <h2>Products</h2>
+
+    <div class="products-container">
+        {% for product in product_data %}
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
+                    <a href="{% url 'Ecommerce:add_to_wishlist' product.variant.variant_id %}" class="wishlist-icon">
+                      {% if product.variant_id in wishlist_product_ids %}
+                          <box-icon type='solid' name='heart' color='red'></box-icon>
+                      {% else %}
+                          <box-icon name='heart'></box-icon>
+                      {% endif %}
+                  </a>
+                </div>
+                <div class="product-details">
+                    <div class="product-header">
+                      <a href="{% url 'Ecommerce:product_view' product.variant.variant_id %}">
+                        <h4>{{ product.product_name }}</h4>
+                    </a>
+                       
+                    </div>
+                    <!-- Display Only One Variant -->
+                    {% if product.variant %}
+                        <div>
+                            <p class="price">
+                                <span>₹{{ product.sales_price }}</span> | 
+                                <span>{{ product.variant.units }}</span>
+                            </p>
+                        </div>
+                    {% endif %}
+                  
+                     <div class="rating-container">
+                        <span class="star-rating">
+                            {% if product.rating %}
+                                {% for i in "12345" %}
+                                    {% if i|add:"0" <= product.rating %}
+                                        <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
+                                    {% else %}
+                                        <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
+                            {% else %}
+                                {% for i in "12345" %}
+                                    <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                                {% endfor %}
+                                <span class="rating">(0/5)</span>
+                            {% endif %}
+                        </span>
+                    </div> 
+
+                    {% if product.inventory_quantity > 0 %}
+                    {% if product.variant.variant_id in cart_product_variant_ids %} 
+                        <a href="{% url 'Ecommerce:cart_view' %}" class="add-to-cart">
+                            <button class="add-to-cart">Go to Cart</button>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'Ecommerce:add_to_cart' product.variant.variant_id %}" class="add-to-cart">
+                            <button class="add-to-cart">Add to Cart</button>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <button class="add-to-cart" style="background-color:rgb(246, 246, 246);color: black;">Out of Stock</button>
+                {% endif %}
+                
+                
+                </div>
+            </div>
+        {% endfor %}
+        
+</section>
+{% endblock %}

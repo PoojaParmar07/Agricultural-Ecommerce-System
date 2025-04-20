@@ -35,7 +35,12 @@
                 <tr>
                     <td>{{ post.post_id }}</td>
                     <td>{{ post.user_id }}</td>
-                    <td>{{ post.image }}</td>
+                    {% comment %} <td>{{ post.image }}</td> {% endcomment %}
+                    <td > {% if post.image %}
+                        <img src="{{  post.image.url }}" alt="Post Image" width="50">
+                    {% else %}
+                        No Image
+                    {% endif %}</td>
                     <td>{{ post.caption }}</td>
                     <td>{{ post.likes }}</td>
                     <td>

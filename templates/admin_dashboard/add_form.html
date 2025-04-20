@@ -7,35 +7,33 @@
 <!-- Load Open Sans font -->
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 
-<div class="content">
-    <section>
-        <div class="section-header">
-            <div class="field_name"><span>Add {{model_name}}</span></div>
-        </div>
-    </section>
-    <div class="form-container">
+{% comment %} <div class="content"> {% endcomment %}
+<div class="form-container">
+    <div class="form-header">
+        <h2>Add {{ model_name }}</h2>
+    </div>
         {% comment %} <h2>Add {{model_name}}</h2> {% endcomment %}
         <form method='post' enctype="multipart/form-data">
             {% csrf_token %}
             
            
-            <div class="input-group">
+            <div class="form-fields">
                
                 {% for field in form %}
-                
+                <div class="input-wrapper">
                   <label>{{ field.label }}</label>
                   {{ field }}
                   {% if field.errors %}
                     
                   {% endif %}
-               
+                </div>
               {% endfor %}
               
             </div>
                   
-            <div class="btn-container">
-                <button type="submit" class="btn">Save</button>
-                <a href="{% url list %}" class="btn-cancel">Cancel</a>
+            <div class="button-group">
+                <button type="submit" class="btn-primary">Save</button>
+                <a href="{% url list %}" class="btn-secondary">Cancel</a>
 
             </div>
         </form>

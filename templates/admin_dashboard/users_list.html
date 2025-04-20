@@ -41,7 +41,7 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.mobile_number }}</td>
                     <td > {% if user.image %}
-                        <img src="/media/account/8bd1a2737efa1ed20648d4e5a6fed6f1_zy3fBxr.jpg" alt="Profile Image" width="100" style="
+                        <img src="{{ user.image.url }}" alt="Profile Image" width="100" style="
     width: 50px;
     height: 50px;
     border-radius: 100px;

@@ -42,7 +42,7 @@ class AddUserForm(forms.ModelForm):
         fields = [
             'username', 'email', 'password', 'confirm_password', 'image',
             'city', 'state', 'pincode', 'mobile_number', 'address',
-            'is_staff', 'is_superuser', 'is_active'
+           'is_active'
         ]
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
@@ -63,8 +63,8 @@ class AddUserForm(forms.ModelForm):
 
 
 class DeleteUserForm(forms.ModelForm):
-    is_staff = forms.BooleanField(required=False, label="Staff Status", disabled=True)
-    is_superuser = forms.BooleanField(required=False, label="Superuser Status", disabled=True)
+    # is_staff = forms.BooleanField(required=False, label="Staff Status", disabled=True)
+    # is_superuser = forms.BooleanField(required=False, label="Superuser Status", disabled=True)
     is_active = forms.BooleanField(required=False, label="Active Status", disabled=True)
 
     class Meta:
@@ -73,7 +73,7 @@ class DeleteUserForm(forms.ModelForm):
             'username', 'email', 
             'city', 'state', 'pincode', 
             'mobile_number', 'address', 
-            'is_staff', 'is_superuser','is_active'
+            'is_active'
         ]
         
 

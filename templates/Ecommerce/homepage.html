@@ -53,7 +53,7 @@
     <h2>Products</h2>
 
     <div class="products-container">
-        {% for product in product_data %}
+        {% for product in product_data|slice:":8" %}
             <div class="product-card">
                 <div class="product-image-container">
                     <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="product-details">
                     <div class="product-header">
-                      <a href="{% url 'Ecommerce:product_view' product.product_id %}">
+                      <a href="{% url 'Ecommerce:product_view' product.variant.variant_id %}">
                         <h4>{{ product.product_name }}</h4>
                     </a>
                        
@@ -113,7 +113,7 @@
                         </a>
                     {% endif %}
                 {% else %}
-                    <button class="add-to-cart">Out of Stock</button>
+                    <button class="add-to-cart" style="background-color:rgb(246, 246, 246);color: black;">Out of Stock</button>
                 {% endif %}
                 
                  
@@ -121,9 +121,18 @@
                 </div>
             </div>
         {% endfor %}
-
+           
+        <!-- Show More Button if there are more than 8 products -->
         
-    </div>
+      </div>
+      {% if product_data|length %}
+            <div class="show-more-container">
+                <a href="{% url 'Ecommerce:product_listing' %}" class="show-more-btn">
+                    Show More<i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+          {% endif %}
+    
 </section>
 
 

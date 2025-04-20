@@ -2,71 +2,80 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 <div class="dashboard-container">
     <div class="card border">
-        <div class="icon">👤</div>
+        <div class="icon">
+            <i class='bx bx-user'></i>
+        </div>
         <div class="info">
             <a href="{% url 'account:user_list' %}">Users</a>
-            
         </div>
     </div>
-
+    
     <div class="card border">
-        <div class="icon">📦</div>
+        <div class="icon">
+            <i class='bx bx-package'></i>
+        </div>
         <div class="info">
             <a href="{% url 'admin_dashboard:order_list' %}">Orders</a>
-           
         </div>
     </div>
-
+    
     <div class="card border">
-        <div class="icon">🛒</div>
+        <div class="icon">
+            <i class='bx bx-cart'></i>
+        </div>
         <div class="info">
             <a href="{% url 'admin_dashboard:product_list' %}">Products</a>
-           
         </div>
     </div>
-
+    
     <div class="card border">
-        <div class="icon">📜</div>
+        <div class="icon">
+            <i class='bx bx-list-ul'></i>
+        </div>
         <div class="info">
             <a href="{% url 'admin_dashboard:productbatch_list' %}">Batches</a>
-           
         </div>
     </div>
 </div>
 
 <div class='dashboard-container'>
     <div class="card border">
-        <div class="icon">📊</div>
+        <div class="icon">
+            <i class='bx bx-bar-chart-alt-2'></i>
+        </div>
         <div class="info">
             <a href="{% url 'admin_dashboard:inventory_list' %}">Inventory</a>
-           
         </div>
     </div>
-
+    
     <div class="card border">
-        <div class="icon">🎫</div>
+        <div class="icon">
+            <i class='bx bx-id-card'></i>
+        </div>
         <div class="info">
             <a href="{% url 'membership:user_membership' %}">Membership</a>
-           
         </div>
     </div>
-
+    
     <div class="card border">
-        <div class="icon">📝</div>
+        <div class="icon">
+            <i class='bx bx-message-square-edit'></i>
+        </div>
         <div class="info">
             <a href="{% url 'socialmedia:post' %}">Posts</a>
-            
         </div>
     </div>
-
+    
     <div class="card border">
-        <div class="icon">💰</div>
+        <div class="icon">
+            <i class='bx bx-dollar-circle'></i>
+        </div>
         <div class="info">
             <a href="{% url 'admin_dashboard:payment_list' %}">Payments</a>
-          
         </div>
     </div>
 </div>

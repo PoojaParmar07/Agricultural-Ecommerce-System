@@ -43,6 +43,7 @@
           </form>
         </div>
       </div>
+
       <!-- Icons -->
       <div class="nav-icons">
         <!-- User Dropdown -->
@@ -50,8 +51,8 @@
           <a href="#" id="user-icon"><i class="bx bx-user-circle user"></i></a>
           <div class="dropdown-menu" id="dropdown-menu">
             {% if user.is_authenticated %}
-            <a href="{% url 'account:profile' %}">Profile</a>
-            <a href="{% url 'Ecommerce:order_history' %}">Order History</a>
+            <a href="{% url 'account:profile' %}"><i class="bx bx-user"></i> Profile</a>
+            <a href="{% url 'Ecommerce:order_history' %}"><i class="bx bx-history"></i> Order History</a>
             <form
               id="logout-form"
               action="{% url 'account:logout' %}"
@@ -69,62 +70,63 @@
                   left: -7%;
                 "
               >
-                <a>Logout</a>
+                <a><i class="bx bx-log-out"></i> Logout</a>
               </button>
             </form>
             {% else %}
-            <a href="{% url 'account:login' %}">Login</a>
-            <a href="{% url 'account:registration' %}">Register</a>
+            <a href="{% url 'account:login' %}"><i class="bx bx-log-in"></i> Login</a>
+            <a href="{% url 'account:registration' %}"><i class="bx bx-user-plus"></i> Register</a>
             {% endif %}
           </div>
-        </div>
-        <a href="{% url 'Ecommerce:wishlist' %}"><i class="bx bx-heart"></i></a>
-        <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"
-          ><i class="bx bx-cart-alt"></i>
-          <span id="cartcounter">{{cart_count}}</span>
+          </div>
+          <a href="{% url 'Ecommerce:wishlist' %}"><i class="bx bx-heart"></i></a>
+          <a href="{% url 'Ecommerce:cart_view' %}" class="cart-icon"
+            ><i class="bx bx-cart-alt"></i>
+            <span id="cartcounter">{{cart_count}}</span>
+          </a>
+          {% comment %} <br>
+          <p class="cart-counter">{{cart_count}}</p> {% endcomment %}
+          </div>
+          </nav>
           
-        </a>
-        {% comment %} <br>
-        <p  class="cart-counter" >{{cart_count}}</p> {% endcomment %}
-      </div>
-    </nav>
-
-    <!-- Secondary Navbar -->
-    <nav class="sub-navbar">
-      <ul class="sub-nav">
-        <li>
-          <a href="{% url 'Ecommerce:homepage' %}" class="active">Home</a>
-        </li>
-        <li class="category-dropdown">
-          <a href="#">CATEGORY</a>
-          <ul class="category-dropdown-menu length-cat">
-            {% for category in categories %}
-            <li class="sub-a">
-              <a href="{% url 'Ecommerce:product_list' category.category_id %}" >{{ category.category_name }}</a>
-            </li>
-            {% endfor %}
-          </ul>
-        </li>
-
-        <li><a href="{% url 'Ecommerce:crop_info' %}">CROF-INFO.</a></li>
-
-        <!-- ABOUT US Dropdown -->
-        <li class="about-dropdown">
-          <a href="#">ABOUT US</a>
-          <ul class="about-dropdown-menu">
-            <li class="sub-a"><a href="{% url "Ecommerce:enquiry_view" %}">Enquiry</a></li>
-            <li class="sub-a"><a href="{% url "membership:membership_gold" %}">Membership</a></li>
-          </ul>
-        </li>
-        <li class="about-dropdown">
-          <a href="{% url 'socialmedia:my_feed' %}">KISHAN CHARCHA</a>
-          <ul class="about-dropdown-menu">
-            <li class="sub-a"><a href="{% url 'socialmedia:my_feed' %}">Post</a></li>
-            <li class="sub-a"><a href="{% url 'socialmedia:user_feed' %}">My Profile</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
+          <!-- Secondary Navbar -->
+          <nav class="sub-navbar">
+            <ul class="sub-nav">
+              <li>
+                <a href="{% url 'Ecommerce:homepage' %}" class="active"><i class="bx bx-home-alt"></i> Home</a>
+              </li>
+              <li class="category-dropdown">
+                <a href="#"><i class="bx bx-category-alt"></i> CATEGORY</a>
+                <ul class="category-dropdown-menu length-cat">
+                  {% for category in categories %}
+                  <li class="sub-a">
+                    <a href="{% url 'Ecommerce:product_list' category.category_id %}">
+                      <i class="bx bx-list-ul"></i> {{ category.category_name }}
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </li>
+          
+              <li><a href="{% url 'Ecommerce:crop_info' %}"><i class="bx bx-leaf"></i> CROP-INFO.</a></li>
+          
+              <!-- ABOUT US Dropdown -->
+              <li class="about-dropdown">
+                <a href="#"><i class="bx bx-info-circle"></i> ABOUT US</a>
+                <ul class="about-dropdown-menu">
+                  <li class="sub-a"><a href="{% url 'Ecommerce:enquiry_view' %}"><i class="bx bx-question-mark"></i> Enquiry</a></li>
+                  <li class="sub-a"><a href="{% url 'membership:membership_gold' %}"><i class="bx bx-medal"></i> Membership</a></li>
+                </ul>
+              </li>
+              <li class="about-dropdown">
+                <a href="{% url 'socialmedia:my_feed' %}"><i class="bx bx-chat"></i> KISHAN CHARCHA</a>
+                <ul class="about-dropdown-menu">
+                  <li class="sub-a"><a href="{% url 'socialmedia:my_feed' %}"><i class="bx bx-news"></i> Post</a></li>
+                  <li class="sub-a"><a href="{% url 'socialmedia:user_feed' %}"><i class="bx bx-user-circle"></i> My Profile</a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
 
     <!-- Messages Section -->
     {% if messages %}
@@ -136,7 +138,9 @@
     {% endif %}
 
     <main>
-      <div class="container">{% block content%} {% endblock %}</div>
+      <div class="container">{% block content%} {% endblock %}
+        {% block scripts %}{% endblock %}
+      </div>
     </main>
 
     

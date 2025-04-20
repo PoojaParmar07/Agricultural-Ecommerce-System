@@ -10,49 +10,42 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
         rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-        <link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
-
+        <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="/media/company_logo.jpg">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 </head>
 
 <body>
     <div class="container">
         <aside class="sidebar">
-           
-                {% comment %} <div id="logo"> {% endcomment %}
-                    <a href="{% url 'Ecommerce:homepage' %}" class="brand"><img src="/media/logo.jpg" alt="" height="70px"></a>
-                {% comment %} </div> {% endcomment %}
+            <a href="{% url 'admin_dashboard:admin_dashboard' %}" class="brand">
+                <img src="/media/logo.jpg" alt="Jyoti Agro" height="70px">
+            </a>
             
-            {% comment %} <div id="logo">
-                <img src="/media/company_logo.jpg" alt="Jyoti Agro" srcset="">
-        </div> {% endcomment %}
             <nav>
+                <div class="dashboard">
+                    <img src="/media/dashboard_home.png" alt="Dashboard">
+                    <a id="text1" href="{% url 'admin_dashboard:admin_dashboard' %}">Dashboard</a>
+                </div>
+
                 <ul>
-                    <div class="dashboard">
-                        <img src="/media/dashboard_home.png" alt="" srcset="">
-                        <a id="text1" href="{% url 'admin_dashboard:admin_dashboard' %}">Dashboard</a>
-
-                    </div>
-
                     <li class="accounts">
                         <span class="accounts_text">Accounts</span>
                         <ul>
                             <li><a href="{% url 'account:user_list' %}">Users</a></li>
                             <li><a href="{% url 'admin_dashboard:enquiry_list' %}">Enquiry</a></li>
-                           
                         </ul>
                     </li>
 
                     <li class="account">
-                        <span>Ecommerce</span>
+                        <span class="accounts_text accounts_text-2">Ecommerce</span>
                         <ul>
-
-                            <li><a href="{% url 'admin_dashboard:list_brand' %}">Brand</a>
-                            </li>
-                            <li><a href="{% url 'admin_dashboard:category_list' %}">Category</a>
-                            </li>
-                           
+                            <li><a href="{% url 'admin_dashboard:list_brand' %}">Brand</a></li>
+                            <li><a href="{% url 'admin_dashboard:category_list' %}">Category</a></li>
                             <li><a href="{% url 'admin_dashboard:product_list' %}">Products</a></li>
                             <li><a href="{% url 'admin_dashboard:product_variant_list' %}">ProductVariant</a></li>
                             <li><a href="{% url 'admin_dashboard:productbatch_list' %}">Product Batch</a></li>
@@ -70,22 +63,25 @@
                             <li><a href="{% url 'admin_dashboard:pincode_list' %}">Pincode</a></li>
                         </ul>
                     </li>
+
                     <li class="account">
-                        <span>Membership</span>
+                        <span class="accounts_text">Membership</span>
                         <ul>
                             <li><a href="{% url 'membership:membership_plan_list' %}">Membership Plan</a></li>
                             <li><a href="{% url 'membership:user_membership' %}">User Membership</a></li>
                         </ul>
                     </li>
+
                     <li>
-                        <span>Social Media</span>
+                        <span class="accounts_text">Social Media</span>
                         <ul>
-                            <li><a href="{% url 'socialmedia:post_comment_list' %}"> Post Comments</a></li>
+                            <li><a href="{% url 'socialmedia:post_comment_list' %}">Post Comments</a></li>
                             <li><a href="{% url 'socialmedia:post' %}">Posts</a></li>
                         </ul>
                     </li>
+
                     <li>
-                        <span>Report</span>
+                        <span class="accounts_text">Report</span>
                         <ul>
                             <li><a href="{% url 'admin_dashboard:order_report' %}">Order Report</a></li>
                             <li><a href="{% url 'admin_dashboard:membership_report' %}">Membership Report</a></li>
@@ -93,64 +89,63 @@
                     </li>
                 </ul>
             </nav>
-            <div class="settings">
-                <li class="dropdown">
-                    <a  href="#"><box-icon name='cog'></box-icon>Settings</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Change Password</a></li>
-                        
-                    </ul>
-                </li>
-            </div>  
-         
+
+
         </aside>
-        
+
         <main class="content">
             <header>
                 {% if user.is_authenticated %}
-               
-                <form method="post" action="{% url 'account:logout' %}">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
-            {% endif %}
-              
+                <div class="user-dropdown">
+                    <button class="dropdown-toggle">
+                        {% comment %} <i class="bx bx-user-circle"></i> {% endcomment %}
+                        <span class="setting-user-icon"><i class='bx bxs-user-circle'></i></span>
+                        <i class="bx bx-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'password_change' %}">
+                            <i class="bx bx-lock-alt"></i> Change Password
+                        </a>
+                        <form method="post" action="{% url 'account:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">
+                                <i class="bx bx-log-out"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                
             </header>
-                <!-- Messages Section -->
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li  class="message {{ message.tags }}">
-          {{ message }}
-      </li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-
-  
+            
+            <!-- Messages Section -->
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li class="message {{ message.tags }}">
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
             <div class="main-content">
                 {% block content %}{% endblock %}
             </div>
-
-           
-
-            {% comment %}  {% endcomment %}
         </main>
     </div>
+
+    <script>
+        // Fade out messages after 5 seconds
+        document.addEventListener("DOMContentLoaded", function () {
+            let messages = document.querySelectorAll(".messages li");
+            setTimeout(function () {
+                messages.forEach(msg => {
+                    msg.style.opacity = "0";
+                    setTimeout(() => msg.remove(), 500);
+                });
+            }, 5000);
+        });
+    </script>
 </body>
-<script>
-    // Wait for the page to load
-    document.addEventListener("DOMContentLoaded", function () {
-        // Select all messages
-        let messages = document.querySelectorAll(".messages li");
-        // Set timeout to remove them after 5 seconds
-        setTimeout(function () {
-            messages.forEach(msg => {
-                msg.style.transition = "opacity 0s";
-                msg.style.opacity = "0";
-                setTimeout(() => msg.remove(), 500); // Remove after fade-out
-            });
-        }, 5000);
-    });
-</script>
 </html>

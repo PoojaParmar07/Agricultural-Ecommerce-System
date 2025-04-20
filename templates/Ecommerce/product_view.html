@@ -34,39 +34,29 @@
         <!-- Price -->
         {% comment %} <pre>{{ variant_prices }}</pre> {% endcomment %}
 
-        <p class="price">₹<span id="price-display">{{ product.first_price|default:"N/A" }}</span></p>
+        <p class="price">₹<span id="price-display">{{ product.first_price|default:"N/A" }}</span>|{% for variant in variants %}
+            <span style="font-size:22px">{{ variant.units }}</span>
+            {% endfor %}</p>
         
         <hr>
         <p class="description">{{ product.description}}</p>
         <hr>
         
-       
-        <select id="variant" class="variant-dropdown">
-            <option value="">-- Select Variant --</option>
-            {% for variant in variants %}
-                <option value="{{ variant.variant_id }}">{{ variant.units }}</option>
-            {% endfor %}
-        </select>
-
         <!-- Quantity & Add to Cart -->
         <div class="cart-section">
-            <div class="quantity-selector">
-                <button class="decrease">-</button>
-                <input type="text" id="quantity" value="1" max="5"readonly>
-                <button class="increase">+</button>
-            </div>
+            
             {% if inventory_quantity > 0 %}
-            {% if product.product_id in cart_product_ids %}
+            {% if product.variant_id in cart_product_variant_ids %}
                 <a href="{% url 'Ecommerce:cart_view' %}" class="add-to-cart">
                     <button class="add-to-cart">Go to Cart</button>
                 </a>
             {% else %}
-                <a href="{% url 'Ecommerce:add_to_cart' product.product_id %}" class="add-to-cart">
+                <a href="{% url 'Ecommerce:add_to_cart' product.variant_id %}" class="add-to-cart">
                     <button class="add-to-cart">Add to Cart</button>
                 </a>
             {% endif %}
         {% else %}
-        <button class="add-to-cart">Out of Stock</button>
+        <button class="add-to-cart" style="background-color:rgb(246, 246, 246);color: black;">Out of Stock</button>
         {% endif %}
             {% comment %} </a> {% endcomment %}
         </div>
@@ -131,10 +121,10 @@
             </div>
             <input type="hidden" name="rating" id="rating-input">
             <textarea name="comment" placeholder="Write your review..." ></textarea>
-            <button type="submit" class="submit-review">Submit Review</button>
+            <button type="submit" name="submit-review" class="submit-review">Submit Review</button>
         </form>
         {% else %}
-            <p><a href="{% url 'login' %}">Login</a> to leave a review.</p>
+            <p><a href="{% url 'account:login' %}">Login</a> to leave a review.</p>
         {% endif %}
     </div>
 </div>
@@ -162,7 +152,7 @@
     max-width: 400px;
     height: 395px;
     background: #ffffff;
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
@@ -171,7 +161,7 @@
         width: 100%;
         height: auto;
         object-fit: contain;
-        border-radius: 8px;
+        border-radius: 5px;
         transition: transform 0.3s ease-in-out;
     }
 
@@ -216,7 +206,7 @@
     /* Price */
     .price {
         font-size: 32px;
-        color: #28a745;
+        color: #3B823E;
         font-weight: bold;
         margin: 15px 0;
     }
@@ -334,7 +324,7 @@
         display: flex;
         justify-content: space-between;
         gap: 30px;
-        width: 100%%;
+        width: 90%;
         margin-left: 30px;
         padding: 20px;
     }
@@ -343,13 +333,13 @@
     #review-list {
         flex: 1;
         background: #fff;
-        padding: 20px;
-        border-radius: 8px;
+        padding: 40px;
+        border-radius: 5px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
     #review-list h3{
         padding-bottom: 20px;
-}
+    }
    
     
     {% comment %} Review Header  {% endcomment %}
@@ -383,6 +373,9 @@
     }
     
     /* Star Ratings */
+    .review-rating{
+        margin-left: 65px;
+    }
     .review-rating box-icon {
         width: 18px;
         height: 18px;
@@ -393,6 +386,7 @@
         font-size: 14px;
         padding: 5px 0;
         color: #333;
+        margin-left: 65px;
     }
     
     /* Review Form Styling */

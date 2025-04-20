@@ -25,8 +25,7 @@
                     <select id="city" name="city" required>
                         <option value="">Select City</option>
                         {% for city in cities %}
-                           <option value="{{ city.city_id }}" {% if request.user.profile.city == city.city_id %}selected{% endif %}>
-
+                        <option value="{{ city.city_id }}" {% if request.user.profile.city == city.city_id %}selected{% endif %}>
                                 {{ city.city_name }}
                             </option>
                         {% endfor %}
@@ -84,10 +83,14 @@
             <p>Subtotal: ₹<span id="grand-total">{{ grand_total }}</span></p>
             <p>Discount: ₹<span class="free">{{ discount_amount }}</span></p>
             <p>Shipping: 
-                <span id="shipping-charge">
+                <span id="shipping-charge" name="shipping-charge">
                     {% if delivery_charge is not None %}₹{{ delivery_charge }}{% else %}0{% endif %}
                 </span>
             </p>
+            <input type="hidden" name="delivery_charge" id="delivery-charge-input" value="{{ delivery_charge|default:0 }}">
+
+
+
             
             
 
@@ -115,130 +118,165 @@
 </div>
 
 
-
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    document.getElementById('city').addEventListener('change', function() {
-        let cityId = this.value;
-        console.log("City selected:", cityId);  // Debugging: Check if event fires
-    
-        let pincodeDropdown = document.getElementById('pincode');
-    
-        if (cityId) {
-            fetch("{% url 'Ecommerce:get_pincode' 0 %}".replace('0', cityId))  
-            .then(response => response.json())
-            .then(data => {
-                console.log("Response received:", data); // Debugging: Check API response
-    
-                pincodeDropdown.innerHTML = '<option value="">Select Pincode</option>';
-                data.pincodes.forEach(pincode => {
-                    let option = document.createElement("option");
-                    option.value = pincode.area_pincode;
-                    option.textContent = pincode.area_pincode;
-                    pincodeDropdown.appendChild(option);
-                });
-            })
-            .catch(error => console.error("Error fetching pincodes:", error));
-        }
-    });
-    
-
-    
-
     document.addEventListener("DOMContentLoaded", function () {
         let shippingChargeSpan = document.getElementById("shipping-charge");
+        let totalElement = document.querySelector(".total span b");
+        let grandTotalElement = document.getElementById("grand-total");
+        let discountElement = document.querySelector(".free");
+        let pincodeDropdown = document.getElementById("pincode");
+        let cityDropdown = document.getElementById("city");
+        let payButton = document.getElementById("rzp-button1");
+        
     
-        if (!shippingChargeSpan) {
-            console.error("❌ Element with ID 'shipping-charge' not found. Check your HTML.");
-            return;
-        }
+        let razorpayOptions = {
+            "key": "{{ razorpay_key }}",
+            "amount": {{ amount }},
+            "currency": "INR",
+            "name": "Jyoti Agro",
+            "description": "Order Payment",
+            "order_id": "{{ razorpay_order_id }}",
+            "image": "media/logo.jpg",
+            "theme": {
+                "color": "#3B823E"
+            },
+            "prefill": {
+                "name": "{{ user.username }}", 
+                "email": "{{ user.email }}",
+                "contact": "{{ user.profile.mobile_number }}" 
+            },
+
+            "handler": function (response) {
+                let deliveryCharge = parseFloat(document.getElementById("delivery-charge-input").value) || 0;
+
+
+                let formData = new URLSearchParams({
+                    "razorpay_payment_id": response.razorpay_payment_id,
+                    "razorpay_order_id": response.razorpay_order_id,
+                    "first_name": document.getElementById("first-name").value,
+                    "address": document.getElementById("address").value,
+                    "city": document.getElementById("city").value,
+                    "pincode": document.getElementById("pincode").value,
+                    "email": document.getElementById("email").value,
+                    "phone": document.getElementById("phone").value,
+                    "delivery_charge": deliveryCharge.toString()
+                });
+                console.log("Sending delivery charge:", deliveryCharge);
+
+                fetch(/payment_success/, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    window.location.href = "{% url 'Ecommerce:confirm_Order' %}";  // Redirect to success page
+                })
+                .catch(error => console.error("❌ Error:", error));
+            }
+        };
+        
     
-        let pincodeDropdown = document.getElementById('pincode');
-        if (pincodeDropdown) {
-            pincodeDropdown.addEventListener('change', function () {
-                let pincodeId = this.value;
-                if (pincodeId) {
-                    fetch(`/get-delivery-charge/${pincodeId}/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("🚀 API Response:", data);  // Debugging
+        // Fetch pincodes when city changes
+        cityDropdown.addEventListener('change', function() {
+            let cityId = this.value;
+            if (cityId) {
+                fetch("{% url 'Ecommerce:get_pincode' 0 %}".replace('0', cityId))  
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Pincode Data:", data);
+                    pincodeDropdown.innerHTML = '<option value="">Select Pincode</option>';
+                    data.pincodes.forEach(pincode => {
+                        let option = document.createElement("option");
+                        option.value = pincode.area_pincode;
+                        option.textContent = pincode.area_pincode;
+                        pincodeDropdown.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("❌ Error fetching pincodes:", error));
+            }
+        });
     
-                        let deliveryCharge = parseFloat(data.delivery_charge) || 0;
-                        shippingChargeSpan.textContent = deliveryCharge === 0 ? "Free" : "₹" + deliveryCharge.toFixed(2);
+        // Update delivery charge and total amount when pincode changes
+        pincodeDropdown.addEventListener('change', function () {
+            let pincodeId = this.value;
+            console.log("📌 Selected Pincode:", pincodeId);
+        
+            if (pincodeId) {
+                let baseUrl = "{% url 'Ecommerce:get_delivery_charge' 0 %}";
+                let finalUrl = baseUrl.replace("0", pincodeId);
+
+                fetch(finalUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("🚚 Delivery Charge Received:", data);
+                    let deliveryCharge = parseFloat(data.delivery_charge) || 0;
+                    let discountAmount = parseFloat(data.discount_amount) || 0; // Ensure discount is fetched
+                    // ✅ Update UI for shipping charge
+                    shippingChargeSpan.textContent = deliveryCharge === 0 ? "Free" : "₹" + deliveryCharge.toFixed(2);
+                    document.getElementById("delivery-charge-input").value = deliveryCharge.toFixed(2);
+                    console.log("📌 Updated Shipping Charge:", shippingChargeSpan.textContent);
+        
+                    // ✅ Update total including discount
+                    let totalAfterDiscount = parseFloat(data.new_total) || 0;
+        
+                    totalElement.textContent = "₹" + totalAfterDiscount.toFixed(2);
+                    console.log("📌 Updated Total Amount:", totalElement.textContent);
+        
+                    // ✅ Ensure Razorpay reflects the discounted amount
+                    razorpayOptions.amount = Math.round(totalAfterDiscount * 100);
+                    razorpayOptions.order_id = data.new_order_id; 
+        
+                })
+                .catch(error => {
+                    console.error("❌ Error fetching pincodes:", error);
+                    alert("Failed to load pincodes. Check your network or server response.");
+                });
+            }
+        });
     
-                        let grandTotal = parseFloat(document.getElementById("grand-total").textContent) || 0;
-                        let discountAmount = parseFloat(document.querySelector(".free").textContent) || 0;
-                        let newTotal = grandTotal - discountAmount + deliveryCharge;
-    
-                        document.querySelector(".total span b").textContent = "₹" + newTotal.toFixed(2);
-                    })
-                    .catch(error => console.error("❌ Error fetching delivery charge:", error));
-                }
-            });
-        } else {
-            console.error("❌ Element with ID 'pincode' not found.");
-        }
-    });
-    
-    
-    document.addEventListener("DOMContentLoaded", function () {
-        let form = document.getElementById("checkout-form");
-        let placeOrderBtn = document.getElementById("rzp-button1");
-    
-        placeOrderBtn.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent default form submission
+        // Open Razorpay payment when "Pay Now" is clicked
+        payButton.addEventListener("click", function (event) {
+            event.preventDefault();
     
             let selectedPaymentMethod = document.querySelector("input[name='payment_method']:checked").value;
+            let addressField = document.getElementById("address").value.trim();
+            let pincodeField = document.getElementById("pincode").value.trim();
+            let cityField = document.getElementById("city").value.trim();
+            let updatedTotal = parseFloat(totalElement.textContent.replace('₹', '')) || 0;
+        
+            // ✅ Validation: Ensure address, city, and pincode are selected before proceeding
+            if (addressField === "" || cityField === "" || pincodeField === "") {
+                alert("⚠️ Please enter a valid address and select a pincode before proceeding.");
+                return;
+            }
+           
+           
     
             if (selectedPaymentMethod === "COD") {
-                form.action = "{% url 'payment:cod_checkout' %}";
-                form.submit();
-            } 
-            else {
-                // Retrieve the dynamically updated total value
-                let totalElement = document.querySelector("#total span b");
-                if (!totalElement) {
-                    console.error("❌ Total element not found!");
+                document.getElementById("checkout-form").action = "{% url 'payment:cod_checkout' %}";
+                document.getElementById("checkout-form").submit();
+            } else {
+                if (!razorpayOptions.amount || razorpayOptions.amount <= 0) {
+                    alert("Please select a valid pincode to calculate delivery charge.");
                     return;
                 }
     
-                let updatedTotal = parseFloat(totalElement.textContent.replace('₹', '')) || 0;
-                let finalAmount = updatedTotal*100;  // Convert to paise
-    
-                console.log("🚀 Final Amount (paise):", finalAmount);
-    
-                var options = {
-                    "key": "{{ razorpay_key }}",
-                    "amount": finalAmount,  // ✅ Use paise (no division)
-                    "currency": "INR",
-                    "name": "Your Store",
-                    "description": "Order Payment",
-                    "order_id": "{{ razorpay_order_id }}",
-                    "handler": function (response) {
-                        fetch("/payment-success/", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded",
-                                "X-CSRFToken": "{{ csrf_token }}"
-                            },
-                            body: new URLSearchParams({
-                                "razorpay_payment_id": response.razorpay_payment_id,
-                                "razorpay_order_id": response.razorpay_order_id
-                            })
-                        })
-                        .then(res => res.json())
-                        .then(data => alert(data.message))
-                        .catch(error => console.error("Error:", error));
-                    }
-                };
-    
-                var rzp1 = new Razorpay(options);
-                rzp1.open(); 
+                console.log("💰 Final Amount Sent to Razorpay:", razorpayOptions.amount);
+                let rzp1 = new Razorpay(razorpayOptions);
+                rzp1.open();
             }
         });
     });
     
     
+    
 </script>
+
+
 
 {% endblock %}

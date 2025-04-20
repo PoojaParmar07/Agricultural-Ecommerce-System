@@ -1,241 +1,81 @@
 {% extends 'Ecommerce/base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'Ecommerce/homepage.css' %}" >
 <section class="product-list">
     <h2>{{ category_name }}</h2>  <!-- Display category name here -->
 
     <div class="products-container">
-        {% for product in products %}
-        <div class="product-card">
-            <div class="product-image-container">
-                <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
-                {% comment %} <span class="wishlist-icon"><box-icon name='heart' color='red'></box-icon></span> {% endcomment %}
-                <!-- Wishlist Icon -->
-                <a href="#" class="wishlist-icon">
-                    {% if product.id in wishlist_product_ids %}
-                        <box-icon type='solid' name='heart' color='red'></box-icon>
-                    {% else %}
-                        <box-icon name='heart'></box-icon>
-                    {% endif %}
-                </a>
-            </div>
-            <div class="product-details">
-                <a href="{% url 'Ecommerce:product_view' product.product_id %}">
-                    <h2>{{ product.product_name }}</h2>
-                </a>
-                
-                <p class="price">₹{{ product.sales_price|default:"N/A" }}</p>
-
-                <!-- Rating Section -->
-                <div class="rating-container">
-                    <span class="star-rating">
-                        {% for i in "12345" %}
-                            {% if i|add:"0" <= product.rating %}
-                            <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
-                            {% else %}
-                            <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
-                            {% endif %}
-                        {% endfor %}
-                        <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
-                    </span>
+        {% for product in product_data %}
+            <div class="product-card">
+                <div class="product-image-container">
+                    <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
+                    <a href="{% url 'Ecommerce:add_to_wishlist' product.variant.variant_id %}" class="wishlist-icon">
+                      {% if product.variant_id in wishlist_product_ids %}
+                          <box-icon type='solid' name='heart' color='red'></box-icon>
+                      {% else %}
+                          <box-icon name='heart'></box-icon>
+                      {% endif %}
+                  </a>
                 </div>
+                <div class="product-details">
+                    <div class="product-header">
+                      <a href="{% url 'Ecommerce:product_view' product.variant.variant_id %}">
+                        <h4>{{ product.product_name }}</h4>
+                    </a>
+                       
+                    </div>
+                    <!-- Display Only One Variant -->
+                    {% if product.variant %}
+                        <div>
+                            <p class="price">
+                                <span>₹{{ product.sales_price }}</span> | 
+                                <span>{{ product.variant.units }}</span>
+                            </p>
+                        </div>
+                    {% endif %}
+                  
+                     <div class="rating-container">
+                        <span class="star-rating">
+                            {% if product.rating %}
+                                {% for i in "12345" %}
+                                    {% if i|add:"0" <= product.rating %}
+                                        <box-icon type='solid' name='star' color='#f8b400' size="sm"></box-icon>
+                                    {% else %}
+                                        <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="rating">({{ product.rating|floatformat:1 }}/5)</span>
+                            {% else %}
+                                {% for i in "12345" %}
+                                    <box-icon type='solid' name='star' color='#ddd' size="sm"></box-icon>
+                                {% endfor %}
+                                <span class="rating">(0/5)</span>
+                            {% endif %}
+                        </span>
+                    </div> 
+
+                    {% if product.inventory_quantity > 0 %}
+                    {% if product.variant.variant_id in cart_product_variant_ids %} 
+                        <a href="{% url 'Ecommerce:cart_view' %}" class="add-to-cart">
+                            <button class="add-to-cart">Go to Cart</button>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'Ecommerce:add_to_cart' product.variant.variant_id %}" class="add-to-cart">
+                            <button class="add-to-cart">Add to Cart</button>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <button class="add-to-cart" style="background-color:rgb(246, 246, 246);color: black;">Out of Stock</button>
+                {% endif %}
                 
-
-                {% if product.product_id in cart_product_ids %}
-                <a href="{% url 'Ecommerce:cart_view' %}">
-                    <button class="add-to-cart">Go to Cart</button>
-                </a>
-              {% else %}
-                <a href="{% url 'Ecommerce:add_to_cart' product.product_id %}">
-                    <button class="add-to-cart">Add to Cart</button>
-                </a>
-                {% comment %} <p>Product : {{ product.product_id }}</p> {% endcomment %}
-              {% endif %}
-               
+                
+                </div>
             </div>
-        </div>
-        {% empty %}
-        <p>No products available in this category.</p>
         {% endfor %}
-    </div>
+        
 </section>
-
 <style>
-/* General Styling */
-h2 {
-    margin: 20px 0;
-    text-align: center;
-    font-size: 42px;
-    font-weight: bold;
-    color: #333;
-    font-family: "Open sans", sans-serif;
-}
-
-/* Product Grid */
-.products-container {
-    display: flex;
-    justify-content: center; /* ✅ Centers horizontally */
-    align-items: center; /* ✅ Centers vertically */
-    flex-wrap: wrap; /* ✅ Ensures wrapping for responsiveness */
-    gap: 50px;
-    padding: 20px;
-    max-width: 1300px;
-    margin: 80px auto;
-    
-}
-
-/* Product Card */
-.product-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    padding: 15px;
-    text-align: center;
-    border: 1px solid #eee;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-/* Product Image Container */
-.product-image-container {
-    position: relative;
-    width: 100%;
-    height: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.product-image-container img {
-    width: 100%;
-    height: 150px;
-    object-fit: contain;
-    border-radius: 10px;
-}
-
-/* Wishlist Icon */
-.wishlist-icon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 8px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wishlist-icon:hover {
-    background: rgba(162, 3, 67, 0.8);
-    transform: scale(1.0);
-}
-
-.wishlist-icon box-icon {
-    width: 22px;
-    height: 22px;
-}
-
-.wishlist-icon:hover box-icon {
-    fill: white;
-}
-
-/* Product Details */
-.product-details {
-    padding: 15px 14px 8px 14px;
-    display: flex
-;
-    flex-direction: column;
-    align-items: flex-start;
-
-}
-
-/* Product Name */
-.product-details h2 {
-    font-size: 20px;
-    color: #222;
-    font-weight: bold;
-    font-family: "Open Sans", sans-serif;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    cursor: pointer;
-}
-
-/* Price */
-.price {
-    font-size: 18px;
-    font-weight: 600;
-    color:#3B823E;
-    margin-bottom: 10px;
-}
-
-/* Rating */
-.rating-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    margin-bottom: 10px;
-}
-
-.star-rating {
-    color: #f39c12;
-    font-size: 16px;
-}
-
-.rating {
-    font-size: 14px;
-    font-weight: 600;
-    color: #777;
-}
-
-/* Add to Cart Button */
-.add-to-cart {
-    width: 220px;
-    height: 45px;
-    background: #3B823E;
-    color: white;
-    border: none;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.3s ease;
-}
-
- {% comment %} a{
-    height: 45px;
-    width: 220px;
-} {% endcomment %}
-
-.add-to-cart:hover {
-    background: #3B823E;
-}
-
-/* Responsive Grid */
-@media (max-width: 1024px) {
-    .products-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .products-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    .products-container {
-        grid-template-columns: repeat(1, 1fr);
-    }
-}
 
 </style>
 {% endblock %}

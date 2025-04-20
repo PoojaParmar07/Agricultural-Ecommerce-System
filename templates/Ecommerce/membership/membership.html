@@ -183,62 +183,102 @@
         }
         
     </style>
-
-
+    {% if user.is_authenticated %}
     <div class="membership-container">
-        <div class="membership-mini-container"></div>
         <div class="membership-subcontainer">
-            {% comment %} <a href="{% url "Ecommerce:homepage" %}" class="back"><box-icon name='arrow-back'></box-icon> </a> {% endcomment %}
             <h1 class="membership-title">Unlock premium features with our Gold Plan!</h1>
-            <h4 class="membership-subtitle">Join our exclusive membership program and enjoy premium benefits, special <br> discounts, and unique experiances tailored just for you.</h4>
+            <h4 class="membership-subtitle">Join our exclusive membership program and enjoy premium benefits, special <br> discounts, and unique experiences tailored just for you.</h4>
         </div>
-
+    
         <div class="membership-header">
-            {% comment %} <a href="{% url "Ecommerce:homepage" %}" class="back"><box-icon name='arrow-back'></box-icon> </a> {% endcomment %}
-            <h1>Gold Plan</h1>
-            <h4>Select a plan that first you needs and enjoying exclusive benefits today</h4>
+            <h1>Membership Details</h1>
+            <h4>Select a plan that fits your needs and enjoy exclusive benefits today</h4>
         </div>
-
+    
         <div class="membership-cards">
-            <!-- Card 1 -->
-            {% comment %} <div class="membership-card">
-                <h3 class="card-title">Bronze Membership</h3>
-                <p class="membership-price">₹2,000  <span>/ Year</span></p>
-                <ul class="membership-benefits">
-                    <li class="benefit-item"><span class="check">✔</span> 5% Discount</li>
-                    <li class="benefit-item"><span class="check">✔</span> Free Shipping</li>
-                </ul>
-                <button class="cta-button">Join Now</button>
-            </div> {% endcomment %}
-            <!-- Card 2 -->
-            <div class="membership-card">
-                <h3 class="card-title">Gold Membership</h3>
-                <p class="membership-price">₹5,000 <span>/ Year</span></p>
-                <ul class="membership-benefits">
-                    <li class="benefit-item"><span class="check">✔</span> 10% Discount</li>
-                    <li class="benefit-item"><span class="check">✔</span> Free Shipping</li>
-                    <li class="benefit-item"><span class="check">✔</span> Early Access</li>
-                </ul>
-                <button class="cta-button">Join Now</button>
-            </div> 
-            <!-- Card 3 -->
-            {% comment %} <div class="membership-cards">
-                {% for plan in membership_plans %}
+            {% if user_membership %}  <!-- Check if user has an active membership -->
                 <div class="membership-card">
-                    <h3 class="card-title">{{plan.plan_name}}</h3>
-                    <p class="membership-price">₹{{plan.annual_fees}} <span>/ Year</span></p>
+                    <h3 class="card-title">{{ user_membership.plan.plan_name }}</h3>
+                    <p class="membership-price">₹{{ user_membership.plan.annual_fees }} <span>/ Year</span></p>
                     <ul class="membership-benefits">
-                        <li class="benefit-item"><span class="check">✔</span> {{plan.discount_rate}}% Discount</li>
-                        <li class="benefit-item"><span class="check">✔</span> {{plan.description}}</li>
+                        <li class="benefit-item"><span class="check">✔</span> {{ user_membership.plan.discount_rate|floatformat:0 }}% Discount</li>
+                        <li class="benefit-item"><span class="check">✔</span> {{ user_membership.plan.description }}</li>
                     </ul>
-                    <button class="cta-button">Join Now</button>
+                    <p class="membership-price">Active Until: {{ user_membership.membership_end_date }}</p>
                 </div>
-                {% comment %} {% empty %}
-                <p>No membership plans available.</p>  <!-- This will show if there are no records --> {% endcomment %}
-                {% comment %} {% endfor %}
-            </div> {% endcomment %}
+            {% else %}  <!-- If no active membership, show plans -->
+                {% for plan in membership_plan %}
+                    <div class="membership-card">
+                        <h3 class="card-title">{{ plan.plan_name }}</h3>
+                        <p class="membership-price">₹{{ plan.annual_fees }} <span>/ Year</span></p>
+                        <ul class="membership-benefits">
+                            <li class="benefit-item"><span class="check">✔</span> {{ plan.discount_rate|floatformat:0 }}% Discount</li>
+                            <li class="benefit-item"><span class="check">✔</span> {{ plan.description }}</li>
+                        </ul>
+                        <button class="cta-button" onclick="payNow('{{ plan.plan_id }}')">Join Now</button>
+                    </div>
+                {% empty %}
+                    <p>No membership plans available.</p>
+                {% endfor %}
+            {% endif %}
         </div>
-       
     </div>
+    {% else %}
+            <p><a href="{% url 'account:login' %}">Login</a> to leave a review.</p>
+        {% endif %}
+        {% block scripts %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
 
+function payNow(planId) {
+    fetch(`/membership/create_razorpay_order/${planId}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);  // Show error message
+            return;
+        }
+        var options = {
+            "key": data.razorpay_key,
+            "amount": data.amount,
+            "currency": "INR",
+            "name": data.plan_name,
+            "order_id": data.razorpay_order_id,
+            "theme": {
+                "color": "#3B823E"
+            },
+            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                "name": "{{ user.username }}", //your customer's name
+                "email": "{{ user.email }}",
+                "contact": "{{ user.profile.mobile_number }}" //Provide the customer's phone number for better conversion rates 
+            },
+
+            "handler": function (response){
+                fetch(`/membership/razorpay_payment_success/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({
+                        "razorpay_payment_id": response.razorpay_payment_id,
+                        "razorpay_order_id": response.razorpay_order_id,
+                        "razorpay_signature": response.razorpay_signature
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        alert("Payment successful! Membership activated.");
+                        window.location.href = "/membership/membership_gold/";
+                    } else {
+                        alert("Payment failed! Please try again.");
+                    }
+                });
+            }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+    });
+}
+</script>
 {% endblock %}
+{% endblock %}
+

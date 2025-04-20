@@ -15,7 +15,7 @@
 .billing-info, .order-summary {
     background: white;
     padding: 25px;
-    border-radius: 10px;
+    border-radius: 3px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
@@ -46,13 +46,14 @@ label {
     font-weight: 600;
     display: block;
     margin-bottom: 6px;
+    margin-left: 5px;
     color: #444;
 }
 
 /* Input Fields */
 input[type="text"], 
 select {
-    width: 100%;
+    width: 95%;
     /* height: 45px; */
     padding: 12px;
     margin: 5px 5px 0 0;
@@ -65,7 +66,7 @@ select {
 }
  .row #email 
 {
-    width: 95%;
+    width: 90%;
     height: 23px;
     padding: 12px;
     margin: 5px 5px 0 0;
@@ -78,7 +79,7 @@ select {
 }
 .row #phone
 {
-    width: 95%;
+    width: 90%;
     height: 23px;
     padding: 12px;
     margin: 5px 5px 0 0;
@@ -129,8 +130,8 @@ input:focus, select:focus {
 }
 
 .item img {
-    width: 65px;
-    height: 65px;
+    width: 50px;
+    height: 50px;
     border-radius: 8px;
     object-fit: cover;
 }
@@ -144,6 +145,7 @@ input:focus, select:focus {
 
 .details p {
     margin: 0;
+    width: 20px;
 }
 
 /* Summary Details */

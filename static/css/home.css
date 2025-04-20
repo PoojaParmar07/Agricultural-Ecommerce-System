@@ -456,21 +456,21 @@ flex: 1;
 
 
 .message.error {
-    background-color: rgba(255, 0, 25, 0.575);
-    color: #FFFFFF;
+    background-color: rgba(247, 10, 10, 0.436);
+    color: #861818;
     border-color: rgba(224, 26, 45, 0.451);
     margin:5px 20px;
 }
 
 .message.success {
-    background-color: #d4edda;
+    background-color: #43c64e90;
     color: #155724;
     border-color: #c3e6cb;
     margin:0px 20px;
 }
 
 .message.warning {
-    background-color: #fffef9;
+    background-color: #c0a52180;
     color: #856404;
     border-color: #ffeeba;
     margin:0px 20px;
@@ -567,4 +567,49 @@ flex: 1;
         padding: 8px;
         margin: 5px;
     }
+}
+
+
+
+
+
+/* Add this to your existing CSS */
+
+/* Icon styling for navbar items */
+.sub-nav li a i,
+.dropdown-menu a i,
+.dropdown-menu button a i {
+  margin-right: 8px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+/* Adjust main navigation icons */
+.sub-nav > li > a i {
+  font-size: 20px;
+}
+
+/* Style category icons */
+.category-dropdown-menu .sub-a a i {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Style dropdown menu icons */
+.dropdown-menu a i,
+.about-dropdown-menu .sub-a a i {
+  width: 20px;
+  text-align: center;
+}
+
+/* Give a nice effect to icons on hover */
+a:hover i {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* Style the cart and wishlist icons */
+.cart-icon i,
+a i.bx-heart {
+  font-size: 30px;
 }

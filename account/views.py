@@ -218,3 +218,4 @@ def update_profile(request):
         form = ProfileForm(instance=user)
 
     return render(request, 'Ecommerce/user_profile.html', {'form': form})
+

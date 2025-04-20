@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('',homepage,name='homepage'),
     path('product_list/<int:category_id>/', product_list, name='product_list'),
-    path('product_view/<int:product_id>/',product_view,name='product_view'),
+    path('product_view/<int:variant_id>/',product_view,name='product_view'),
     
     
     path('cart_view/',cart_view, name='cart_view'),
@@ -30,6 +30,7 @@ urlpatterns = [
          get_delivery_charge_ajax, name='get_delivery_charge'),
     path('checkout/', checkout, name='checkout'),
     path('get_pincode/<int:city_id>/', get_pincode, name='get_pincode'),
+    path('payment_success/', payment_success, name='payment_success'),
     
     
     
@@ -51,11 +52,18 @@ urlpatterns = [
     path('aboutus/',aboutus,name="aboutus"),
     path('enquiry/',enquiry,name="enquiry"),
     path('crop_info/',crop_info,name="crop_info"),
+    
     path('okra/',okra,name="okra"),
+    path('spinach/',spinach,name="spinach"),
+    path('tomato/',tomato,name="tomato"),
+    path('corainder/',corainder,name="corainder"),
+    path('potato/',potato,name="potato"),
+    path('peas/',peas,name="peas"),
     
     path('enquiry_view/',enquiry_view,name='enquiry_view'),
     path('membership_plan/',membership_plan,name='membership_plan'),
     
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('product_listing/',product_listing,name='product_listing'),
 
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

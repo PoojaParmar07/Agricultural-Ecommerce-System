@@ -11,4 +11,6 @@ urlpatterns = [
     path('add_user_membership/', add_user_membership,name='add_user_membership'),
     path('user_membership_details/<int:pk>/', user_membership_details,name='user_membership_details'),
     path('membership_gold/', show_membership_gold,name='membership_gold'),
+    path('create_razorpay_order/<int:plan_id>/', create_razorpay_order, name='create_razorpay_order'),
+    path('razorpay_payment_success/',razorpay_payment_success,name='razorpay_payment_success'),
 ]

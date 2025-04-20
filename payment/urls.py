@@ -6,11 +6,7 @@ app_name = "payment"
 urlpatterns = [
    
     path('cod_checkout/',cod_checkout,name='cod_checkout'),
-    # path('stripe_checkout/', stripe_checkout, name='stripe_checkout'),
-    # path("stripe/webhook/", stripe_webhook, name="stripe_webhook"),
-    # path('razorpay_checkout/',razorpay_checkout,name='razorpay_checkout'),
-     path('razorpay_checkout/', razorpay_integrate,name="razorpay_integrate"),
-     path('payment-success/', payment_success, name='payment_success'),
-    # path("razorpay/webhook/", razorpay_webhook, name="razorpay_webhook"),
+    
+    
 ]
 

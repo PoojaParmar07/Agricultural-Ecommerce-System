@@ -38,7 +38,7 @@ def demo(request):
 
 def category_list(request):
     categories = Category.objects.all()
-    paginator = Paginator(categories, 10)  # Show 10 products per page
+    paginator = Paginator(categories, 5)  # Show 10 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -110,7 +110,7 @@ def category_view_details(request, pk):
 def list_brand(request):
     brand=Brand.objects.all()
      # Pagination
-    paginator = Paginator(brand, 10)  # Show 10 products per page
+    paginator = Paginator(brand, 5)  # Show 10 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -177,7 +177,7 @@ def brand_view_details(request,pk):
 def product_list(request):
     products = Product.objects.all()
      # Pagination
-    paginator = Paginator(products, 10)  # Show 10 products per page
+    paginator = Paginator(products, 5)  # Show 10 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -243,7 +243,7 @@ def product_view_details(request,pk):
 
 def product_variant_list(request):
     product_variant=ProductVariant.objects.all()
-    paginator = Paginator(product_variant, 10)  # Show 10 products per page
+    paginator = Paginator(product_variant, 5)  # Show 10 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

@@ -262,7 +262,7 @@ nav ul li a {
     font-family: "Open sans", sans-serif; */
     font-size: 28px;
     font-weight: bold;
-    margin: 0 300px;
+    margin: 50px 300px 0;
     text-transform:uppercase;
     position: relative;
     text-align:center;
@@ -672,3 +672,29 @@ nav ul li a {
 }
 
 /* FAQ CSS END */
+
+.show-more-container {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 20px 70%;
+}
+
+.show-more-btn {
+    background-color: #3B823E;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.show-more-btn:hover {
+    background-color: #316f34;
+}
+
+
+.show-more-btn i{
+    padding-top: 20px;
+    font-size: 20px;
+}

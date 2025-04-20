@@ -69,7 +69,7 @@ def post_view_details(request, pk):
 
     if request.method == 'POST':
         if 'update' in request.POST:  # Update action
-            form = PostForm(request.POST, instance=post)
+            form = PostForm(request.POST,request.FILES, instance=post)
             if form.is_valid():
                 form.save()
                 messages.success(request, "post updated successfully!")

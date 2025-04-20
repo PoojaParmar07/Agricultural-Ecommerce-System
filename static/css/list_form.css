@@ -1,99 +1,362 @@
-*
-{
-    font-family: "Open Sans", serif;
-   
-}
-.list-table {
-    width:100%;
-    border-collapse: collapse;
-    background-color: white;
-    margin-top: 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-align-self: center;
-    
-}
-.list-table tr td a{
-    text-decoration: none;
-    color:#3B823E;
-}
-
-.list-table th, 
-.list-table td {
-    padding: 4px 8px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-.list-table th {
-    /* background-color: #3B823E;*/
-    background-color: #cfddd0;
-    color: rgb(0, 0, 0);
-    font-weight: 400;
-    font-size:15px;
-    text-transform: uppercase;
-    
-}
-
-.list-table tr:hover {
-    background-color: #f9f9f9;
-}
-
-/* .edit-btn, .delete-btn {
-    text-decoration: none;
-    padding: 5px 10px;
-    margin: 0 5px;
-    border-radius: 3px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.edit-btn {
-    background-color: #f0ad4e;
-    color: white;
-}
-
-.edit-btn:hover {
-    background-color: #ec971f;
-}
-
-.delete-btn {
-    background-color: #d9534f;
-    color: white;
-}
-
-.delete-btn:hover {
-    background-color: #c9302c;
-}
- */
-
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    padding:7px 0px;
-    
-}
-
-
-.field_name span {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0px 20px;
-}
-
-.create-btn {
-    background-color: #3B823E;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px 20px;
-    cursor: pointer;
-    font-weight: 400;
-    font-size: 16px;
-    border-radius: 5px;
-    height: 43px;
-    width: 181px;
-    
-}
+/* Variables for consistent colors */
+:root {
+    --primary: #3B823E;      /* Main green */
+    --primary-dark: #2d6930; /* Darker green for hover states */
+    --primary-light: #f0f7f1; /* Light green for backgrounds */
+    --accent: #5D4C92;       /* Purple accent color - complementary to green */
+    --accent-light: #f2f0fa; /* Light purple for backgrounds */
+    --gray-light: #edf2f7;
+    --gray-medium: #718096;
+    --text-primary: #2d3748;
+    --text-secondary: #000000;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 4px 8px rgba(59, 130, 62, 0.3);
+    --transition: all 0.2s ease;
+  }
+  
+  /* Section Header Styling */
+  .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 16px 24px;
+      border-radius: 5px 5px 0 0;
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--gray-light);
+  }
+  
+  .field_name span {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--primary); 
+      position: relative;
+      padding-left: 14px;
+  }
+  
+  .field_name span::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 24px;
+      background-color: var(--primary);
+      border-radius: 2px;
+  }
+  
+  .create-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 15px;
+      border-radius: 6px;
+      height: 42px;
+      width: 140px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(59, 130, 62, 0.2);
+  }
+  
+  .create-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+  }
+  
+  .create-btn:active {
+      transform: translateY(0);
+  }
+  
+  /* Content Body Styling */
+  .content-body {
+      background-color: white;
+      border-radius: 0 0 10px 10px;
+      box-shadow: var(--shadow-md);
+      padding: 0 0 20px 0;
+      overflow: hidden;
+  }
+  
+  /* Card Layout for Brand Listing */
+  .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+  }
+  
+  .brand-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      overflow: hidden;
+      border: 1px solid var(--gray-light);
+  }
+  
+  .brand-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-light);
+  }
+  
+  .brand-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--gray-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  
+  .brand-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 16px;
+  }
+  
+  .brand-status {
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+  }
+  
+  .status-active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+  }
+  
+  .status-inactive {
+      background-color: #fff0f0;
+      color: #e53e3e;
+  }
+  
+  .brand-info {
+      padding: 16px;
+  }
+  
+  .brand-meta {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-size: 14px;
+  }
+  
+  .brand-meta svg {
+      margin-right: 8px;
+      color: var(--gray-medium);
+  }
+  
+  .brand-actions {
+      padding: 12px 16px;
+      background-color: #fafbfc;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+  }
+  
+  .action-btn {
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+  }
+  
+  .view-btn {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border: none;
+  }
+  
+  .view-btn:hover {
+      background-color: var(--primary);
+      color: white;
+  }
+  
+  .edit-btn {
+      background-color: var(--accent-light);
+      color: var(--accent);
+      border: none;
+  }
+  
+  .edit-btn:hover {
+      background-color: var(--accent);
+      color: white;
+  }
+  
+  /* Table Styling (Alternative List View) */
+  .list-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: white;
+      margin: 0;
+  }
+  
+  .list-table th {
+      background-color: #CFDDD0;
+      color: var(--primary-dark);
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      padding: 14px 16px;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--gray-light);
+      position: sticky;
+      top: 0;
+      text-align: left;
+  }
+  
+  .list-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-light);
+      color: var(--text-secondary);
+      font-size: 14px;
+      vertical-align: middle;
+  }
+  
+  .list-table tr:last-child td {
+      border-bottom: none;
+  }
+  
+  .list-table tr:hover {
+      background-color: #fafffe;
+  }
+  
+  .list-table tr td a {
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: var(--transition);
+      display: inline-block;
+  }
+  
+  .list-table tr td a:hover {
+      background-color: var(--primary);
+      color: white;
+  }
+  
+  .list-table tr td a:active {
+      transform: translateY(0);
+  }
+  
+  /* Add subtle zebra striping */
+  .list-table tbody tr:nth-child(even) {
+      background-color: #fafbfc;
+  }
+  
+  /* Actions column styling */
+  .actions-cell {
+      display: flex;
+      gap: 8px;
+  }
+  
+  /* View toggle styling */
+  .view-toggle {
+      display: flex;
+      margin: 16px 24px;
+      gap: 10px;
+  }
+  
+  .toggle-btn {
+      background-color: var(--gray-light);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+  }
+  
+  .toggle-btn.active {
+      background-color: var(--primary);
+      color: white;
+  }
+  
+  .toggle-btn:hover:not(.active) {
+      background-color: #e2e8f0;
+  }
+  
+  /* Pagination Styling */
+  .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0 10px;
+      gap: 15px;
+  }
+  
+  .pagination a {
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      color: var(--primary);
+      background-color: var(--primary-light);
+      transition: var(--transition);
+      font-weight: 500;
+      font-size: 14px;
+  }
+  
+  .pagination a:hover {
+      background-color: var(--primary);
+      color: white;
+  }
+  
+  .pagination .active {
+      background-color: var(--primary);
+      color: white;
+  }
+  
+  .pagination span {
+      font-size: 14px;
+      color: var(--gray-medium);
+      padding: 0 10px;
+  }
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+      .content {
+          padding: 15px;
+      }
+      
+      .section-header {
+          flex-direction: column;
+          gap: 10px;
+          align-items: flex-start;
+      }
+      
+      .create-btn {
+          width: 100%;
+      }
+      
+      .brand-grid {
+          grid-template-columns: 1fr;
+      }
+  }
+  
+  /* Table Scrollable for mobile */
+  @media screen and (max-width: 600px) {
+      .content-body {
+          overflow-x: auto;
+      }
+      
+      .list-table {
+          min-width: 500px;
+      }
+  }

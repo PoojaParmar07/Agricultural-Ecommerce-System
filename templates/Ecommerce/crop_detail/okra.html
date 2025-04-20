@@ -88,6 +88,8 @@
                                 Okra is ready for harvest 50-60 days after sowing, depending on the variety.</li>
                             <li class="square-list"> Harvest pods when they are 3-5 inches long and tender, as older pods become tough and fibrous.For continuous harvesting, pick okra regularly to encourage further pod production. </li>
                             <li class="square-list"> Regular harvesting also prevents mature pods from reducing overall plant productivity.</li>
+                            <a href="https://www.youtube.com/embed/DXJkTerZ_ac?si=Y_2YjeUhyymGsqbL" class="video-link" target="_blank">📺 Watch Video</a>
+
                         </ul>
                         </p>
                     </td>
@@ -96,29 +98,10 @@
         </div>
         <!-- <a href="https://youtu.be/d7tDPWWcBWo?si=kcX9cSHfiPh_mBCU" target="_blank">Video link</a> -->
 
-        <!-- Replace this in your more-content div -->
-        <div class="video-container">
-
-                <iframe id="spinachVideo" src="https://www.youtube.com/embed/DXJkTerZ_ac?si=Y_2YjeUhyymGsqbL"
-                frameborder="0" allowfullscreen></iframe>
-
-        </div>
-
     </div>
-    <button class="btn" onclick="toggleContent()">Read More</button>
+    {% comment %} <button class="btn">Read More</button> {% endcomment %}
 </div>
 <script>
-    function toggleContent() {
-        var content = document.getElementById("moreContent");
-        var button = document.querySelector(".btn");
-        if (content.style.display === "none" || content.style.display === "") {
-            content.style.display = "block";
-            button.textContent = "Read Less";
-        } else {
-            content.style.display = "none";
-            button.textContent = "Read More";
-        }
-    }
 
     document.querySelector('.video-container').addEventListener('click', function () {
         var iframe = document.getElementById('spinachVideo');

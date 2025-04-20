@@ -4,12 +4,17 @@ from .models import Membership_plan, User_membership
 from .form import MembershipplanForm, UserMembershipForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required,user_passes_test
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.utils.timezone import now
 from django.urls import reverse
 from datetime import timedelta
 from account.models import CustomUser
 from django.core.paginator import Paginator
+from Ecommerce.models import *
+import razorpay
+from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+from datetime import date
 
 
 def is_admin_user(user):
@@ -162,7 +167,7 @@ def add_user_membership(request):
 
 
     
-    
+@login_required
 def user_membership_details(request, pk):
     
     context = {
@@ -199,8 +204,107 @@ def user_membership_details(request, pk):
     context['membership'] = membership
     return render(request, 'admin_dashboard/view_details.html', context)
 
-
+@login_required
 def show_membership_gold(request):
-    return render(request, "Ecommerce/membership/membership.html")
-  
+    membership_plan=Membership_plan.objects.all()
+    user_membership = User_membership.objects.filter(
+        user=request.user,
+        membership_end_date__gte=date.today(),  # Check if membership is still valid
+        status=True  # Ensure membership is active
+    ).first()  # Get the first active membership if exists
+    
+    return render(request, "Ecommerce/membership/membership.html",{'membership_plan': membership_plan,'user_membership': user_membership})
+
+
+
+
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+
+
+
+@login_required
+def create_razorpay_order(request,plan_id):
+    plan = Membership_plan.objects.get(plan_id=plan_id)
+    user = request.user
+    
+    existing_membership = User_membership.objects.filter(
+        user=user, 
+        plan=plan,
+        membership_end_date__gte=now(),  # Check if membership is still active
+        status=True  # Ensure it's an active membership
+    ).first()
+
+    if existing_membership:
+        return JsonResponse({
+            "error": "You already have an active membership for this plan."
+        }, status=400)
+
+    # Create Razorpay order
+    order_amount = int(plan.annual_fees * 100)  # Convert to paisa
+    order_currency = "INR"
+    razorpay_order = razorpay_client.order.create({
+        "amount": order_amount,
+        "currency": order_currency,
+        "payment_capture": "1"  # Auto capture payment
+    })
+    
+    # Store order details in Payment model
+    membership = User_membership.objects.create(
+        user=user,
+        plan=plan,
+        membership_start_date=datetime.today(),
+        membership_end_date=datetime.today() + timedelta(days=365),  # 1 year membership
+        status=False
+    )
+    
+    payment = Payment.objects.create(
+        membership=membership,
+        total_price=plan.annual_fees,
+        payment_mode="online",
+        payment_status="pending",
+        razorpay_order_id=razorpay_order["id"]
+    )
+
+    return JsonResponse({
+        "razorpay_order_id": razorpay_order["id"],
+        "razorpay_key": settings.RAZORPAY_KEY_ID,
+        "amount": order_amount,
+        "plan_name": plan.plan_name,
+        "plan_id": plan_id,
+    })
+    # return JsonResponse({"error": "Invalid request method"}, status=400)
+    
+    
+    
+@csrf_exempt
+def razorpay_payment_success(request):
+    if request.method == "POST":
+        data = request.POST
+        razorpay_payment_id = data.get("razorpay_payment_id")
+        razorpay_order_id = data.get("razorpay_order_id")
+        razorpay_signature = data.get("razorpay_signature")
         
+        payment = Payment.objects.get(razorpay_order_id=razorpay_order_id)
+        
+        # Verify Razorpay signature
+        try:
+            razorpay_client.utility.verify_payment_signature({
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": razorpay_signature
+            })
+            payment.payment_status = "completed"
+            payment.razorpay_payment_id = razorpay_payment_id
+            payment.razorpay_signature = razorpay_signature
+            payment.save()
+            
+            # Activate membership
+            user_membership = payment.membership
+            user_membership.status = True
+            user_membership.save()
+            
+            return JsonResponse({"status": "success", "message": "Payment successful!"})
+        except razorpay.errors.SignatureVerificationError:
+            payment.payment_status = "failed"
+            payment.save()
+            return JsonResponse({"status": "failed", "message": "Payment verification failed!"}, status=400)
